@@ -31,7 +31,7 @@ add_category <- function(policy_list, name = "Category", slipdays = 0,
     category <- list("name" = name, "slipdays" = slipdays,
                      "late_time1" = late_time1, "late_time2" = late_time2,
                      "late_scale1" = late_scale1, "late_scale2" = late_scale2,
-                     "weights" = weights, "drops" = drops, 
+                     "weight" = weight, "drops" = drops, 
                      "weighted_equally" = weighted_equally,
                      "clobber" = clobber, "assigns" = assigns
     )
