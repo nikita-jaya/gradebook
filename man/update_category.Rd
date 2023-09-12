@@ -14,7 +14,7 @@ update_category(
   late_scale2 = 0,
   weight = 0,
   drops = 0,
-  weighted_equally = TRUE,
+  weight_method = c("equally", "by_points"),
   clobber = "None",
   assigns = c()
 )
@@ -38,11 +38,11 @@ update_category(
 
 \item{drops}{allowed drops for category.}
 
-\item{weighted_equally}{whether it's weighted equally or by points.}
-
 \item{clobber}{whether it's clobbered.}
 
 \item{assigns}{any assignments included in category.}
+
+\item{weighted_equally}{whether it's weighted equally or by points.}
 }
 \value{
 A list.
