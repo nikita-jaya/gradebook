@@ -1,12 +1,12 @@
 #' Process Student IDs
 #'
-#' This function processes a dataset with student IDs (sids). It handles 
+#' This function processes a dataset with student IDs. It handles 
 #' erroneous student IDs by filtering out duplicates and handling NA values. 
 #' The function returns a list containing two dataframes: 
 #' 1) "unique_sids" which has unique student IDs and 
 #' 2) "duplicates" which contains all rows with duplicate or NA student IDs.
 #'
-#' @param new_data A dataframe containing a column named "sid" which holds student IDs.
+#' @param gs_data A dataframe (csv from Gradescope) containing a column named "sid" which holds student IDs.
 #'
 #' @return A list with two dataframes:
 #'   - "unique_sids": A dataframe containing unique student IDs.
@@ -31,18 +31,18 @@
 #' @importFrom dplyr %>% filter group_by ungroup arrange summarize everything n across
 #' @export
 
-process_student_id <- function(new_data) {
+process_student_id <- function(gs_data) {
   .data <- NULL
   sid <- NULL
   
-  df_filtered <- new_data %>% filter(!is.na(.data$sid))
+  df_filtered <- gs_data %>% filter(!is.na(.data$sid))
   
   duplicated_rows <- df_filtered %>%
     group_by(.data$sid) %>%
     filter(n() > 1) %>%
     ungroup()
   
-  duplicates_df <- new_data %>%
+  duplicates_df <- gs_data %>%
     filter(is.na(.data$sid) | (.data$sid %in% duplicated_rows$.data$sid)) %>%
     arrange(.data$sid)
   

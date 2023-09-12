@@ -4,10 +4,10 @@
 \alias{process_student_id}
 \title{Process Student IDs}
 \usage{
-process_student_id(new_data)
+process_student_id(gs_data)
 }
 \arguments{
-\item{new_data}{A dataframe containing a column named "sid" which holds student IDs.}
+\item{gs_data}{A dataframe (csv from Gradescope) containing a column named "sid" which holds student IDs.}
 }
 \value{
 A list with two dataframes:
@@ -17,7 +17,7 @@ A list with two dataframes:
 }
 }
 \description{
-This function processes a dataset with student IDs (sids). It handles
+This function processes a dataset with student IDs. It handles
 erroneous student IDs by filtering out duplicates and handling NA values.
 The function returns a list containing two dataframes:
 \enumerate{
