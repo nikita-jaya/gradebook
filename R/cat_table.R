@@ -52,11 +52,11 @@ update_category <- function(policy_list, name = "Category", slipdays = 0,
 
 
 getCatIndex <- function(policy_list, name){
-    nrs <- purrr::map(cat_list, "name") |>
+    nrs <- purrr::map(policy_list, "name") |>
         unlist()
     i <- which(nrs == name)
     if (length(i) == 0){
-        i <- length(cat_list)+1
+        i <- length(policy_list)+1
     }
     return (i)
 }
