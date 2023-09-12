@@ -1,4 +1,4 @@
-#' Add category to policy list
+#' Add or update category to policy list
 #' 
 #' @param policy_list a policy list if adding category to previous one.
 #' @param name name of category.
@@ -35,7 +35,28 @@ update_category <- function(policy_list, name = "Category", slipdays = 0,
                      "weighted_equally" = weighted_equally,
                      "clobber" = clobber, "assigns" = assigns
     )
-    policy_list[[length(policy_list) + 1]] <- category
+    policy_list[[getCatIndex(policy_list, name)]] <- category
     return (policy_list)
     
+}
+
+#' Finds index of category within a policy list
+#' 
+#' @param policy_list a policy list if adding category to previous one.
+#' @param name name of category.
+#' @returns An integer.
+#' @export
+#' @examples
+#' getCatIndex( update_category(name = "LABS"), "LABS")
+
+
+
+getCatIndex <- function(policy_list, name){
+    nrs <- purrr::map(cat_list, "name") |>
+        unlist()
+    i <- which(nrs == name)
+    if (length(i) == 0){
+        i <- length(cat_list)+1
+    }
+    return (i)
 }

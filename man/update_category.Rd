@@ -2,7 +2,7 @@
 % Please edit documentation in R/cat_table.R
 \name{update_category}
 \alias{update_category}
-\title{Add category to policy list}
+\title{Add or update category to policy list}
 \usage{
 update_category(
   policy_list,
@@ -48,7 +48,7 @@ update_category(
 A list.
 }
 \description{
-Add category to policy list
+Add or update category to policy list
 }
 \examples{
 update_category(name = "Labs")

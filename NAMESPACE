@@ -3,6 +3,7 @@
 export(add)
 export(assignments_gs)
 export(convert_to_min)
+export(getCatIndex)
 export(process_student_id)
 export(update_category)
 importFrom(dplyr,"%>%")
