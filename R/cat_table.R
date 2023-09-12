@@ -47,11 +47,11 @@ update_category <- function(policy_list, name = "Category", slipdays = 0,
 #' @returns An integer.
 #' @export
 #' @examples
-#' getCatIndex( update_category(name = "LABS"), "LABS")
+#' get_cat_index( update_category(name = "LABS"), "LABS")
 
 
 
-getCatIndex <- function(policy_list, name){
+get_cat_index <- function(policy_list, name){
     nrs <- purrr::map(policy_list, "name") |>
         unlist()
     i <- which(nrs == name)
@@ -67,8 +67,8 @@ getCatIndex <- function(policy_list, name){
 #' @param name name of category.
 #' @returns A list.
 #' @export
-deleteCategory <- function(policy_list, name){
-    i <- getCatIndex(policy_list, name)
+delete_category <- function(policy_list, name){
+    i <- get_cat_index(policy_list, name)
     policy_list <- policy_list[-i]
     return (policy_list)
 }
