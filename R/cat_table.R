@@ -21,7 +21,7 @@
 update_category <- function(policy_list, name = "Category", slipdays = 0, 
                          late_time1 = "00:00:00", late_time2 = "00:00:00", 
                          late_scale1 = 1, late_scale2 = 0, 
-                         weight = 0,drops = 0, weighted_equally = TRUE, 
+                         weight = 0,drops = 0, weight_method = c("equally", "by_points"), 
                          clobber = "None", assigns = c()){
     if (missing(policy_list))
         policy_list <- list()
