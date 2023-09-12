@@ -15,10 +15,10 @@
 #' @returns A list.
 #' @export
 #' @examples
-#' add_category(name = "Labs")
-#' add_category(name = "Quizzes")
+#' update_category(name = "Labs")
+#' update_category(name = "Quizzes")
 
-add_category <- function(policy_list, name = "Category", slipdays = 0, 
+update_category <- function(policy_list, name = "Category", slipdays = 0, 
                          late_time1 = "00:00:00", late_time2 = "00:00:00", 
                          late_scale1 = 1, late_scale2 = 0, 
                          weight = 0,drops = 0, weighted_equally = TRUE, 
