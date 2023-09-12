@@ -60,3 +60,15 @@ getCatIndex <- function(policy_list, name){
     }
     return (i)
 }
+
+#' Deletes category with name "name"
+#' 
+#' @param policy_list a policy list if adding category to previous one.
+#' @param name name of category.
+#' @returns A list.
+#' @export
+deleteCategory <- function(policy_list, name){
+    i <- getCatIndex(policy_list, name)
+    policy_list <- policy_list[-i]
+    return (policy_list)
+}
