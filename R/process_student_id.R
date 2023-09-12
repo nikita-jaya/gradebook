@@ -80,5 +80,5 @@ process_student_id <- function(new_data) {
     result <- new_data
   }
   
-  return(list(unique_sids = result, duplicates = duplicates_df))
+  return(list(unique_student_ids = result, duplicates = duplicates_df))
 }
