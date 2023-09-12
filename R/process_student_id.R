@@ -28,22 +28,69 @@
 #'  )
 #' processed_data <- process_student_id(data)
 #' 
-#' @importFrom dplyr %>% filter group_by ungroup arrange summarize everything n across
+#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across
+#' @importFrom tidyr drop_na
 #' @export
+
+make_duplicate_sid_df <- function(gs_data) {
+    gs_data |>
+        dplyr::group_by(sid) |>
+        dplyr::mutate(n_records = n()) |>
+        dplyr::filter(n_records > 1) |>
+        dplyr::distinct() |>
+        dplyr::select(-n_records)
+}
+
+#this could be a good workflow for a wrapper function
+gs2 <- gs_data |>
+    tidyr::drop_na(sid) |>
+    dplyr::group_by(sid) |>
+    dplyr::summarize(merge_replicated_records())
+    
+gs3 <- gs2 |>
+    filter(is_replicated)
+
+single_sid_df <- gs3
+
+merge_replicated_records <- function(single_sid_df) {
+    
+if (nrow(single_sid_df) == 1) {
+    return(single_sid_df)
+    } else {
+    single_sid_df |>
+            summarize(across(
+                everything(),
+                ~ if (inherits(., "Period")) {
+                    last(na.omit(.))
+                } else if (is.numeric(.)) {
+                    max(., na.rm = TRUE)
+                } else {
+                    if (all(is.na(.))) {
+                        NA
+                    } else {
+                        last(na.omit(.))
+                    }
+                }
+            ))
+    }
+}
+
+
 
 process_student_id <- function(gs_data) {
   .data <- NULL
   sid <- NULL
   
-  df_filtered <- gs_data %>% filter(!is.na(.data$sid))
+  df_filtered <- gs_data |>
+      tidyr::drop_na(sid)
   
-  duplicated_rows <- df_filtered %>%
-    group_by(.data$sid) %>%
-    filter(n() > 1) %>%
+  duplicated_rows <- df_filtered |>
+    group_by(sid) |>
+    filter(n() > 1) |>
     ungroup()
   
-  duplicates_df <- gs_data %>%
-    filter(is.na(.data$sid) | (.data$sid %in% duplicated_rows$.data$sid)) %>%
+  duplicates_df <- gs_data |>
+    filter(is.na(.data$sid) | (.data$sid %in% duplicated_rows$.data$sid)) |>
     arrange(.data$sid)
   
   #df with only unique sid
@@ -55,24 +102,7 @@ process_student_id <- function(gs_data) {
   #df with duplicate sid so we can do merging using only this small df
   duplicate_sids_without_na <- filter(duplicates_df, !is.na(.data$sid))
   
-  if (nrow(duplicate_sids_without_na) > 0) {
-    data_uniquesids <- duplicate_sids_without_na %>%
-      group_by(.data$sid) %>%
-      summarize(across(
-        everything(),
-        ~ if (inherits(., "Period")) {
-          last(na.omit(.))
-        } else if (is.numeric(.)) {
-          max(., na.rm = TRUE)
-        } else {
-          if (all(is.na(.))) {
-            NA
-          } else {
-            last(na.omit(.))
-          }
-        }
-      )) %>%
-      ungroup()
+
     
     #combine dataframes into 1 correct dataframe of students
     result <- rbind(unique_and_na_sids, data_uniquesids)
