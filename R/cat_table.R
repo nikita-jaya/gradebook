@@ -9,7 +9,7 @@
 #' @param late_scale2 scale for second lateness policy.
 #' @param weight weight for category.
 #' @param drops allowed drops for category.
-#' @param weighted_equally whether it's weighted equally or by points.
+#' @param weight_method whether it's weighted equally or by points.
 #' @param clobber whether it's clobbered.
 #' @param assigns any assignments included in category.
 #' @returns A list.
@@ -32,10 +32,10 @@ update_category <- function(policy_list, name = "Category", slipdays = 0,
                      "late_time1" = late_time1, "late_time2" = late_time2,
                      "late_scale1" = late_scale1, "late_scale2" = late_scale2,
                      "weight" = weight, "drops" = drops, 
-                     "weighted_equally" = weighted_equally,
+                     "weighted_method" = weight_method,
                      "clobber" = clobber, "assigns" = assigns
     )
-    policy_list[[getCatIndex(policy_list, name)]] <- category
+    policy_list[[get_cat_index(policy_list, name)]] <- category
     return (policy_list)
     
 }

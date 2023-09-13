@@ -21,12 +21,12 @@ assignments_gs <- function(unique_student_ids) {
     gs_cols[1] <- "Names"
   }
 
-  assignments <- tibble(colnames = gs_cols) %>%
+  assignments <- tibble(colnames = gs_cols) |>
     # General regex to rename assignments and add a column "category" in table
     mutate(new_colnames = str_replace_all(tolower(colnames), "[\\s:]+", "_"),
            type = if_else(!str_detect(new_colnames, "name|sections|max|time|late|email|sid"), "_-_raw_points", "" ),
-           new_colnames = paste0(new_colnames, type))%>% # concatenate gs_col and type
-    select(new_colnames, colnames) %>%
+           new_colnames = paste0(new_colnames, type))|> # concatenate gs_col and type
+    select(new_colnames, colnames) |>
     mutate(category = "Unassigned")
   
   # Replace all "," with ":" in the colnames to avoid the issue with selecting these assignments in creating categories.

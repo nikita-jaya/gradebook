@@ -38,11 +38,11 @@ update_category(
 
 \item{drops}{allowed drops for category.}
 
+\item{weight_method}{whether it's weighted equally or by points.}
+
 \item{clobber}{whether it's clobbered.}
 
 \item{assigns}{any assignments included in category.}
-
-\item{weighted_equally}{whether it's weighted equally or by points.}
 }
 \value{
 A list.
