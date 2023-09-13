@@ -28,7 +28,7 @@
 #'  )
 #' processed_data <- process_student_id(data)
 #' 
-#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across
+#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across group_split last
 #' @importFrom tidyr drop_na
 #' @importFrom purrr map_dfr
 #' @export
@@ -43,7 +43,7 @@ process_student_id <- function(gs_data) {
   
   # Then, split the data by group and apply merge_replicated_records
   gs2 <- grouped_data |>
-    dplyr::ungroup() |>
+    dplyr::group_split() |>
     purrr::map_dfr(merge_replicated_records)
   
   # gs2 <- gs_data |>
