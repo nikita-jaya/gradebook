@@ -2,15 +2,12 @@
 #'
 #' This function processes a dataset with student IDs. It handles 
 #' erroneous student IDs by filtering out duplicates and handling NA values. 
-#' The function returns a list containing two dataframes: 
-#' 1) "unique_sids" which has unique student IDs and 
-#' 2) "duplicates" which contains all rows with duplicate or NA student IDs.
+#' The function returns a dataframe with unique student IDs  
 #'
 #' @param gs_data A dataframe (csv from Gradescope) containing a column named "sid" which holds student IDs.
 #'
-#' @return A list with two dataframes:
-#'   - "unique_sids": A dataframe containing unique student IDs.
-#'   - "duplicates": A dataframe with rows having duplicate or NA student IDs.
+#' @return A dataframe "unique_ids": A dataframe containing unique student IDs.
+#' 
 #'
 #' @examples
 #' # Example dataframe
@@ -26,7 +23,7 @@
 #'             "patricia.anderson@berkeley.edu", "patricia.anderson@berkeley.edu"
 #'             )
 #'  )
-#' processed_data <- process_student_id(data)
+#' processed_data <- process_id(data)
 #' 
 #' @importFrom dplyr filter group_by ungroup arrange summarize everything n across group_split last
 #' @importFrom tidyr drop_na
@@ -34,7 +31,7 @@
 #' @export
 
 
-process_student_id <- function(gs_data) {
+process_id <- function(gs_data) {
   
   # First, remove NAs and group by sid
   grouped_data <- gs_data |>
@@ -42,7 +39,7 @@ process_student_id <- function(gs_data) {
     dplyr::group_by(sid)
   
   # Then, split the data by group and apply merge_replicated_records
-  gs2 <- grouped_data |>
+  unique_ids <- grouped_data |>
     dplyr::group_split() |>
     purrr::map_dfr(merge_replicated_records)
   
@@ -54,10 +51,8 @@ process_student_id <- function(gs_data) {
   #   #merge by id - apply function 
   #   dplyr::summarize(merge_replicated_records(), .groups = 'drop')
   # 
-  return(gs2)
+  return(unique_ids)
 }
-
-
 
 #get only duplicates
 make_duplicate_sid_df <- function(gs_data) {
@@ -74,7 +69,7 @@ merge_replicated_records <- function(single_sid_df) {
   if (nrow(single_sid_df) == 1) {
     return(single_sid_df)
   } else {
-    new_sid <- single_sid_df |>
+    new_id <- single_sid_df |>
       summarize(across(
         everything(),
         ~ if (inherits(., "Period")) {
@@ -89,6 +84,6 @@ merge_replicated_records <- function(single_sid_df) {
           }
         }
       ))
-    return(new_sid)
+    return(new_id)
   }
 }
