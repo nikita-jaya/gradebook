@@ -3,7 +3,7 @@
 export(assignments_gs)
 export(delete_category)
 export(get_cat_index)
-export(process_student_id)
+export(process_id)
 export(update_category)
 importFrom(dplyr,across)
 importFrom(dplyr,arrange)
