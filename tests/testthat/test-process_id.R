@@ -12,11 +12,12 @@ test_that("merge data has accurate dimensions", {
                 )
      )
     processed_data <- process_id(data)
+    
     expect_equal(nrow(processed_data), 7)
     expect_equal(ncol(processed_data), 3)
 })
 
-test_that("merge data removes all duplicate student id's from sid column", {
+test_that("no duplicate student id's in sid column", {
   data <- data.frame(
     sid = c(3032412514, NA, 3032412516,
             3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
