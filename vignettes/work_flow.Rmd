@@ -1,12 +1,14 @@
 ---
-title: "work_flow"
+title: "General Work Flow"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{work_flow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+##Testing Here
 
+Insert paragraph here.
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
