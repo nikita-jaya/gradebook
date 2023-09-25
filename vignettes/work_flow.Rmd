@@ -2,13 +2,11 @@
 title: "General Work Flow"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{work_flow}
+  %\VignetteIndexEntry{General Work Flow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-##Testing Here
 
-Insert paragraph here.
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -19,3 +17,25 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(gradebook)
 ```
+
+## Category vs Assignments
+
+Description here.
+
+## User Input
+
+Description here.
+
+## Grading
+
+Description here.
+
+## Summaries and Distributions
+
+Description here.
+
+## Coming soon.
+
+ * Slip days
+ * Aggregated Assignments
+
