@@ -10,7 +10,7 @@ Authors@R: c(person(
                     given = "Monika", 
                     family = "Voutov", 
                     email = "mvoutov@berkley.edu", 
-                    role = c("aut", "cre"))
+                    role = c("aut"))
                     )
 Description: This package calculates course grades based on assignment scores from Gradescope and a JSON-formatted policy file.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
