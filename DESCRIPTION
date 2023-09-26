@@ -1,9 +1,8 @@
 Package: gradebook
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
-Authors@R: 
-    person("Nikita", "Jayaprakash", , "nikita.jp@berkley.edu", role = c("aut", "cre"))
-    person("Monika", "Voutov", , "mvoutov@berkley.edu", role = c("aut", "cre"))
+Authors@R: c(person("Nikita", "Jayaprakash", , "nikita.jp@berkley.edu", role = c("aut", "cre")),
+person("Monika", "Voutov", , "mvoutov@berkley.edu", role = c("aut", "cre")))
 Description: This package calculates course grades based on assignment scores from Gradescope and a JSON-formatted policy file.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
