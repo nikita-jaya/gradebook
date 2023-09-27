@@ -18,30 +18,30 @@ to remove duplicate students or invalid IDs
 and it applies pivot longer function to allow for unit of observation be a student + individual assignment
 }
 \examples{
-# Example tibble
- processed_data <- tibble(
-  `sid` = c(3032412514, 3032122516, 3032412516,
-            3032412517, 3032412518, 3032412519, 
+# Example
+processed_data <- tibble::tibble(
+  `SID` = c(3032412514, 3032122516, 3032412516,
+            3032412517, 3032412518, 3032412519,
             3032412520, 3032412521),
-  `section` = c("Stat20", "Stat20", "Stat20", "Stat20", 
+  `Section` = c("Stat20", "Stat20", "Stat20", "Stat20",
                 "Stat20", "Stat20", "Stat20", "Stat20"),
-                
-  `name` = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
-           "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson"),
-  `email` = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", 
-              "robert.brown@berkeley.edu", "emily.johnson@berkeley.edu", 
-              "michael.davis@berkeley.edu", "linda.wilson@berkeley.edu", 
+  
+  `Name` = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+             "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson"),
+  `Email` = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu",
+              "robert.brown@berkeley.edu", "emily.johnson@berkeley.edu",
+              "michael.davis@berkeley.edu", "linda.wilson@berkeley.edu",
               "james.taylor@berkeley.edu", "patricia.anderson@berkeley.edu"),
   `lab1` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.8),
   `lab1 - Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-  `lab1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0", "1/19/2023 10:00:00 AM", "0", 
+  `lab1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0", "1/19/2023 10:00:00 AM", "0",
                                "1/19/2023 9:00:00 AM", "1/19/2023 9:30:00 AM", "1/19/2023 9:20:00 AM", "1/19/2023 9:15:00 AM"),
-  `lab1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", 
-                                 "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+  `lab1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00",
+                                "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
   
   `lab2` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
   `lab2 - Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-  `lab2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0", "1/20/2023 10:00:00 AM", "1/20/2023 9:50:00 AM", 
+  `lab2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0", "1/20/2023 10:00:00 AM", "1/20/2023 9:50:00 AM",
                                "1/20/2023 9:00:00 AM", "0", "1/20/2023 9:20:00 AM", "1/20/2023 9:30:00 AM"),
   `lab2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
   
@@ -55,6 +55,7 @@ and it applies pivot longer function to allow for unit of observation be a stude
   `project1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0", "1/22/2023 10:00:00 AM", "0", "1/22/2023 9:00:00 AM", "1/22/2023 9:30:00 AM", "1/22/2023 9:20:00 AM", "1/22/2023 9:45:00 AM"),
   `project1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00")
 )
-student_assignments_long_data <- pivot(processed_data)
+
+student_assignments_long_data <- pivot_gs(processed_data)
 
 }
