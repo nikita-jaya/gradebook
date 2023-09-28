@@ -86,3 +86,8 @@ merge_replicated_records <- function(single_sid_df) {
     return(new_id)
   }
 }
+
+#' @export
+check_colnames <- function(processed_data) {
+    colnames(processed_data) <- tolower(colnames(processed_data))
+}
