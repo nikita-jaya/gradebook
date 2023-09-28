@@ -1,6 +1,6 @@
-test_that("merge data has accurate dimensions", {
+test_that("merge data has accurate dimensions - duplicate sid", {
   data <- data.frame(
-      sid = c(3032412514, NA, 3032412516,
+      sid = c(3032412514, 3032412314, 3032412516,
               3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
 
       name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
@@ -13,7 +13,7 @@ test_that("merge data has accurate dimensions", {
      )
     processed_data <- process_id(data)
     
-    expect_equal(nrow(processed_data), 7)
+    expect_equal(nrow(processed_data), 8)
     expect_equal(ncol(processed_data), 3)
 })
 
