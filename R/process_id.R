@@ -43,14 +43,6 @@ process_id <- function(gs_data) {
     dplyr::group_split() |>
     purrr::map_dfr(merge_replicated_records)
   
-  # gs2 <- gs_data |>
-  #   #drop NA ids
-  #     tidyr::drop_na(sid) |>
-  #   #groupd by id
-  #     dplyr::group_by(sid) |>
-  #   #merge by id - apply function 
-  #   dplyr::summarize(merge_replicated_records(), .groups = 'drop')
-  # 
   return(unique_ids)
 }
 

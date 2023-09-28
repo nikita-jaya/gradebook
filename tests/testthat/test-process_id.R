@@ -37,3 +37,34 @@ test_that("no duplicate student id's in sid column", {
   
   expect_equal(unique_sids, total_rows)
 })
+
+
+test_that("merges max value", {
+  data <- data.frame(
+    sid = c(3032412521, 3032412521),
+    
+    name = c("Patricia Anderson", "Patricia Anderson"),
+    email = c("patricia.anderson@berkeley.edu", "patricia.anderson@berkeley.edu"),
+    lab1 = c(0.8, NA),
+    lab2 = c(0.9, NA),
+    lab3 = c(NA, 0.85),
+    #even if you have 2 values - keep higher
+    project1 = c(0.9, 0.5),
+    project2 = c(0, 1)
+  )
+  processed_data <- process_id(data)
+  
+  #the new data should look like this:
+  new_data <- tibble(
+    sid = c(3032412521),
+    name = c("Patricia Anderson"),
+    email = c("patricia.anderson@berkeley.edu"),
+    lab1 = c(0.8),
+    lab2 = c(0.9),
+    lab3 = c(0.85),
+    project1 = c(0.9),
+    project2 = c(1)
+  )
+  
+  expect_equal(processed_data, new_data)
+})
