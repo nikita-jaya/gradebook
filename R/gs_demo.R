@@ -1,4 +1,4 @@
-#' Demo Data
+#' Gradescope Demo Data
 #'
 #' A fake dataset that mimics Gradescope .csv format
 #' 
