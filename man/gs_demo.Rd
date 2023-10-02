@@ -3,7 +3,7 @@
 \docType{data}
 \name{gs_demo}
 \alias{gs_demo}
-\title{Demo Data}
+\title{Gradescope Demo Data}
 \format{
 \subsection{\code{gs_demo}}{
 
