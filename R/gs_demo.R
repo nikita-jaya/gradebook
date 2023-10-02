@@ -3,7 +3,7 @@
 #' A fake dataset that mimics Gradescope .csv format
 #' 
 #'
-#' @format ## `demo_data`
+#' @format ## `gs_demo`
 #' A data frame with 10 rows and 44 columns:
 #' \describe{
 #'   \item{Names}{student name}
@@ -15,5 +15,4 @@
 #'   \item{Lab 1 - Lateness (H:M:S)}{how late Lab 1 was turned in, formatted HH:MM:SS}
 #'   ...
 #' }
-#' @source <https://www.who.int/teams/global-tuberculosis-programme/data>
-"demo_data"
+"gs_demo"
