@@ -21,6 +21,6 @@ library(gradebook)
 ### Load in data
 
 ```{r}
-demo_data
+gs_demo
 ```
 
