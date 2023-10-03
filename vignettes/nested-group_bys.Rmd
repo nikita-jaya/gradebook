@@ -29,16 +29,127 @@ A surprisingly robust abstraction to encompass these two policies is to cast the
 ```{r}
 #| message: false
 library(tidyverse)
-student_df <- tibble(student_id = c("4863", "5211", "4893"),
-                     ps_1_written_pts = c(12, 11, 8),
-                     ps_1_written_max = c(15, 15, 15),
-                     ps_1_code_pts    = c(5, 6, 8),
-                     ps_1_code_max    = c(10, 10, 10),
-                     ps_2_written_pts = c(19, 19, 10),
-                     ps_2_written_max = c(20, 20, 20),
-                     ps_2_code_pts    = c(13, 10, 13),
-                     ps_2_code_max    = c(16, 16, 16),
-                     exam_pts         = c(86, 75, 92),
-                     exam_max         = c(100, 100, 100))
+
+grades_a <- tibble(student_id = rep(c("4863", "5211", "4893"), each = 3),
+                   assignment = rep(c("ps_1", "ps_2", "exam"), 3),
+                   pts_earned = c(17, 32, 86,
+                                  17, 29, 75,
+                                  16, 23, 92),
+                   pts_max    = rep(c(25, 36, 100), 3),
+                   category   = rep(c("ps", "ps", "exam"), 3))
+grades_a
 ```
+
+```yaml
+# policy a
+course_grade:
+  aggregation: mean
+  categories:
+    exams:
+      aggregation: mean
+      assignments:
+        - exam
+    ps:
+      aggregation: mean
+      assignments:
+        - ps_1_written
+        - ps_1_code
+        - ps_2_written
+        - ps_2_code
+    
+```
+
+
+```{r}
+grades_b <- tibble(student_id = rep(c("4863", "5211", "4893"), each = 5),
+                   assignment = rep(c("ps_1_written", 
+                                      "ps_1_code",
+                                      "ps_2_written",
+                                      "ps_2_code",
+                                      "exam"), 3),
+                   pts_earned = c(12, 5, 19, 13, 86,
+                                  11, 6, 19, 10, 75,
+                                  8, 8, 10, 13, 92),
+                   pts_max    = rep(c(15, 10, 20, 16, 100), 3),
+                   category   = rep(c("ps", "ps", "ps", "ps", "exam"), 3),
+                   subcategory = rep(c("ps_1", "ps_1", "ps_2", "ps_2", "exam"), 3))
+grades_b
+```
+
+
+```yaml
+# policy b
+categories:
+  aggregation: mean
+  exams:
+    aggregation: mean
+    assignments:
+      - exam
+  ps:
+    aggregation: mean
+    categories:
+      ps_1:
+        aggregation: by points
+        assignments:
+          - ps_1_written
+          - ps_1_code
+      ps_2:
+        aggregation: by points
+        assignments:
+          - ps_2_written
+          - ps_2_code
+    
+```
+
+### Policy A
+
+#### I. Hardcode scores
+
+```{r}
+grades_a |>
+    mutate(score = pts_earned / pts_max) |>
+    group_by(student_id, category) |>
+    summarize(cat_score = mean(score)) |>
+    summarize(course_grade = mean(cat_score))
+```
+
+
+### Policy B
+
+#### I. Hardcode scores
+
+```{r}
+grades_b |>
+    group_by(student_id, category, subcategory) |>
+    summarize(tot_earned = sum(pts_earned),
+              tot_max    = sum(pts_max)) |>
+    ungroup() |>
+    mutate(score = tot_earned / tot_max) |>
+    group_by(student_id, category) |>
+    summarize(cat_score = mean(score)) |>
+    summarize(course_grade = mean(cat_score))
+```
+
+### Questions
+
+1. How to represent subcategories in the data frame that are category-specific? E.g. should `exam` be both a category and a subcategory? If it is NA, won't it be lumped with all other NA in the group_by?
+
+2. Can this be made more general by replacing the `mutate()` step with the inclusion of a `weights` column so that all aggregations are just weighted sums?
+
+3. This approach will be pulling categories from the list (a ragged array) and appending them to the grades data frame (a square array). Would it work better to effectively take the scores from the data frame and append them to the list?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
