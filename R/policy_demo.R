@@ -13,7 +13,8 @@
 #'   \item{slipdays}{number of slip days}
 #'   \item{late_time1, late_time2}{cutoffs for lateness penalty}
 #'   \item{late_scale1, late_scale2}{lateness penalty for respective lateness cutoffs}
-#'       \item{weight}{weight of this category in overall grade}
+#'   \item{after}{if TRUE, late_scale1 is applied AFTER late_time1 has passed; if FALSE, late_scale1 is applied UNTIL late_scale2 has passed; same for late_scale2 and late_time2}
+#'   \item{weight}{weight of this category in overall grade}
 #'   \item{drops}{the number of lowest-score assignments that are dropped from the grade}
 #'   \item{weighted_equally}{if TRUE, all assignments are weighted by their percentages; if FALSE, all assignments are weighted by their max-point value}
 #'   \item{clobber}{if the clobber-category has a higher grade than this one, the clobber-category's grade replaces the grade for this category}

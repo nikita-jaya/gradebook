@@ -12,6 +12,7 @@ update_category(
   late_time2 = "00:00:00",
   late_scale1 = 1,
   late_scale2 = 0,
+  after = TRUE,
   weight = 0,
   drops = 0,
   weight_method = c("equally", "by_points"),
@@ -33,6 +34,8 @@ update_category(
 \item{late_scale1}{scale for first lateness policy.}
 
 \item{late_scale2}{scale for second lateness policy.}
+
+\item{after}{whether late_scale1/late_scale2 is applied after or until late_time1/late_time2}
 
 \item{weight}{weight for category.}
 

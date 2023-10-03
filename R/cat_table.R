@@ -7,6 +7,7 @@
 #' @param late_time2 cutoff for second lateness policy.
 #' @param late_scale1 scale for first lateness policy.
 #' @param late_scale2 scale for second lateness policy.
+#' @param after whether late_scale1/late_scale2 is applied after or until late_time1/late_time2
 #' @param weight weight for category.
 #' @param drops allowed drops for category.
 #' @param weight_method whether it's weighted equally or by points.
@@ -20,7 +21,7 @@
 
 update_category <- function(policy_list, name = "Category", slipdays = 0, 
                          late_time1 = "00:00:00", late_time2 = "00:00:00", 
-                         late_scale1 = 1, late_scale2 = 0, 
+                         late_scale1 = 1, late_scale2 = 0, after = TRUE,
                          weight = 0,drops = 0, weight_method = c("equally", "by_points"), 
                          clobber = "None", assigns = c()){
     if (missing(policy_list))
@@ -31,7 +32,7 @@ update_category <- function(policy_list, name = "Category", slipdays = 0,
     category <- list("name" = name, "slipdays" = slipdays,
                      "late_time1" = late_time1, "late_time2" = late_time2,
                      "late_scale1" = late_scale1, "late_scale2" = late_scale2,
-                     "weight" = weight, "drops" = drops, 
+                     "after" = after,"weight" = weight, "drops" = drops, 
                      "weighted_method" = weight_method,
                      "clobber" = clobber, "assigns" = assigns
     )
