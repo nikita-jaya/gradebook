@@ -28,7 +28,7 @@ A surprisingly robust abstraction to encompass these two policies is to cast the
 
 ```{r}
 #| message: false
-library(tidyverse)
+library(dplyr)
 
 grades_a <- tibble(student_id = rep(c("4863", "5211", "4893"), each = 3),
                    assignment = rep(c("ps_1", "ps_2", "exam"), 3),
@@ -132,11 +132,11 @@ grades_b |>
 
 ### Questions
 
-1. How to represent subcategories in the data frame that are category-specific? E.g. should `exam` be both a category and a subcategory? If it is NA, won't it be lumped with all other NA in the group_by?
+1. Can this be made more general by replacing the `mutate()` step with the inclusion of a `weights` column so that all aggregations are just weighted sums?
 
-2. Can this be made more general by replacing the `mutate()` step with the inclusion of a `weights` column so that all aggregations are just weighted sums?
+2. How to represent subcategories in the data frame that are category-specific? E.g. should `exam` be both a category and a subcategory? If it is NA, won't it be lumped with all other NA in the group_by?
 
-3. This approach will be pulling categories from the list (a ragged array) and appending them to the grades data frame (a square array). Would it work better to effectively take the scores from the data frame and append them to the list?
+3. This approach will be pulling categories from the list (a ragged array) and appending them to the grades data frame (a square array). Would it work better to effectively take the scores from the data frame and append them to the list? Said another way, should we be using `dplyr` functions like `group_by()` and `summarize()`, `purrr` functions like `group_map()`, or `nest()` from `tidyr`?
 
 
 
