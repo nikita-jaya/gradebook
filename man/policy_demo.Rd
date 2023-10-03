@@ -10,7 +10,7 @@ A list of three nested lists
 \item{COURSEWIDE}{first nested list with general information about the class}
 \item{course_name}{name of the course}
 \item{description}{any relevant course description, purely for the user}
-\item{CATEGORIES}{syllabus is broken down into categories with their respective grading criteria}
+\item{CATEGORIES}{second nested list where syllabus is broken down into categories with their respective grading criteria}
 \item{name}{category name}
 \item{slipdays}{number of slip days}
 \item{late_time1, late_time2}{cutoffs for lateness penalty}
@@ -20,7 +20,7 @@ A list of three nested lists
 \item{weighted_equally}{if TRUE, all assignments are weighted by their percentages; if FALSE, all assignments are weighted by their max-point value}
 \item{clobber}{if the clobber-category has a higher grade than this one, the clobber-category's grade replaces the grade for this category}
 \item{assigns}{list of assignment names that falls into this category}
-\item{CUTOFF}{each cutoff reflects the lower bound cutoff for each letter grade: A,B,C,D,F}
+\item{CUTOFF}{third and final nested list where each cutoff reflects the lower bound cutoff for each letter grade: A,B,C,D,F}
 ...
 }
 }
