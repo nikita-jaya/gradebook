@@ -24,6 +24,21 @@ A surprisingly robust abstraction to encompass these two policies is to cast the
 
 *How should we implement functions that will allow for an arbitrary number of nested groupings and arbitrary aggregation functions?*
 
+
+#### Definitions
+
+**Category**
+
+A set of assignments and/or other categories along with an aggregation function. Aggregation can include number of drops and a lateness penalty.
+
+Front end aggregation functions:
+
+1. Equal weights
+2. By total points
+3. Min
+4. Max
+
+
 ### The demo data set
 
 ```{r}
@@ -43,7 +58,10 @@ grades_a
 ```yaml
 # policy a
 course_grade:
-  aggregation: mean
+  aggregation:
+    weights: even
+    drops: 0 
+    lateness: etc...
   categories:
     exams:
       aggregation: mean
@@ -56,7 +74,6 @@ course_grade:
         - ps_1_code
         - ps_2_written
         - ps_2_code
-    
 ```
 
 
@@ -99,6 +116,67 @@ categories:
           - ps_2_written
           - ps_2_code
     
+```
+
+```yaml
+# policy b take 2
+categories:
+  exams:
+    assignments:
+      - exam
+  ps:
+    categories:
+      agg: equally weighted
+      ps_1:
+        agg: by points
+        assignments:
+          - ps_1_written
+          - ps_1_code
+      ps_2:
+        agg: by points
+        assignments:
+          - ps_2_written
+          - ps_2_code
+```
+
+```yaml
+quiz:
+  agg: equally weighted
+  assignments:
+    - name: quiz 1
+      agg: equally weighted
+      assignments:
+        - name: ind quiz
+          agg: max
+          assignments:
+            - ind version a
+            - ind version b
+            - ind version c
+            - ind version d
+        - name: group quiz
+          agg: max
+          assignments:
+            - group version a
+            - group version b
+            - group version c
+            - group version d
+    - name: quiz 2
+      agg: equally weighted
+      assignments:
+        - name: ind quiz
+          agg: max
+          assignments:
+            - ind version a
+            - ind version b
+            - ind version c
+            - ind version d
+        - name: group quiz
+          agg: max
+          assignments:
+            - group version a
+            - group version b
+            - group version c
+            - group version d
 ```
 
 ### Policy A
