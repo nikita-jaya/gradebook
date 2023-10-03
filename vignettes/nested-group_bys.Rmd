@@ -1,0 +1,44 @@
+---
+title: "How to implement nested grouped operations?"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Nested Grouped Operations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+A challenge of authoring software to calculate course grades is that different courses can use very different grading policies. Consider two policies:
+
+> A. Assignments include 2 problem sets and 1 exam. Problem sets are aggregated by weighting each one equally. To calculate a course grade, problem sets and exams are aggregated by weighting them 50-50.
+> 
+> B. Assignments include 2 problem sets and 1 exam but problem sets are comprised of two parts, a written component and a coding component. The score on a given problem set is the number of total points earned over the total points possible. Problem sets are aggregated by weighting each one equally. To calculate a course grade, problem sets and exams are aggregated by weighting them 50-50.
+
+A surprisingly robust abstraction to encompass these two policies is to cast them as sequences of grouped aggregations. In his vignette we use `group_by()` and `summarize()` to implement these two policies on a demo data set. The ultimate objective is to figure out:
+
+*How should we implement functions that will allow for an arbitrary number of nested groupings and arbitrary aggregation functions?*
+
+### The demo data set
+
+```{r}
+#| message: false
+library(tidyverse)
+student_df <- tibble(student_id = c("4863", "5211", "4893"),
+                     ps_1_written_pts = c(12, 11, 8),
+                     ps_1_written_max = c(15, 15, 15),
+                     ps_1_code_pts    = c(5, 6, 8),
+                     ps_1_code_max    = c(10, 10, 10),
+                     ps_2_written_pts = c(19, 19, 10),
+                     ps_2_written_max = c(20, 20, 20),
+                     ps_2_code_pts    = c(13, 10, 13),
+                     ps_2_code_max    = c(16, 16, 16),
+                     exam_pts         = c(86, 75, 92),
+                     exam_max         = c(100, 100, 100))
+```
+
