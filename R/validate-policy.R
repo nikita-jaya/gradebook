@@ -8,13 +8,13 @@
 #' @importFrom purrr map
 #' @export
 check_names <- function(policy){
-    level_one_names <- names(policy_files)
+    level_one_names <- names(policy)
     
     if (! setequal(level_one_names, c("coursewide", "categories", "cutoff") ) ){
         stop("Incorrect names of nested lists in policy files")
     }
     
-    cutoff_names <- names(policy$cutoff)
+    cutoff_grades <- names(policy$cutoff)
     
     if (! setequal(cutoff_grades, c("A", "B", "C", "D", "F") )){
         stop("Incorrect names of nested list, cutoff")
@@ -22,7 +22,10 @@ check_names <- function(policy){
     
     category_names <- purrr::map(policy$categories, names)
     
-    if (purrr::map(category_names, check_cat_names) ){
+    are_valid_cat_names <- purrr::map(category_names, check_cat_names) |>
+        unlist()
+    
+    if (sum(!are_valid_cat_names) > 0){
         stop("One of the categories has incorrectly formatted names")
     }
     
