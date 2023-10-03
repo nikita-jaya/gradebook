@@ -20,7 +20,7 @@ The function returns a dataframe with unique student IDs
 \examples{
 # Example dataframe
 data <- data.frame(
-  SID = c(3032412514, NA, 3032412516,
+  sid = c(3032412514, NA, 3032412516,
           3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
 
   name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",

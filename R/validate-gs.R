@@ -12,7 +12,7 @@
 #' @examples
 #' # Example dataframe
 #' data <- data.frame(
-#'   SID = c(3032412514, NA, 3032412516,
+#'   sid = c(3032412514, NA, 3032412516,
 #'           3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
 #'
 #'   name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
@@ -32,8 +32,6 @@
 
 process_id <- function(gs_data) {
   
-  colnames(gs_data) <- tolower(colnames(gs_data))
-  
   # First, remove NAs and group by sid
   grouped_data <- gs_data |>
     tidyr::drop_na(sid) |>
@@ -49,7 +47,6 @@ process_id <- function(gs_data) {
 
 #get only duplicates
 get_duplicate_ids <- function(gs_data) {
-  colnames(gs_data) <= tolower(colnames(gs_data))
   gs_data |>
     dplyr::group_by(sid) |>
     dplyr::mutate(n_records = n()) |>
