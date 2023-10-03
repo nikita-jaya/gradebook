@@ -52,7 +52,8 @@ get_duplicate_ids <- function(gs_data) {
     dplyr::mutate(n_records = n()) |>
     dplyr::filter(n_records > 1) |>
     dplyr::distinct() |>
-    dplyr::select(-n_records)
+    dplyr::select(-n_records)|>
+    as.data.frame()
 }
 
 # internal function which merges replicated rows by several rules:
