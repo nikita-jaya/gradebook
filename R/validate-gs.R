@@ -12,7 +12,7 @@
 #' @examples
 #' # Example dataframe
 #' data <- data.frame(
-#'   sid = c(3032412514, NA, 3032412516,
+#'   SID = c(3032412514, NA, 3032412516,
 #'           3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
 #'
 #'   name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
@@ -32,6 +32,8 @@
 
 process_id <- function(gs_data) {
   
+  colnames(gs_data) <- tolower(colnames(gs_data))
+  
   # First, remove NAs and group by sid
   grouped_data <- gs_data |>
     tidyr::drop_na(sid) |>
@@ -42,27 +44,24 @@ process_id <- function(gs_data) {
     dplyr::group_split() |>
     purrr::map_dfr(merge_replicated_records)
   
-  # gs2 <- gs_data |>
-  #   #drop NA ids
-  #     tidyr::drop_na(sid) |>
-  #   #groupd by id
-  #     dplyr::group_by(sid) |>
-  #   #merge by id - apply function 
-  #   dplyr::summarize(merge_replicated_records(), .groups = 'drop')
-  # 
   return(unique_ids)
 }
 
 #get only duplicates
-make_duplicate_sid_df <- function(gs_data) {
+get_duplicate_ids <- function(gs_data) {
+  colnames(gs_data) <= tolower(colnames(gs_data))
   gs_data |>
     dplyr::group_by(sid) |>
     dplyr::mutate(n_records = n()) |>
-    dplyr::filter(n_records > 1) #|>
-  dplyr::distinct() |>
+    dplyr::filter(n_records > 1) |>
+    dplyr::distinct() |>
     dplyr::select(-n_records)
 }
 
+# internal function which merges replicated rows by several rules:
+# 1) if cell is a datetime, it removes NAs and takes the last datetime
+# 2) if cell is numeric, it takes the max
+# 3) if cell is NA, leave as NA
 merge_replicated_records <- function(single_sid_df) {
   
   if (nrow(single_sid_df) == 1) {
@@ -90,4 +89,5 @@ merge_replicated_records <- function(single_sid_df) {
 #' @export
 check_colnames <- function(processed_data) {
     colnames(processed_data) <- tolower(colnames(processed_data))
+    return (processed_data)
 }
