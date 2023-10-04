@@ -8,13 +8,13 @@
 #'
 #' @examples
 #' # Example
-#' createAssignsTable(policy_demo)
+#' create_assigns_table(policy_demo)
 #' @importFrom purrr map
 #' @importFrom stringr str_replace_all
 
 #' @export
 #' 
-createAssignsTable <- function(policy){
+create_assigns_table <- function(policy){
     assignments <- purrr::map(policy$categories, "assigns") 
     
     categories <- purrr::map(policy$categories, "name") |> unlist()
