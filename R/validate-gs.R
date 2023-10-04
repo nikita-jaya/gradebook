@@ -142,7 +142,8 @@ check_data_names <- function(gs_data){
                                         formatting_additions)
     
     if ( !setequal(col_names[-1:-4], expected_colnames) ){
-        stop("Incorrect formatting for assignment scoring column names")
+        wrong_names <- setdiff(col_names[-1:-4], expected_colnames)
+        stop(paste("Incorrect formatting for columns names:", wrong_names))
     }
     
     
