@@ -91,3 +91,59 @@ test_that("get duplicate ids - test with 2 duplicates  ", {
   expect_equal(two_duplicate, correct_data)
 })
 
+test_that("check data names - correct formatting", {
+    data <- tibble(
+        Names = c("John Smith", "John Smith", "John Doe", "John Doe"),
+        Email = c("john.smith@berkeley.edu", "john.smith@berkeley.edu", "john.doe@berkeley.edu", "john.doe@berkeley.edu"),
+        SID = c(3032412514, 3032412514, 3032412515, 3032412515),
+        Sections = c("class-001", "class-001", "class-001", "class-001"),
+        `Lab` = c(7, 10, 8, 9),
+        `Lab - Max Points` = c(10, 10, 10, 10),
+        `Lab - Submission Time` = c("1/20/2023 7:22:00 AM", "1/20/2023 9:25:00 AM", "1/20/2023 10:25:00 AM", "1/21/2023 1:25:00 AM"),
+        `Lab - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "01:25:00")
+    )
+    expect_no_error(check_data_names(data))
+})
+
+test_that("check data names - incorrect number of rows", {
+    data <- tibble(
+        Names = c("John Smith", "John Smith", "John Doe", "John Doe"),
+        Email = c("john.smith@berkeley.edu", "john.smith@berkeley.edu", "john.doe@berkeley.edu", "john.doe@berkeley.edu"),
+        SID = c(3032412514, 3032412514, 3032412515, 3032412515),
+        Sections = c("class-001", "class-001", "class-001", "class-001"),
+        `Lab` = c(7, 10, 8, 9),
+        `Lab - Max Points` = c(10, 10, 10, 10),
+        `Lab - Submission Time` = c("1/20/2023 7:22:00 AM", "1/20/2023 9:25:00 AM", "1/20/2023 10:25:00 AM", "1/21/2023 1:25:00 AM"),
+        `Lab - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "01:25:00"),
+        `Lab 2` = c(4,5,5,5)
+    )
+    expect_error(check_data_names(data))
+})
+
+test_that("check data names - SID label is incorrect", {
+    data <- tibble(
+        Names = c("John Smith", "John Smith", "John Doe", "John Doe"),
+        Email = c("john.smith@berkeley.edu", "john.smith@berkeley.edu", "john.doe@berkeley.edu", "john.doe@berkeley.edu"),
+        sid = c(3032412514, 3032412514, 3032412515, 3032412515),
+        Sections = c("class-001", "class-001", "class-001", "class-001"),
+        `Lab` = c(7, 10, 8, 9),
+        `Lab - Max Points` = c(10, 10, 10, 10),
+        `Lab - Submission Time` = c("1/20/2023 7:22:00 AM", "1/20/2023 9:25:00 AM", "1/20/2023 10:25:00 AM", "1/21/2023 1:25:00 AM"),
+        `Lab - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "01:25:00")
+    )
+    expect_error(check_data_names(data))
+})
+
+
+test_that("check data names - incorrect assignment formatting", {
+    data <- tibble(
+        Names = c("John Smith", "John Smith", "John Doe", "John Doe"),
+        Email = c("john.smith@berkeley.edu", "john.smith@berkeley.edu", "john.doe@berkeley.edu", "john.doe@berkeley.edu"),
+        SID = c(3032412514, 3032412514, 3032412515, 3032412515),
+        Sections = c("class-001", "class-001", "class-001", "class-001"),
+        `Lab` = c(7/10, 10/10, 8/10, 9/10),
+        `Lab - Submission Time` = c("1/20/2023 7:22:00 AM", "1/20/2023 9:25:00 AM", "1/20/2023 10:25:00 AM", "1/21/2023 1:25:00 AM"),
+        `Lab - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "01:25:00")
+    )
+    expect_error(check_data_names(data))
+})
