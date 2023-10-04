@@ -126,7 +126,7 @@ merge_replicated_records <- function(single_sid_df) {
 #' @export
 check_data_names <- function(gs_data){
     if (! (length(gs_data)%%4 == 0) ){
-        stop("Incorect number of columns")
+        stop("Incorrect number of columns")
     }
     
     col_names <- colnames(gs_data)
@@ -142,7 +142,7 @@ check_data_names <- function(gs_data){
                                         formatting_additions)
     
     if ( !setequal(col_names[-1:-4], expected_colnames) ){
-        stop("Incorrect formatting for assignment scoring")
+        stop("Incorrect formatting for assignment scoring column names")
     }
     
     
