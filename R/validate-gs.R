@@ -45,6 +45,37 @@ process_id <- function(gs_data) {
   return(unique_ids)
 }
 
+
+
+#' Return a Dataframe with Duplicate Student IDs
+#'
+#'  Returns all the duplicate Student IDs in the data. 
+#'  
+#'  Must pre-process the dataframe with `check_colnames()` from gradebook package.
+#'
+#' @param gs_data A dataframe (csv from Gradescope) containing a column named "sid" which holds student IDs.
+#'
+#' @return A dataframe "get_duplicate_ids": A dataframe containing all duplicate students from the data.
+#'
+#' @examples
+#' # Example dataframe
+#' data <- data.frame(
+#'   sid = c(3032412514, NA, 3032412516,
+#'           3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
+#'
+#'   name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+#'            "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson", "Patricia Anderson"),
+#'   email = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", "robert.brown@berkeley.edu",
+#'             "emily.johnson@berkeley.edu", "michael.davis@berkeley.edu",
+#'             "linda.wilson@berkeley.edu", "james.taylor@berkeley.edu",
+#'             "patricia.anderson@berkeley.edu", "patricia.anderson@berkeley.edu"
+#'             )
+#'  )
+#' processed_data <- process_id(data)
+#' 
+#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across group_split last
+#' @export
+
 #get only duplicates
 get_duplicate_ids <- function(gs_data) {
   gs_data |>
@@ -117,6 +148,22 @@ check_data_names <- function(gs_data){
     
 }
 
+#' Check Column Names for Gradescope Data
+#'
+#' This functions changes to lower case all column names throughout the Gradescope data
+#'
+#' @param gs_data A dataframe with column names.
+#'
+#' @examples
+#' data <- data.frame(
+#'   'SID' <- c(123,345),
+#'   'NAME' = c('Al', 'Ben'),
+#'   'EMAIL' = c('al@company.com', 'ben@company.com')
+#' )
+#' lower <- check_colnames(data)
+#'
+#' @return same dataframe with lower case column names
+#' @importFrom stringr str_c
 #' @export
 check_colnames <- function(processed_data) {
     

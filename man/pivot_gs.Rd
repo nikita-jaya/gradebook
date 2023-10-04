@@ -4,7 +4,7 @@
 \alias{pivot_gs}
 \title{Convert GS data to longer table}
 \usage{
-pivot_gs(processed_data)
+pivot_gs(processed_data, names_sep = "_-_")
 }
 \arguments{
 \item{processed_data}{A dataframe (csv from Gradescope) containing a column named "sid" which holds student IDs.}

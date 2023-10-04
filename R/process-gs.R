@@ -54,36 +54,47 @@
 #' @importFrom tibble as_tibble
 
 #' @export
-
-
-pivot_gs <- function(processed_data){
+#' 
+pivot_gs <- function(processed_data, names_sep = "_-_"){
 #takes gradescope data - after it has been cleaned up - and transforms using pivot_longer
 #yields 8 columns:  "name", "section", "email", "sid", "assignments", 
-#                   "max Points","submission time", "lateness (h:m:s)"
+#                   "max points","submission time", "lateness (h:m:s)"
   
   sxa <- processed_data |>
     tidyr::pivot_longer(
                   cols = -all_of(c("name", "section","email","sid")), # change the unit of obs to student x assignment
                   names_to = c("assignments", ".value"),
-                  names_sep = "_-_"
+                  names_sep = names_sep
       )
   return(sxa)
 }
 
 
+#' Remove white spaces and special characters from column names
+#' 
+#' This function takes a gradescope dataframe and
+#' it removes white spaces and special characters from column names
+#
+#' @param processed_data A dataframe (csv from Gradescope)
+#'
+#' @return A dataframe "processed_data": Returns the same dataframe with modified column names.
+#'
+#' @examples
+#' 
+#' #gradebook gradescope demo data:
+#' gs_demo
+#' processed_assignments_df <- process_assignments(gs_demo)
+#' 
+#' @importFrom stringr str_replace_all
+#' @importFrom tidyr pivot_longer replace_na
+#' @importFrom tibble as_tibble
+
+#' @export
 process_assignments <- function(processed_data){
-  #get the current column names
   old_names <- colnames(processed_data)
   
   new_names <- old_names |>
     str_replace_all("[\\s:]+", "_")  # Replace whitespace/special characters
-  
-  # Append "_-_raw_points" on assignmments
-  # new_names <- if_else(
-  #   !str_detect(new_names, "name|section|max|time|late|email|sid"), 
-  #   paste0(new_names, "_-_raw_points"),
-  #   new_names
-  # )
   
   # Replace all "," with ":" in the colnames to avoid 
   # issues with selecting these assignments in creating categories.
@@ -93,8 +104,11 @@ process_assignments <- function(processed_data){
   colnames(processed_data) <- new_names
   
   return(processed_data)
-
 }
+
+
+
+
 
 # if (!is.null(assignments_dataframe)) {
 #   assignments_dataframe$new_colnames <- str_replace_all(assignments_dataframe$new_colnames, "_-_raw_points", "")
