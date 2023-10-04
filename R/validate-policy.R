@@ -44,18 +44,3 @@ check_cat_names <- function(category_name){
                               "late_scale1", "late_scale2", "after", "weight", 
                               "drops", "weighted_method", "clobber", "assigns"))
 }
-
-#' Check Values for Policy File
-#'
-#' This functions checks the values throughout the policy file
-#'
-#' @param policy_file A policy file that's validated for having the right format in terms of values and datatypes
-#'
-#' @return No output, only stops and warnings
-#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across group_split last
-#' @importFrom tidyr drop_na
-#' @importFrom purrr map_dfr
-#' @export
-check_values <- function(policy_file){
-
-}
