@@ -39,4 +39,19 @@ create_assigns_table <- function(policy){
     
     return (assigns_table)
 }
-
+#' Merges processed pivot data
+#' This function merges processed pivot data with assignment table
+#'
+#' @param pivot_df A processed pivotted data from Gradescope
+#' @param assigns_table An assignment table made from the policy file
+#'
+#' @return A data frame
+#'
+#' @importFrom dplyr left_join
+#' @export
+data_merge_assigns <- function(assigns_table, pivot_df){
+    add_categories_to_pivot <- pivot_df %>%
+        left_join(assigns_table, by = c("assignments" = "assignments"))
+    
+    return (add_categories_to_pivot)
+}
