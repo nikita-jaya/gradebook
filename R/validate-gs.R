@@ -84,8 +84,42 @@ merge_replicated_records <- function(single_sid_df) {
   }
 }
 
+#' Check Names for Gradescope Data
+#'
+#' This functions checks the names throughout the Gradescope data
+#'
+#' @param gs_data Grades data that's validated for having the right format in terms of names and nesting
+#'
+#' @return No output, only stops and warnings
+#' @importFrom stringr str_c
+#' @export
+check_data_names <- function(gs_data){
+    if (! (length(gs_data)%%4 == 0) ){
+        stop("Incorect number of columns")
+    }
+    
+    col_names <- colnames(gs_data)
+    
+    if ( !setequal(col_names[1:4], c("Names", "Email", "SID", "Sections")) ){
+        stop("Formatting for first four columns is incorrect")
+    }
+    
+    assignment_names <- col_names[seq(from = 5, to = length(col_names), by = 4)]
+    n <- length(assignment_names)
+    formatting_additions <-  c("", " - Max Points",  " - Submission Time", " - Lateness (H:M:S)")[rep(1:4, times = n)]
+    expected_colnames <- stringr::str_c(assignment_names[rep(1:n, each = 4)],
+                                        formatting_additions)
+    
+    if ( !setequal(col_names[-1:-4], expected_colnames) ){
+        stop("Incorrect formatting for assignment scoring")
+    }
+    
+    
+}
+
 #' @export
 check_colnames <- function(processed_data) {
+    
     colnames(processed_data) <- tolower(colnames(processed_data))
     return (processed_data)
 }
