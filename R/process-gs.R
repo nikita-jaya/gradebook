@@ -62,7 +62,7 @@ pivot_gs <- function(processed_data, names_sep = "_-_"){
   
   sxa <- processed_data |>
     tidyr::pivot_longer(
-                  cols = -all_of(c("names", "sections","email","sid")), # change the unit of obs to student x assignment
+                  cols = -all_of(c("name", "section","email","sid")), # change the unit of obs to student x assignment
                   names_to = c("assignments", ".value"),
                   names_sep = names_sep
       )
