@@ -30,9 +30,9 @@ create_assigns_table <- function(policy){
     clobber <- purrr::map(policy$categories, "clobber") |> unlist()
     
     
-    iterations_of_each_cat <- unlist(purrr::map(assignments, length))
+    n_assigns_per_cat <- unlist(purrr::map(assignments, length))
     num_cat <- length(categories)
-    iterations_of_each <- rep(1:num_cat, times = iterations_of_each_cat)
+    iterations_of_each <- rep(1:num_cat, times = n_assigns_per_cat)
     
     
     assigns_table <- data.frame(assignments = unlist(assignments),
