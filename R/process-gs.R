@@ -105,25 +105,3 @@ process_assignments <- function(processed_data){
   
   return(processed_data)
 }
-
-
-
-
-
-# if (!is.null(assignments_dataframe)) {
-#   assignments_dataframe$new_colnames <- str_replace_all(assignments_dataframe$new_colnames, "_-_raw_points", "")
-# }
-
-# add_categories_to_pivot <- sxa %>%
-#   left_join(assignments_dataframe %>% select(new_colnames, colnames, category), by = c("assignments" = "new_colnames"))
-# colnames(add_categories_to_pivot)[colnames(add_categories_to_pivot) == "lateness_(h_m_s)"] ="lateness_min"
-# 
-# #cat_table is the list with categories (policy$categories) which is converted to a data frame categories_df in the server.
-# x <- length(cat_table)
-# if (x > 0){
-#   #remove assigns column from cat_table
-#   cat_table <- select(cat_table, -assigns)
-#   add_categories_to_pivot <- add_categories_to_pivot %>%
-#     left_join(cat_table, by = c("category" = "name"))
-# }
-
