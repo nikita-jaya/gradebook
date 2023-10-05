@@ -49,14 +49,6 @@ create_assigns_table <- function(policy){
                                 clobber = clobber[iterations_of_each]
                                 )
     
-    assigns_table$assignments <- assigns_table$assignments |>
-        tolower() |>
-        str_replace_all("[\\s:]+", "_")  # Replace whitespace/special characters
-    
-    # Replace all "," with ":" in the colnames to avoid 
-    # issues with selecting these assignments in creating categories.
-    assigns_table$assignments <- str_replace_all(assigns_table$assignments, ",", ":")
-    
     return (assigns_table)
 }
 #' Merges processed pivot data
