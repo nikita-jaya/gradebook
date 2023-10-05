@@ -32,7 +32,9 @@ policy_demo
 A demo policy file that mimics a hypothetical class syllabus
 }
 \examples{
-yaml::as.yaml(policy_demo)
+policy_demo
+
+# yaml:as_yaml(policy_demo)
 
 }
 \keyword{datasets}

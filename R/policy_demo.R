@@ -23,6 +23,8 @@
 #'   ...
 #' }
 #' @examples
-#' yaml::as.yaml(policy_demo)
+#' policy_demo
+#' 
+#' # yaml:as_yaml(policy_demo)
 #' 
 "policy_demo"
