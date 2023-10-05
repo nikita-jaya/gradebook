@@ -15,7 +15,7 @@
 #'   sid = c(3032412514, NA, 3032412516,
 #'           3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
 #'
-#'   name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+#'   names = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
 #'            "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson", "Patricia Anderson"),
 #'   email = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", "robert.brown@berkeley.edu",
 #'             "emily.johnson@berkeley.edu", "michael.davis@berkeley.edu",
@@ -63,7 +63,7 @@ process_id <- function(gs_data) {
 #'   sid = c(3032412514, NA, 3032412516,
 #'           3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
 #'
-#'   name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+#'   names = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
 #'            "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson", "Patricia Anderson"),
 #'   email = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", "robert.brown@berkeley.edu",
 #'             "emily.johnson@berkeley.edu", "michael.davis@berkeley.edu",

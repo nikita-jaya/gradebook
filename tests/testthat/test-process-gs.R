@@ -3,7 +3,7 @@ test_that("merge data has accurate dimensions - duplicate sid", {
     sid = c(3032412514, 3032412314, 3032412516,
             3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
     
-    name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+    names = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
              "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson", "Patricia Anderson"),
     email = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", "robert.brown@berkeley.edu",
               "emily.johnson@berkeley.edu", "michael.davis@berkeley.edu",
@@ -22,7 +22,7 @@ test_that("no duplicate student id's in sid column", {
     sid = c(3032412514, NA, 3032412516,
             3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
     
-    name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+    names = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
              "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson", "Patricia Anderson"),
     email = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", "robert.brown@berkeley.edu",
               "emily.johnson@berkeley.edu", "michael.davis@berkeley.edu",
@@ -43,7 +43,7 @@ test_that("merges max value", {
   data <- data.frame(
     sid = c(3032412521, 3032412521),
     
-    name = c("Patricia Anderson", "Patricia Anderson"),
+    names = c("Patricia Anderson", "Patricia Anderson"),
     email = c("patricia.anderson@berkeley.edu", "patricia.anderson@berkeley.edu"),
     lab1 = c(0.8, NA),
     lab2 = c(0.9, NA),
@@ -57,7 +57,7 @@ test_that("merges max value", {
   #the new data should look like this:
   new_data <- tibble(
     sid = c(3032412521),
-    name = c("Patricia Anderson"),
+    names = c("Patricia Anderson"),
     email = c("patricia.anderson@berkeley.edu"),
     lab1 = c(0.8),
     lab2 = c(0.9),
@@ -75,7 +75,7 @@ test_that("perfect data - change nothing", {
     sid = c(3032412514, 3032412314, 3032412516,
             3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032232521),
     
-    name = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+    names = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
              "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson", "Patricia Jane"),
     email = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", "robert.brown@berkeley.edu",
               "emily.johnson@berkeley.edu", "michael.davis@berkeley.edu",

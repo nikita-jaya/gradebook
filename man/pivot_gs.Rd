@@ -23,10 +23,10 @@ processed_data <- tibble::tibble(
   `sid` = c(3032412514, 3032122516, 3032412516,
             3032412517, 3032412518, 3032412519,
             3032412521, 3032412521),
-  `section` = c("Stat20", "Stat20", "Stat20", "Stat20",
+  `sections` = c("Stat20", "Stat20", "Stat20", "Stat20",
                 "Stat20", "Stat20", "Stat20", "Stat20"),
   
-  `name` = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+  `names` = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
              "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson"),
   `email` = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu",
               "robert.brown@berkeley.edu", "emily.johnson@berkeley.edu",
