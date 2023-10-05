@@ -20,7 +20,7 @@ drop_na_assignments <- function(merged_files){
 #' @param merged_files merged file with only assigned assignments
 #'
 #' @return data frame with only assigned assignments and intermediary columns
-#' @importFrom dplyr group_by mutate ungroup
+#' @importFrom dplyr group_by mutate ungroup case_when
 #' @export
 intermediary_computations <- function(merged_files){
     #num_assigns
@@ -28,9 +28,9 @@ intermediary_computations <- function(merged_files){
         dplyr::group_by(sid, category) %>%
         dplyr::mutate(num_assigns = n()) %>%
         dplyr::ungroup() %>%
-        dplyr::mutate(relevant_assigns = case_when(
-            is.numeric(drop) ~ num_assigns-drops,
-            TRUE ~ 1), #if drop is "min" or "max"
+        dplyr::mutate(relevant_assigns = dplyr::case_when(
+            is.numeric(drops) ~ num_assigns-drops,
+            !is.numeric(drops) ~ 1), #if drop is "min" or "max"
         lateness_min1 = convert_to_min(late_time1),
         lateness_min2 = convert_to_min(late_time2)
         )
