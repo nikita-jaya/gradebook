@@ -18,7 +18,17 @@ create_assigns_table <- function(policy){
     assignments <- purrr::map(policy$categories, "assigns") 
     
     categories <- purrr::map(policy$categories, "name") |> unlist()
+    slipdays <- purrr::map(policy$categories, "slipdays") |> unlist()
+    late_time1 <- purrr::map(policy$categories, "late_time1") |> unlist()
+    late_time2 <- purrr::map(policy$categories, "late_time2") |> unlist()
+    late_scale1 <- purrr::map(policy$categories, "late_scale1") |> unlist()
+    late_scale2 <- purrr::map(policy$categories, "late_scale2") |> unlist()
+    after <- purrr::map(policy$categories, "after") |> unlist()
     weights <- purrr::map(policy$categories, "weight") |> unlist()
+    drops <- purrr::map(policy$categories, "drops") |> unlist()
+    weighted_method <- purrr::map(policy$categories, "weighted_method") |> unlist()
+    clobber <- purrr::map(policy$categories, "clobber") |> unlist()
+    
     
     iterations_of_each_cat <- unlist(purrr::map(assignments, length))
     num_cat <- length(categories)
@@ -27,7 +37,17 @@ create_assigns_table <- function(policy){
     
     assigns_table <- data.frame(assignments = unlist(assignments),
                                 category = categories[iterations_of_each],
-                                weights = weights[iterations_of_each])
+                                slipdays = slipdays[iterations_of_each],
+                                late_time1 = late_time1[iterations_of_each],
+                                late_time2 = late_time2[iterations_of_each],
+                                late_scale1 = late_scale1[iterations_of_each],
+                                late_scale2 = late_scale2[iterations_of_each],
+                                after = after[iterations_of_each],
+                                weights = weights[iterations_of_each],
+                                drops = drops[iterations_of_each],
+                                weighted_method = weighted_method[iterations_of_each],
+                                clobber = clobber[iterations_of_each]
+                                )
     
     assigns_table$assignments <- assigns_table$assignments |>
         tolower() |>
