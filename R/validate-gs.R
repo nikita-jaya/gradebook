@@ -146,7 +146,7 @@ check_data_names <- function(gs_data){
         stop(paste("Incorrect formatting for columns names:", wrong_names))
     }
     
-    
+    return (gs_data)
 }
 
 #' Check Column Names for Gradescope Data

@@ -29,6 +29,8 @@ check_names <- function(policy){
         stop("One of the categories has incorrectly formatted names")
     }
     
+    return (policy)
+    
 }
 
 #' Check Category Names
@@ -66,5 +68,7 @@ check_assignment_names <- function(policy, pivot_df){
     if (nrow(additional_assigns) > 0){
         stop(paste0("There is no data on the following assignments: ", additional_assigns))
     }
+    
+    return(policy)
     
 }
