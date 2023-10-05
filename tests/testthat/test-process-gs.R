@@ -106,7 +106,7 @@ test_that("process_assignments - remove white spaces from colnames", {
   no_white_spaces <- process_assignments(processed_data)
   
   
-  new_col_names <- c("lab1", "lab1_-_Max_Points", "lab1_-_Submission_Time","lab1_-_Lateness_(H_M_S)","lab2",
+  new_col_names <- c("lab1_-_raw_score", "lab1_-_Max_Points", "lab1_-_Submission_Time","lab1_-_Lateness_(H_M_S)","lab2_-_raw_score",
                      "lab2_-_Max_Points","lab2_-_Submission_Time","lab2_-_Lateness_(H_M_S)" )            
   
   expect_equal(new_col_names, colnames(no_white_spaces))

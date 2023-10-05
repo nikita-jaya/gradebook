@@ -85,20 +85,24 @@ pivot_gs <- function(processed_data, names_sep = "_-_"){
 #' gs_demo
 #' processed_assignments_df <- process_assignments(gs_demo)
 #' 
-#' @importFrom stringr str_replace_all
+#' @importFrom stringr str_replace_all 
 #' @importFrom tidyr pivot_longer replace_na
 #' @importFrom tibble as_tibble
 
 #' @export
 process_assignments <- function(processed_data){
   old_names <- colnames(processed_data)
-  
+  # Replace whitespace/special characters
   new_names <- old_names |>
-    str_replace_all("[\\s:]+", "_")  # Replace whitespace/special characters
-  
-  # Replace all "," with ":" in the colnames to avoid 
-  # issues with selecting these assignments in creating categories.
+    str_replace_all("[\\s:]+", "_")
   new_names <- str_replace_all(new_names, ",", ":")
+  
+  # Append " - raw_score" to specific column names
+  new_names <- ifelse(
+    !stringr::str_detect(new_names, stringr::regex("name|section|max|time|late|email|sid", ignore_case = TRUE)), 
+    paste0(new_names, "_-_raw_score"),
+    new_names
+  )
   
   # Assigning the new column names back to processed_data
   colnames(processed_data) <- new_names
