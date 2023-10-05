@@ -55,7 +55,7 @@ test_that("merges max value", {
   processed_data <- process_id(data)
   
   #the new data should look like this:
-  new_data <- tibble(
+  new_data <- tibble::tibble(
     sid = c(3032412521),
     names = c("Patricia Anderson"),
     email = c("patricia.anderson@berkeley.edu"),

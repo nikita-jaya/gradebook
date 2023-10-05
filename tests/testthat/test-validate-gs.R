@@ -92,7 +92,7 @@ test_that("get duplicate ids - test with 2 duplicates  ", {
 })
 
 test_that("check data names - correct formatting", {
-    data <- tibble(
+    data <- tibble::tibble(
         Names = c("John Smith", "John Smith", "John Doe", "John Doe"),
         Email = c("john.smith@berkeley.edu", "john.smith@berkeley.edu", "john.doe@berkeley.edu", "john.doe@berkeley.edu"),
         SID = c(3032412514, 3032412514, 3032412515, 3032412515),
@@ -106,7 +106,7 @@ test_that("check data names - correct formatting", {
 })
 
 test_that("check data names - incorrect number of rows", {
-    data <- tibble(
+    data <- tibble::tibble(
         Names = c("John Smith", "John Smith", "John Doe", "John Doe"),
         Email = c("john.smith@berkeley.edu", "john.smith@berkeley.edu", "john.doe@berkeley.edu", "john.doe@berkeley.edu"),
         SID = c(3032412514, 3032412514, 3032412515, 3032412515),
@@ -121,7 +121,7 @@ test_that("check data names - incorrect number of rows", {
 })
 
 test_that("check data names - SID label is incorrect", {
-    data <- tibble(
+    data <- tibble::tibble(
         Names = c("John Smith", "John Smith", "John Doe", "John Doe"),
         Email = c("john.smith@berkeley.edu", "john.smith@berkeley.edu", "john.doe@berkeley.edu", "john.doe@berkeley.edu"),
         sid = c(3032412514, 3032412514, 3032412515, 3032412515),
@@ -136,7 +136,7 @@ test_that("check data names - SID label is incorrect", {
 
 
 test_that("check data names - incorrect assignment formatting", {
-    data <- tibble(
+    data <- tibble::tibble(
         Names = c("John Smith", "John Smith", "John Doe", "John Doe"),
         Email = c("john.smith@berkeley.edu", "john.smith@berkeley.edu", "john.doe@berkeley.edu", "john.doe@berkeley.edu"),
         SID = c(3032412514, 3032412514, 3032412515, 3032412515),
