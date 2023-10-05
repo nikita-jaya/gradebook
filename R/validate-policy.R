@@ -53,6 +53,7 @@ check_cat_names <- function(category_name){
 #' @param pivot_df pivotted gradescope data
 #'
 #' @return None
+#' @importFrom dplyr filter
 #' @export
 check_assignment_names <- function(policy, pivot_df){
     policy_assigns <- purrr::map(policy$categories, "assigns") |> unlist()
@@ -62,7 +63,7 @@ check_assignment_names <- function(policy, pivot_df){
     additional_assigns <- as.data.frame(policy_assigns) %>%
         filter(!(policy_assigns %in% pivot_assigns)) 
     
-    if (length(additional_assigns) > 0){
+    if (nrow(additional_assigns) > 0){
         stop(paste0("There is no data on the following assignments: ", additional_assigns))
     }
     
