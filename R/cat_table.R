@@ -28,7 +28,7 @@ update_category <- function(policy_list, name = "Category", slipdays = 0,
         policy_list <- list()
     
     if (name == "Category") 
-        name <- paste0("Category ", length(policy_list))
+        name <- paste0("Category ", length(policy_list)+1)
     category <- list("name" = name, "slipdays" = slipdays,
                      "late_time1" = late_time1, "late_time2" = late_time2,
                      "late_scale1" = late_scale1, "late_scale2" = late_scale2,
@@ -41,6 +41,41 @@ update_category <- function(policy_list, name = "Category", slipdays = 0,
     
 }
 
+#' Create an Empty Policy File
+#' 
+#' This function creates an empty policy file with a certain number of categories.
+#' 
+#' @param num_cat number of categories in policy file
+#' @returns An empty policy file as a list
+#' @export
+#' @examples
+#' create_empty_policy_file(num_cat = 3)
+create_empty_policy_file <- function(num_cat = 1){
+    
+    coursewide <- list(course_name = "Course Name",
+                       description = "cours description")
+    
+    categories <- update_category()
+    
+    cutoff <- list(A = 90, 
+                   B = 80,
+                   C = 70,
+                   D = 60,
+                   F = 0)
+    
+    if (num_cat > 1) {
+        for (i in 2:num_cat){
+            categories <- update_category(policy_list = categories)
+        }
+    }
+    
+    policy <- list(coursewide = coursewide,
+                   categories = categories,
+                   cutoff = cutoff)
+    
+    return (policy)
+}
+
 #' Finds index of category within a policy list
 #' 
 #' @param policy_list a policy list if adding category to previous one.
@@ -49,9 +84,6 @@ update_category <- function(policy_list, name = "Category", slipdays = 0,
 #' @export
 #' @examples
 #' get_cat_index( update_category(name = "LABS"), "LABS")
-
-
-
 get_cat_index <- function(policy_list, name){
     nrs <- purrr::map(policy_list, "name") |>
         unlist()
