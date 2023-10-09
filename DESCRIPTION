@@ -1,5 +1,5 @@
 Package: gradebook
-Title: What the Package Does (One Line, Title Case)
+Title: Calculate course grades based on assignment scores from Gradescope and a description of the course grading policy.
 Version: 0.0.0.9000
 Authors@R: c(person(
                     given = "Nikita", 
@@ -12,9 +12,11 @@ Authors@R: c(person(
                     email = "mvoutov@berkley.edu", 
                     role = c("aut"))
                     )
-Description: This package calculates course grades based on assignment scores from Gradescope and a JSON-formatted policy file.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: A system to make course grade calculations easy, fast, 
+    and most importantly, correct. Course grades are produced from a data frame
+    of assignment grades along with a grading policy file that specifies how they
+    should be weighted when combined into a final grade.
+License: GPL (>= 3)
 Encoding: UTF-8
 Imports: 
     dplyr,
@@ -28,10 +30,11 @@ RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10)
 LazyData: true
-URL: https://gradebook-dev.github.io/gradebook/
+URL: https://github.com/gradebook-dev/gradebook
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+BugReports: https://github.com/gradebook-dev/gradebook/issues
