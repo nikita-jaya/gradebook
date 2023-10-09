@@ -4,14 +4,19 @@ Version: 0.0.0.9000
 Authors@R: c(person(
                     given = "Nikita", 
                     family = "Jayaprakash", 
-                    email = "nikita.jp@berkley.edu", 
+                    email = "nikita.jp@berkeley.edu", 
                     role = c("aut", "cre")),
             person(
                     given = "Monika", 
                     family = "Voutov", 
-                    email = "mvoutov@berkley.edu", 
+                    email = "mvoutov@berkeley.edu", 
                     role = c("aut"))
-                    )
+                    ),
+            person(
+                    given = "Andrew", 
+                    family = "Bray", 
+                    email = "andrewbray@berkeley.edu", 
+                    role = c("aut"))
 Description: A system to make course grade calculations easy, fast, 
     and most importantly, correct. Course grades are produced from a data frame
     of assignment grades along with a grading policy file that specifies how they
