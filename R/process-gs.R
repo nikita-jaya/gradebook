@@ -24,28 +24,28 @@
 #'               "robert.brown@berkeley.edu", "emily.johnson@berkeley.edu",
 #'               "michael.davis@berkeley.edu", "linda.wilson@berkeley.edu",
 #'               "james.taylor@berkeley.edu", "patricia.anderson@berkeley.edu"),
-#'   `lab1` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.8),
-#'   `lab1_-_Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-#'   `lab1_-_Submission Time` = c("1/19/2023 9:25:00 AM", "0", "1/19/2023 10:00:00 AM", "0",
+#'   `lab1_-_Raw_Score` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.8),
+#'   `lab1_-_Max_Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
+#'   `lab1_-_Submission_Time` = c("1/19/2023 9:25:00 AM", "0", "1/19/2023 10:00:00 AM", "0",
 #'                                "1/19/2023 9:00:00 AM", "1/19/2023 9:30:00 AM", "1/19/2023 9:20:00 AM", "1/19/2023 9:15:00 AM"),
-#'   `lab1_-_Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00",
+#'   `lab1_-_Lateness_(H_M_S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00",
 #'                                 "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
 #'   
-#'   `lab2` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
-#'   `lab2_-_Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-#'   `lab2_-_Submission Time` = c("1/20/2023 9:25:00 AM", "0", "1/20/2023 10:00:00 AM", "1/20/2023 9:50:00 AM",
+#'   `lab2_-_Raw_Score` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
+#'   `lab2_-_Max_Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
+#'   `lab2_-_Submission_Time` = c("1/20/2023 9:25:00 AM", "0", "1/20/2023 10:00:00 AM", "1/20/2023 9:50:00 AM",
 #'                                "1/20/2023 9:00:00 AM", "0", "1/20/2023 9:20:00 AM", "1/20/2023 9:30:00 AM"),
-#'   `lab2_-_Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+#'   `lab2_-_Lateness_(H_M_S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
 #'   
-#'   `lab3` = c(0, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
-#'   `lab3_-_Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-#'   `lab3_-_Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM", "1/21/2023 9:50:00 AM", "1/21/2023 9:00:00 AM", "1/21/2023 9:30:00 AM", "1/21/2023 9:20:00 AM", "1/21/2023 9:45:00 AM"),
-#'   `lab3_-_Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+#'   `lab3_-_Raw_Score` = c(0, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
+#'   `lab3_-_Max_Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
+#'   `lab3_-_Submission_Time` = c("0", "0", "1/21/2023 10:00:00 AM", "1/21/2023 9:50:00 AM", "1/21/2023 9:00:00 AM", "1/21/2023 9:30:00 AM", "1/21/2023 9:20:00 AM", "1/21/2023 9:45:00 AM"),
+#'   `lab3_-_Lateness_(H_M_S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
 #'   
-#'   `project1` = c(0.9, 0, 0.4, 0, 0.99, 0.9, 1, 0.9),
-#'   `project1_-_Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-#'   `project1_-_Submission Time` = c("1/22/2023 9:25:00 AM", "0", "1/22/2023 10:00:00 AM", "0", "1/22/2023 9:00:00 AM", "1/22/2023 9:30:00 AM", "1/22/2023 9:20:00 AM", "1/22/2023 9:45:00 AM"),
-#'   `project1_-_Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00")
+#'   `project1_-_Raw_Score` = c(0.9, 0, 0.4, 0, 0.99, 0.9, 1, 0.9),
+#'   `project1_-_Max_Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
+#'   `project1_-_Submission_Time` = c("1/22/2023 9:25:00 AM", "0", "1/22/2023 10:00:00 AM", "0", "1/22/2023 9:00:00 AM", "1/22/2023 9:30:00 AM", "1/22/2023 9:20:00 AM", "1/22/2023 9:45:00 AM"),
+#'   `project1_-_Lateness_(H_M_S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00")
 #' )
 #' 
 #' student_assignments_long_data <- pivot_gs(processed_data)
@@ -60,9 +60,12 @@ pivot_gs <- function(processed_data, names_sep = "_-_"){
 #yields 8 columns:  "name", "section", "email", "sid", "assignments", 
 #                   "max points","submission time", "lateness (h:m:s)"
   
+  #get_id_cols(): extracts the col names
+  id_cols <- get_id_cols(processed_data)
+  
   sxa <- processed_data |>
     tidyr::pivot_longer(
-                  cols = -all_of(c("names", "sections","email","sid")), # change the unit of obs to student x assignment
+                  cols = -all_of(id_cols), # change the unit of obs to student x assignment
                   names_to = c("assignments", ".value"),
                   names_sep = names_sep
       )
@@ -108,4 +111,60 @@ process_assignments <- function(processed_data){
   colnames(processed_data) <- new_names
   
   return(processed_data)
+}
+
+
+
+
+#' Get the ID Columns for Gradescope Data
+#'
+#' This function identified the id columns from gradescope data
+#'
+#' @param gs_data Gradescope dataframe
+#'
+#' @examples
+#' df <- tibble::tibble(
+#' name = 'name',
+#' email = 'email',
+#' sid = '343432',
+#' `PS 1_-_Raw_Score` = 1,
+#' `PS 1_-_Max_points` = 1,
+#' `PS 1_-_Submission_time` = '1/21/2023 10:00:00 AM',
+#' `PS 1-_-Lateness_(h_m_s)` = '0:00:00'
+#' )
+#' 
+#' @return a list of id columns
+#' @importFrom stringr str_replace_all regex
+#' @importFrom cli cli_alert_info
+#' @export
+#' 
+#' 
+get_id_cols <- function(df){
+  #REGEX pattern: case INsensitive, then matches the extensions
+  #works with untouched GS dataframe so we can match the pattern
+  regex = "(?i)(_-_raw_score|_-_max_points|_-_submission_time|_-_lateness_\\(h_m_s\\))"
+  
+  # extract base names and excludes the extensions (max points, submission time and lateness)
+  base_names <- stringr::str_replace_all(names(df),regex, "")
+  
+  # Count occurrences of base names
+  base_name_counts <- table(base_names)
+  
+  # identify base names that repeat exactly 4 times
+  repeating <- names(base_name_counts[base_name_counts == 4])
+  
+  # identify columns to keep: those not repeating 4 times
+  columns_to_keep <- names(df)[!(base_names %in% repeating)]
+  
+  alert <- function() {
+    cli::cli_div(theme = list(span.emph = list(color = "orange")))
+    cli::cli_text("{.emph Important Message}")
+    cli::cli_end()
+    cli::cli_alert_info("The ID columns from Gradescope are {columns_to_keep}")
+  }
+  alert()
+  
+  
+  
+  return(columns_to_keep)
 }
