@@ -29,7 +29,8 @@ Imports:
     stringr,
     tibble,
     tidyr,
-    purrr
+    purrr,
+    cli
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: 
