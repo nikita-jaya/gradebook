@@ -247,31 +247,41 @@ The idea would be:
 1. Keeping the grade data in wide instead of tall form, where the post-lateness grade for every assignment can be found in a column.
 2. Set up a map that will iterate over a list of every category and subcategory starting with the leaves of the tree. Essentially like this:
    ```yaml
-   - category: ps-1
-     aggregation: by points
+   - category: ps_1
+     aggregation: by_points
      assignments:
        - ps_1_written
        - ps_1_code
-   - category: ps-2
-     aggregation: by points
+   - category: ps_2
+     aggregation: by_points
      assignments:
        - ps_2_written
        - ps_2_code
-   - category: problem sets
+   - category: problem_sets
      aggregation: mean
      assignments:
-       - ps-1
-       - ps-2
+       - ps_1
+       - ps_2
    - category: exam
      aggregation: mean
      assignments:
-       - final exam
+       - final_exam
    ```
+4. The operation that we want to enable is something like this:
+   ```r
+   gs_data |>
+     mutate(ps_1 = by_points(ps_1_written, ps_1_code)) |>
+     mutate(ps_2 = by_points(ps_2_written, ps_2_code)) |>
+     mutate(problem_sets = mean(ps_1, ps2)) |>
+     mutate(exam = mean(final_exam)) |>
+     mutate(course_grade = weighted_sum(problem_sets, weights))
+   ```
+   Note that this won't quite work as written. `mutate()` wants to do column-wise operations, so `mean()`, for example, won't work as intended. It's possible `dplyr::rowwise()` is the solution (we'd start our pipe with it).
 3. The map would be something like (I forget map syntax):
    ```r
    map(policy_list, mutate(x$category = x$aggregation(gs_wide, cols = x$assignments)))
    ```
-4. I'm not quite sure how to get the output of a given iteration accessible to the next iteration (so that `ps-1` can get passed to `ps`), but the general idea is just to tack columns onto the right side of `gs_wide`.
+4. I'm not quite sure how to get the output of a given iteration accessible to the next iteration (so that `ps_1` can get passed to `ps`), but the general idea is just to tack columns onto the right side of `gs_wide`.
 
 There will be some conversions that need to happen to be sure each of those bits of data in the policy file are passed as their appropriate things (a name, a function, a data frame, column names). The package `rlang` will be helpful here.
 
