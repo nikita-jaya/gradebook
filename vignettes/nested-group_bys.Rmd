@@ -223,19 +223,19 @@ Here is an attempt at solving the nested categories by doing a few things. As an
 
 ```yaml
 categories:
-  - name: exam
+  - category: exam
     aggregation: mean
     assignments:
       - final exam
-  - name: problem sets
+  - category: problem sets
     aggregation: mean
     assignments:
-      - name: ps-1
+      - category: ps-1
         aggregation: by points
         assignments:
           - ps_1_written
           - ps_1_code
-      - name: ps-2
+      - category: ps-2
         aggregation: by points
         assignments:
           - ps_2_written
@@ -247,29 +247,29 @@ The idea would be:
 1. Keeping the grade data in wide instead of tall form, where the post-lateness grade for every assignment can be found in a column.
 2. Set up a map that will iterate over a list of every category and subcategory starting with the leaves of the tree. Essentially like this:
    ```yaml
-   - name: ps-1
+   - category: ps-1
      aggregation: by points
      assignments:
        - ps_1_written
        - ps_1_code
-   - name: ps-2
+   - category: ps-2
      aggregation: by points
      assignments:
        - ps_2_written
        - ps_2_code
-   - name: problem sets
+   - category: problem sets
      aggregation: mean
      assignments:
        - ps-1
        - ps-2
-   - name: exam
+   - category: exam
      aggregation: mean
      assignments:
        - final exam
    ```
 3. The map would be something like (I forget map syntax):
    ```r
-   map(policy_list, mutate(x$name = x$aggregation(gs_wide, cols = x$assignments)))
+   map(policy_list, mutate(x$category = x$aggregation(gs_wide, cols = x$assignments)))
    ```
 4. I'm not quite sure how to get the output of a given iteration accessible to the next iteration (so that `ps-1` can get passed to `ps`), but the general idea is just to tack columns onto the right side of `gs_wide`.
 
