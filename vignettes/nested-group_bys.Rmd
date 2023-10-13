@@ -285,6 +285,53 @@ The idea would be:
 
 There will be some conversions that need to happen to be sure each of those bits of data in the policy file are passed as their appropriate things (a name, a function, a data frame, column names). The package `rlang` will be helpful here.
 
+```{r}
+library(tidyverse)
+policy <- list(list(category = "ps_1",
+                    aggregation = "sum",
+                    assignments = c("ps_1_written", "ps_1_code")),
+               list(category = "ps_2",
+                    aggregation = "sum",
+                    assignments = c("ps_2_written", "ps_2_code")),
+               list(category = "problem-sets",
+                    aggregation = "mean",
+                    assignments = c("ps_2", "ps_2")),
+               list(category = "exam",
+                    aggregation = "mean",
+                    assignments = c("final_exam")))
+
+grades_b <- tibble(student_id = rep(c("4863", "5211", "4893"), 
+                                    each = 5),
+                   assignment = rep(c("ps_1_written", 
+                                      "ps_1_code",
+                                      "ps_2_written",
+                                      "ps_2_code",
+                                      "final_exam"), 3),
+                   pts_earned = c(12, 5, 19, 13, 86,
+                                  11, 6, 19, 10, 75,
+                                  8, 8, 10, 13, 92),
+                   pts_max    = rep(c(15, 10, 20, 16, 100), 3),
+                   category   = rep(c("ps", "ps", "ps", "ps", "exam"), 3),
+                   subcategory = rep(c("ps_1", "ps_1", "ps_2", "ps_2", "exam"), 3))
+
+gs_wide <- grades_b |>
+    mutate(score = pts_earned / pts_max) |>
+    pivot_wider(id_cols = student_id,
+                names_from = assignment,
+                values_from = score)
+
+pol1 <- policy[[1]]
+
+gs_wide |>
+    rowwise() |>
+    mutate(get(pol1$aggregation)(!!!rlang::syms(pol1$assignments)))
+```
+
+
+
+
+
+
 
 
 
