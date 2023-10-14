@@ -322,9 +322,19 @@ gs_wide <- grades_b |>
 
 pol1 <- policy[[1]]
 
+
+agg_assigns <- function(pol1, gs_wide) {
+    gs_wide[[pol1$category]] = get(pol1$aggregation)(pol1$assignments)
+}
+
+gs_wide |>
+    map(agg_assigns)
+
+library(glue)
 gs_wide |>
     rowwise() |>
     mutate(get(pol1$aggregation)(!!!rlang::syms(pol1$assignments)))
+
 ```
 
 
