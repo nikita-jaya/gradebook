@@ -88,7 +88,7 @@ policy_demo
 ```
 
 ### check_names()
-Description
+This function validates that the policy file has the right format in terms of names and nesting. If there is incorrect formatting, it returns an error with information about what formatting is missing. If the policy file is correctly formatted, it returns the policy file as is in order to make these functions pipeable.
 
 ```{r}
 policy_demo|>
@@ -96,26 +96,33 @@ policy_demo|>
 ```
 
 ### check_assignment_names()
-Description
+This function checks that the assignments within the policy file can be found within the Gradescope data. If there is an assignment in the policy file that does not occur in the Gradescope data, an error is returned, including which assignments have no student data. If there is no error, the same policy file is return to keep these functions pipeable. This part of the process should be done after validating the Gradescope data and converting it into its pivotted format with `pivot_gs()` pipline as explained and demonstrated above. In this example, `pivot_df` is the pivotted result of `gs_demo` going thorugh this pipeline.
 
 ```{r}
-policy_demo|>
+policy_demo |>
     check_names()|>
     check_assignment_names(pivot_df = pivot_df)
 ```
 
 ### create_assigns_table()
-Description
+This function creates an assignment table where each row is an assignment with its relevant category information. This is an intermediary table that makes it easier to combine the information from the policy file with the pivoted data from the Gradescope data. 
 
 ```{r}
-
+policy_demo|>
+    check_names()|>
+    check_assignment_names(pivot_df = pivot_df) |>
+    create_assigns_table()
 ```
 
 ### data_merge_assigns()
-Description
+This function combines the grading criteria from the policy file with the student-assignment data from the Gradescope data, which is now in its pivotted form. At this point, the resulting dataframe's unit of observation is a student's individual assignment. Each row includes the student's scores and lateness information as well as information about the assignment's grading criteria based on its respective category. The purpose of combining these two original inputs -- the Gradescope data and the policy file -- is to allow all following grading computations to utilize only one merged file.
 
 ```{r}
-
+policy_demo|>
+    check_names()|>
+    check_assignment_names(pivot_df = pivot_df) |>
+    create_assigns_table() |>
+    data_merge_assigns(pivot_df = pivot_df)
 ```
 
 ### Grading

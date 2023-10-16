@@ -62,7 +62,7 @@ create_assigns_table <- function(policy){
 #' @importFrom dplyr left_join
 #' @export
 data_merge_assigns <- function(assigns_table, pivot_df){
-    add_categories_to_pivot <- pivot_df %>%
+    add_categories_to_pivot <- pivot_df |>
         left_join(assigns_table, by = c("assignments" = "assignments"))
     
     return (add_categories_to_pivot)
