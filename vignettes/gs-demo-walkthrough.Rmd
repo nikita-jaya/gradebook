@@ -14,13 +14,109 @@ knitr::opts_chunk$set(
 )
 ```
 
+This article walks through how this package is used to process student assignment scores according to the given syllabus. This workflow requires two inputs: student data (ideally from Gradescope) and a policy file.
+
 ```{r setup}
 library(gradebook)
 ```
 
-### Load in data
+### Load in student data
+
+Student data is formatted according to Gradescope .csv format, where each unit of observation is a student and each individual assignment includes the student's score, the maximum allowed points, the student's submission timestamp and how late the student submitted (in HH:MM:SS format). Below is the Gradescope demo data found within the package.
 
 ```{r}
 gs_demo
 ```
 
+### check_colnames()
+This function changes all column names to lowercase for consistent data processing.
+
+```{r}
+gs_demo |>
+    check_colnames()
+```
+
+### check_data_names()
+This function checks that the general formatting for the column names of the Gradescope data. This checks that all assignments are uniformly formatted by their raw points, the maximum points, the submission time and lateness. This also checks that the first few columns of the Gradescope data include ID columns used to identify students, such as student ID. If there is incorrect formatting, the function will return a relevant error. If not, this function returns the same dataframe in order for these functions to be pipeable.
+
+```{r}
+gs_demo |>
+    check_colnames()
+    #check_data_names() |> need to add REGEX
+```
+
+### process_id()
+This function drops any students with missing student IDs and merges any replicated students based on the following criteria. If the assignment cell is a datetime, it removes NAs and takes the last datetime. If the assignment cell is numeric, it takes the max. If the assignment cell is NA, leave as NA. If there are no issues on a student level, there is no change. The processed data is returned with no missing student IDs nor any duplicated students.
+
+```{r}
+gs_demo |>
+    check_colnames() |>
+    #check_data_names() |> need to add REGEX
+    process_id()
+```
+
+### process_assignments()
+This function removes any white spaces and special characters from column names. This cleans up column names for future processing.
+
+```{r}
+gs_demo |>
+    check_colnames() |>
+    #check_data_names() |> need to add REGEX
+    process_id() |>
+    process_assignments()
+```
+
+### pivot_gs()
+This function applies the pivot-longer function to allow for unit of observation be a student + individual assignment.
+
+```{r}
+pivot_df <- gs_demo |>
+    check_colnames() |>
+    #check_data_names() |> need to add REGEX
+    process_id() |>
+    process_assignments() |>
+    pivot_gs()
+
+pivot_df
+```
+
+### Load in policy file
+The policy file is broken down into three separate parts: coursewide information, categories and cutoffs. Coursewide information includes the course name and a course description; this is purely for the user. Each category is a subset of the overall grade and includes information about how the scores of the assignments within the category are aggregated: this information includes lateness penalties, how the assignments are weighted within the category and how categories are weighted in the overall grade. Finally, the cutoffs describe the lower cutoff for each letter grade. For example, if the cutoff for a "A" is 90, a student earns an "A" if their overall grade is at least 90%.
+
+```{r}
+policy_demo
+```
+
+### check_names()
+Description
+
+```{r}
+policy_demo|>
+    check_names()
+```
+
+### check_assignment_names()
+Description
+
+```{r}
+policy_demo|>
+    check_names()|>
+    check_assignment_names(pivot_df = pivot_df)
+```
+
+### create_assigns_table()
+Description
+
+```{r}
+
+```
+
+### data_merge_assigns()
+Description
+
+```{r}
+
+```
+
+### Grading
+TBD
