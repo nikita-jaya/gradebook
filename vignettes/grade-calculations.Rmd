@@ -113,10 +113,10 @@ apply_policy <- function(policy_item, gs_wide) {
 
 ## Run computations
 
-### Walk and apply
+### Version A: Walk and apply
 
 ```{r}
-gs_wide_a <- gs_wide
+gs_wide_forloop <- gs_wide
 library(microbenchmark)
 microbenchmark({
     purrr::walk(policy, \(x) apply_policy(policy_item = x, gs_wide = gs_wide))
@@ -128,17 +128,16 @@ Places for improvement:
 1. Inner `apply()` can possibly be parrallelize. Possibly by switching to `map()` family and using `furrr`.
 2. Global assignment operator, `<<-` is very sketchy to use. It be good if we can find an alternative.
 
-### Naive double for loop
+### Version B: Naive double for loop
 
-*This one doesn't yet run; needs to be tweaked*
+This version doesn't currently calculate the `problem_set` category correctly, but it is much slower.
 
 ```{r}
-gs_wide_b <- gs_wide
 microbenchmark({
     for(i in 1:length(policy)) { 
-        for(j in 1:nrow(gs_wide_b)) {
-            gs_wide_b[j, policy[[i]]$category] <- agg_assigns(policy_item = policy[[i]],
-                                                              gs_wide_b[j,])
+        for(j in 1:nrow(gs_wide_forloop)) {
+            gs_wide_forloop[j, policy[[i]]$category] <- agg_assigns(policy_item = policy[[i]],
+                                                              gs_wide_forloop[j,])
         }
     }
 })
