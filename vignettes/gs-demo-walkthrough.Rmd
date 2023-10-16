@@ -81,11 +81,19 @@ pivot_df
 ```
 
 ### Load in policy file
-The policy file is broken down into three separate parts: coursewide information, categories and cutoffs. Coursewide information includes the course name and a course description; this is purely for the user. Each category is a subset of the overall grade and includes information about how the scores of the assignments within the category are aggregated: this information includes lateness penalties, how the assignments are weighted within the category and how categories are weighted in the overall grade. Finally, the cutoffs describe the lower cutoff for each letter grade. For example, if the cutoff for a "A" is 90, a student earns an "A" if their overall grade is at least 90%.
+The policy file is broken down into three separate parts: coursewide information, categories and cutoffs. Coursewide information includes the course name and a course description; this is purely for the user. Each category is a subset of the overall grade and includes information about how the scores of the assignments within the category are aggregated: this information includes lateness penalties, how the assignments are weighted within the category and how categories are weighted in the overall grade. Finally, the cutoffs describe the lower cutoff for each letter grade. For example, if the cutoff for a "A" is 90, a student earns an "A" if their overall grade is at least 90%. Below is the demo policy file found within the package.
 
 ```{r}
 policy_demo
 ```
+
+### Creating a Policy File
+Any empty policy file can be created with the `create_empty_policy_file()` function, which takes a single numeric input to specify how many categories this policy file has. The function defaults to just one category. This returns a list with the correct policy-file formatting and default values for all inputs.
+
+```{r}
+create_empty_policy_file(num_cat = 2)
+```
+
 
 ### check_names()
 This function validates that the policy file has the right format in terms of names and nesting. If there is incorrect formatting, it returns an error with information about what formatting is missing. If the policy file is correctly formatted, it returns the policy file as is in order to make these functions pipeable.
