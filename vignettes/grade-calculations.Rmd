@@ -18,6 +18,9 @@ knitr::opts_chunk$set(
 ```{r}
 #| message: false
 library(tidyverse)
+library(future.apply)
+plan(multisession)
+
 policy <- list(list(category = "ps_1",
                     aggregation = "weighted_by_points",
                     assignments = c("ps_1_written", "ps_1_code")),
@@ -63,7 +66,6 @@ gs_wide
 #### Vector Versions
 
 ```{r}
-#| eval: true
 equally_weighted <- function(assignments, weights, n_drops, ...) {
 
     if (n_drops > 0) { assignments[order(assignments)[1:n_drops]] <- NA}
@@ -71,7 +73,7 @@ equally_weighted <- function(assignments, weights, n_drops, ...) {
     mean(assignments, na.rm =TRUE)
 }
 
-weighted_by_points <- function(assignments, weights, n_drops) {
+weighted_by_points <- function(assignments, weights, n_drops, ...) {
 
     if (n_drops > 0) {
         drop_idx <- order(assignments)[1:n_drops]
@@ -116,6 +118,9 @@ apply_policy <- function(policy_item, gs_wide) {
 ### Version A: Walk and apply
 
 ```{r}
+gs_wide_b <- gs_wide
+gs_wide_c <- gs_wide
+gs_wide_d <- gs_wide
 gs_wide_forloop <- gs_wide
 library(microbenchmark)
 microbenchmark({
@@ -128,11 +133,79 @@ Places for improvement:
 1. Inner `apply()` can possibly be parrallelize. Possibly by switching to `map()` family and using `furrr`.
 2. Global assignment operator, `<<-` is very sketchy to use. It be good if we can find an alternative.
 
-### Version B: Naive double for loop
+### Version B: For loop over apply
+
+We can tweak the previous version to get rid of `<<-` by using a for-loop.
+
+```{r}
+microbenchmark( {
+    for (policy_item in policy) {
+    gs_wide_b[[policy_item$category]] <- apply(gs_wide_b, 1, agg_assigns, policy_item = policy_item)
+}
+})
+```
+
+This increases the time by 3x, which is probably worth it at this stage of the game. We can come back and speed it up later.
+
+### Version C: For loop over a parallelized apply
+
+*Under construction*. This is an attempt to speed up version B. *Use furrr instead of future_apply*.
+
+```{r}
+#| eval: false
+microbenchmark( {
+    for (policy_item in policy) {
+        gs_wide_c[[policy_item$category]] <- future_apply(gs_wide_c, 1, agg_assigns, policy_item = policy_item)
+    }
+})
+
+```
+
+
+### Version D: For loop over pmap
+
+*Under construction*: This is an attempt to try using `pmap` on the inner loop.
+
+```{r}
+#| eval: false
+agg_assigns <- function(gs_wide, policy_item) {
+    get(policy_item$aggregation)(
+        assignments = gs_wide[policy_item$assignments],
+        weights = gs_wide[paste0(policy_item$assignments, "_max_pts")],
+        n_drops = ifelse(is.null(policy_item$n_drops), 0, policy_item$n_drops))
+}
+
+apply_policy <- function(policy_item, gs_wide) {
+    gs_wide[[policy_item$category]] <- pmap(gs_wide, agg_assigns, policy_item = policy_item)
+}
+
+weighted_by_points <- function(assignments, weights, n_drops, ...) {
+
+    if (n_drops > 0) {
+        drop_idx <- order(assignments)[1:n_drops]
+        weights[drop_idx] <- NA
+        assignments[drop_idx] <- NA
+    }
+
+    rowsum(assignments * (weights / sum(weights, na.rm = TRUE)), na.rm =TRUE)
+}
+
+pol <- policy[[1]]
+
+gs_wide_d |>
+    pmap_dbl(weighted_by_points, 
+         assignments = pol$assignments,
+         weights = paste0(pol$assignments, "_max_pts"),
+         n_drops = 0)
+```
+
+
+### Version E: Naive double for loop
 
 This version doesn't currently calculate the `problem_set` category correctly, but it is much slower.
 
 ```{r}
+#| eval: false
 microbenchmark({
     for(i in 1:length(policy)) { 
         for(j in 1:nrow(gs_wide_forloop)) {
