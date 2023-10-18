@@ -260,8 +260,3 @@ if (n_drops > 0) {
 
 sum(weighted_assignments / sum(weights, na.rm = TRUE), na.rm = TRUE)
 ```
-
-
-
-
-
