@@ -177,7 +177,7 @@ formatted_policy <- list(
 )
 
 # hypothetically, lets use pmap nested inside an modify
-pmap_function <- function(aggregate_assign, aggregation,sub_assigns, ...){
+pmap_function <- function(gs_data, aggregate_assign, aggregation,sub_assigns, ...){
     if (aggregation ==  "by_points"){
        return ( by_points(gs_data = gs_data, aggregate_assign = aggregate_assign, 
                           sub_assigns = sub_assigns) )
@@ -206,7 +206,7 @@ a <- c("by_points", "by_points")
 pmap(list(a_a, a, s_a), pmap_function)
 
 #hypothetically, this setup???
-#modify(gs_data, pmap(list(a_a, a, s_a), pmap_function))
+#modify2(gs_data, pmap(list(.x, a_a, a, s_a), pmap_function))
 ```
 
 
