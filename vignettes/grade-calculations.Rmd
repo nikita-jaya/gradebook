@@ -68,7 +68,7 @@ gs_wide
 ```{r}
 equally_weighted <- function(assignments, weights, n_drops, ...) {
 
-    if (n_drops > 0) { assignments[order(assignments)[1:n_drops]] <- NA}
+    if (n_drops > 0) {assignments[order(assignments)[1:n_drops]] <- NA}
 
     mean(assignments, na.rm =TRUE)
 }
