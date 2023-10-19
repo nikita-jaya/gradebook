@@ -48,7 +48,7 @@ YOU CAN SKIP TO THE EXAMPLE OF THESE FUNCTIONS RUN TOGETHER AT THE BOTTOM!
 Here's the function for weighting by points:
 
 ```{r}
-by_points <- function(gs_data, aggregate_assign, sub_assigns){
+by_points <- function(gs_data, aggregate_assign, sub_assigns,...){
   total_raw <- gs_data |>   #sum up all earned points
     rowwise() |>
     summarize(raw = sum(c_across(sub_assigns))) %>%
@@ -135,6 +135,15 @@ by_weight <- function(gs_data, aggregate_assign, sub_assigns, weights) {
 }
 ```
 
+
+Here is the function that literally does nothing.
+```{r}
+none <- function(data){
+    return (data)
+}
+```
+
+
 ## SKIP TO HERE FOR EXAMPLE
 
 Here's an example of how these functions would be run sequentially: (I'm assuming this order will be determined by `map_depth()` and these functions will be called depending on the policy file)
@@ -153,4 +162,52 @@ I've pivoted so it prints better for the vignette:
 ```{r}
 print.data.frame(pivot_longer(grades, cols = colnames(grades)))
 ```
+
+
+```{r}
+formatted_policy <- list(
+  name = list("course_grade", "problem_sets","exam", "ps1", "ps2", 
+              "ps_1_written", "ps_1_code", "ps_2_written","ps_2_code", "final_exam"),
+  aggregation = list("by_weight", "by_percent", "by_percent", "by_points", "by_points", "none", "none", 
+                     "none", "none", "none"),
+  assignments = list(c("problem_sets", "exam"),c("ps1", "ps2"), c("final_exam"), 
+                     c("ps_1_written", "ps_1_code"), 
+                     c("ps_2_written","ps_2_code"), NA, NA, NA, NA, NA),
+  nested_level = list(0, 1, 1, 2, 2, 3,3,3,3, 3)
+)
+
+# hypothetically, lets use pmap nested inside an modify
+pmap_function <- function(aggregate_assign, aggregation,sub_assigns, ...){
+    if (aggregation ==  "by_points"){
+       return ( by_points(gs_data = gs_data, aggregate_assign = aggregate_assign, 
+                          sub_assigns = sub_assigns) )
+    } else if (aggregation == "by_percent"){
+        return ( by_percent(gs_data = gs_data, aggregate_assign = aggregate_assign, 
+                            sub_assigns = sub_assigns) )
+    } else if (aggregation == "by_weight"){
+        return ( by_weight(gs_data = gs_data, aggregate_assign = aggregate_assign, 
+                           sub_assigns = sub_assigns) )
+    }
+    
+    #default == none
+    return (none())
+}
+```
+##TESTING
+```{r}
+gs_data |>
+    pmap_function(aggregate_assign = "ps1", 
+                              sub_assigns = c("ps_1_written", "ps_1_code"), 
+                              aggregation = "by_points")
+a_a <- list("ps1", "ps2")
+s_a <- list(c("ps_1_written", "ps_1_code"), c("ps_2_written", "ps_2_code"))
+a <- c("by_points", "by_points")
+
+pmap(list(a_a, a, s_a), pmap_function)
+
+#hypothetically, this setup???
+#modify(gs_data, pmap(list(a_a, a, s_a), pmap_function))
+```
+
+
 
