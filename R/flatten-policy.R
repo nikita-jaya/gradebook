@@ -22,7 +22,7 @@ extract_nested <- function(category) {
     
     # Otherwise, get the nested categories
     nested_categories <- purrr::map(category$assignments, extract_nested) |>
-        purrr::list_flatten(nested_categories)
+        purrr::list_flatten()
     
     # Modify the current category to contain the nested categories as assignments
     category$assignments <- purrr::map_chr(nested_categories, "category")
