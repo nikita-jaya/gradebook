@@ -116,6 +116,7 @@ get_category_grades <- function(gs, policy) {
         gs[[policy_item$category]] <- apply(gs, 1, get_one_grade, 
                                             policy_item = policy_item)
     }
+    gs
 }
 
 #' Drop NA Assignments
