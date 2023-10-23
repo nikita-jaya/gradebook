@@ -134,33 +134,30 @@ check_data_colnames_format <- function(gs_data){
         stop("There is no SID column")
     }
     
-    #REGEX pattern: case INsensitive, then matches the extensions
-    #works with untouched GS dataframe so we can match the pattern
-    regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
-    
-    # extract base names and excludes the extensions (max points, submission time and lateness)
-    base_names <- stringr::str_replace_all(names(gs_data),regex, "")
-    
-    # Count occurrences of base names
-    base_name_counts <- table(base_names)
-    
-    # identify base names that repeat exactly 4 times
-    assignment_names <- names(base_name_counts[base_name_counts == 4])
+    assignment_names <- get_assignments_unprocessed_data(gs_data)
     
     if (is.null(assignment_names) | length(assignment_names) == 0){
         stop("There are no assignments in this dataframe")
     }
     
-    alert <- function() {
-        cli::cli_div(theme = list(span.emph = list(color = "orange")))
-        cli::cli_text("{.emph Important Message}")
-        cli::cli_end()
-        cli::cli_alert_info("The assignments from Gradescope are {assignment_names}")
-    }
-    alert()
-    
     
     return (gs_data)
+}
+
+
+#' Drop Ungraded Assignments
+#'
+#' This functions drops any assignments that have no grades for any students and replaced -Inf values
+#'
+#' @param gs_data A Gradescope data
+#'
+#'
+#' @return same dataframe without graded assignments
+#' @export
+drop_ungraded_assignments<- function(gs_data){
+    #drop any assignments with all NAs for raw-score
+    
+    #replace any -Inf with 0
 }
 
 #' Check Column Names for Gradescope Data

@@ -4,7 +4,7 @@
 \alias{get_id_cols_unprocessed_data}
 \title{Get the ID Columns for Unprocessed Gradescope Data}
 \usage{
-get_id_cols_unprocessed_data(df)
+get_id_cols_unprocessed_data(df, give_alert = TRUE)
 }
 \arguments{
 \item{gs_data}{unprocessed Gradescope dataframe}

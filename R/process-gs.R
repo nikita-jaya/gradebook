@@ -180,7 +180,7 @@ get_id_cols <- function(df){
 #' @export
 #' 
 #' 
-get_id_cols_unprocessed_data <- function(df){
+get_id_cols_unprocessed_data <- function(df, give_alert = TRUE){
     #REGEX pattern: case INsensitive, then matches the extensions
     #works with untouched GS dataframe so we can match the pattern
     regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
@@ -203,9 +203,51 @@ get_id_cols_unprocessed_data <- function(df){
         cli::cli_end()
         cli::cli_alert_info("The ID columns from Gradescope are {columns_to_keep}")
     }
-    alert()
     
+    if (give_alert){
+        alert()
+    }
     
     
     return(columns_to_keep)
+}
+
+#' Get the Assignment Names for Unprocessed Gradescope Data
+#'
+#' This function identified the assignments from unprocessed gradescope data
+#'
+#' @param gs_data unprocessed Gradescope dataframe
+#' 
+#' @return a list of assignments 
+#' @importFrom stringr str_replace_all regex
+#' @importFrom cli cli_alert_info
+#' @export
+#' 
+#' 
+get_assignments_unprocessed_data <- function(df, give_alert = TRUE){
+    #REGEX pattern: case INsensitive, then matches the extensions
+    #works with untouched GS dataframe so we can match the pattern
+    regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
+    
+    # extract base names and excludes the extensions (max points, submission time and lateness)
+    base_names <- stringr::str_replace_all(names(df),regex, "")
+    
+    # Count occurrences of base names
+    base_name_counts <- table(base_names)
+    
+    # identify base names that repeat exactly 4 times
+    assignment_names <- names(base_name_counts[base_name_counts == 4])
+    
+    alert <- function() {
+        cli::cli_div(theme = list(span.emph = list(color = "orange")))
+        cli::cli_text("{.emph Important Message}")
+        cli::cli_end()
+        cli::cli_alert_info("The assignments from Gradescope are {assignment_names}")
+    }
+    
+    if (give_alert){
+        alert()
+    }
+    
+    return (assignment_names)
 }
