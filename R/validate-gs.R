@@ -158,7 +158,7 @@ drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
     #replace any -Inf with NA
     gs_data <- gs_data %>% 
         mutate(
-            across(everything(), ~replace(.x, -Inf, values = NA))
+            across(everything(), ~replace(.x, .x == -Inf, values = NA))
         )
     
     assignments <- get_assignments_unprocessed_data(gs_data, give_alert = FALSE)
