@@ -4,7 +4,7 @@
 \alias{drop_ungraded_assignments}
 \title{Drop Ungraded Assignments}
 \usage{
-drop_ungraded_assignments(gs_data)
+drop_ungraded_assignments(gs_data, give_alert = TRUE)
 }
 \arguments{
 \item{gs_data}{A Gradescope data}

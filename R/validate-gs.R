@@ -150,14 +150,28 @@ check_data_colnames_format <- function(gs_data){
 #' This functions drops any assignments that have no grades for any students and replaced -Inf values
 #'
 #' @param gs_data A Gradescope data
-#'
-#'
+#' @importFrom dplyr filter select
+#' @importFrom purrr keep
 #' @return same dataframe without graded assignments
 #' @export
-drop_ungraded_assignments<- function(gs_data){
-    #drop any assignments with all NAs for raw-score
+drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
+    #replace any -Inf with NA
+    gs_data <- gs_data |> replace(-Inf, NA)
     
-    #replace any -Inf with 0
+    assignments <- get_assignments_unprocessed_data(gs_data, give_alert = FALSE)
+    #These are the dropped assignments with all NAs for raw-score
+    dropped <- gs_data |> keep(~all(is.na(.x))) |> names()
+    dropped <- dropped[dropped %in% assignments]
+    alert <- function() {
+        cli::cli_div(theme = list(span.emph = list(color = "orange")))
+        cli::cli_text("{.emph Important Message}")
+        cli::cli_end()
+        cli::cli_alert_info("These are your ungraded assignments: {dropped}")
+    }
+    if (give_alert){
+        alert()
+    }
+    gs_data <- gs_data |> select(-startsWith(dropped))
 }
 
 #' Check Column Names for Gradescope Data
