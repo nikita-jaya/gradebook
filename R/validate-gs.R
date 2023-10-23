@@ -25,7 +25,7 @@
 #'  )
 #' processed_data <- process_id(data)
 #' 
-#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across group_split last
+#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across group_split last mutate across everything
 #' @importFrom tidyr drop_na
 #' @importFrom purrr map_dfr
 #' @export
@@ -42,6 +42,11 @@ process_id <- function(gs_data) {
     dplyr::group_split() |>
     purrr::map_dfr(merge_replicated_records)
   
+  #replace any -Inf with NA
+  unique_ids <- unique_ids |>
+      mutate(
+          across(everything(), ~replace(.x, .x == -Inf, values = NA))
+      )
   return(unique_ids)
 }
 
@@ -155,11 +160,6 @@ check_data_colnames_format <- function(gs_data){
 #' @return same dataframe without graded assignments
 #' @export
 drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
-    #replace any -Inf with NA
-    gs_data <- gs_data %>% 
-        mutate(
-            across(everything(), ~replace(.x, .x == -Inf, values = NA))
-        )
     
     assignments <- get_assignments_unprocessed_data(gs_data, give_alert = FALSE)
     #These are the dropped assignments with all NAs for raw-score

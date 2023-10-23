@@ -50,7 +50,8 @@
 #' 
 #' student_assignments_long_data <- pivot_gs(processed_data)
 #' 
-#' @importFrom tidyr pivot_longer replace_na
+#' @importFrom tidyr pivot_longer replace_na 
+#' @importFrom dplyr mutate_at vars
 #' @importFrom tibble as_tibble
 
 #' @export
@@ -69,6 +70,8 @@ pivot_gs <- function(processed_data, names_sep = "_-_"){
                   names_to = c("assignments", ".value"),
                   names_sep = names_sep
       )
+  
+  sxa <- sxa |> mutate_at(vars(contains("lateness")), as.character)
   return(sxa)
 }
 

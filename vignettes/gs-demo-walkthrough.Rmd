@@ -41,9 +41,20 @@ This function checks that the general formatting for the column names of the Gra
 
 ```{r}
 gs_demo |>
-    lower_colnames()
-    #check_data_names() |> need to add REGEX
+    lower_colnames() |>
+    check_data_colnames_format()
 ```
+
+### drop_ungraded_assignments()
+This function drops any ungraded assignments. This is just to cut down on the size of the Gradescope data. It removes any assignments where the raw scores are all NAs for every student.
+
+```{r}
+gs_demo |>
+    lower_colnames() |>
+    check_data_colnames_format() |>
+    drop_ungraded_assignments()
+```
+
 
 ### process_id()
 This function drops any students with missing student IDs and merges any replicated students based on the following criteria. If the assignment cell is a datetime, it removes NAs and takes the last datetime. If the assignment cell is numeric, it takes the max. If the assignment cell is NA, leave as NA. If there are no issues on a student level, there is no change. The processed data is returned with no missing student IDs nor any duplicated students.
@@ -51,7 +62,8 @@ This function drops any students with missing student IDs and merges any replica
 ```{r}
 gs_demo |>
     lower_colnames() |>
-    #check_data_names() |> need to add REGEX
+    check_data_colnames_format() |>
+    drop_ungraded_assignments() |>
     process_id()
 ```
 
@@ -61,7 +73,8 @@ This function removes any white spaces and special characters from column names.
 ```{r}
 gs_demo |>
     lower_colnames() |>
-    #check_data_names() |> need to add REGEX
+    check_data_colnames_format() |>
+    drop_ungraded_assignments() |>
     process_id() |>
     process_assignments()
 ```
@@ -72,7 +85,8 @@ This function applies the pivot-longer function to allow for unit of observation
 ```{r}
 pivot_df <- gs_demo |>
     lower_colnames() |>
-    #check_data_names() |> need to add REGEX
+    check_data_colnames_format() |>
+    drop_ungraded_assignments() |>
     process_id() |>
     process_assignments() |>
     pivot_gs()
