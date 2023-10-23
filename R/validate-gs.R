@@ -156,7 +156,10 @@ check_data_colnames_format <- function(gs_data){
 #' @export
 drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
     #replace any -Inf with NA
-    gs_data <- gs_data |> replace(-Inf, NA)
+    gs_data <- gs_data %>% 
+        mutate(
+            across(everything(), ~replace(.x, -Inf, values = NA))
+        )
     
     assignments <- get_assignments_unprocessed_data(gs_data, give_alert = FALSE)
     #These are the dropped assignments with all NAs for raw-score
@@ -171,7 +174,7 @@ drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
     if (give_alert){
         alert()
     }
-    gs_data <- gs_data |> select(-startsWith(dropped))
+    gs_data <- gs_data |> select(-contains(dropped))
 }
 
 #' Check Column Names for Gradescope Data
