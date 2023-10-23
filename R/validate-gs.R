@@ -115,40 +115,50 @@ merge_replicated_records <- function(single_sid_df) {
   }
 }
 
-#' Check Names for Gradescope Data
+#' Check Formatting of Column Names for Gradescope Data
 #'
-#' This functions checks the names throughout the Gradescope data
+#' This functions checks the column names throughout the Gradescope data
 #'
 #' @param gs_data Grades data that's validated for having the right format in terms of names and nesting
 #'
-#' @return No output, only stops and warnings
+#' @return Outputs same dataframe if no error
 #' @importFrom stringr str_c
 #' @export
-check_data_names <- function(gs_data){
+check_data_colnames_format <- function(gs_data){
     
-    if (! (length(gs_data)%%4 == 0) ){
-        
-        stop("Incorrect number of columns")
-        
-    }
     col_names <- colnames(gs_data)
     
-    if ( !setequal(col_names[1:4], c("Names", "Email", "SID", "Sections")) ){
-        stop("Formatting for first four columns is incorrect")
+    id_cols <- get_id_cols_unprocessed_data(gs_data)
+    
+    if ( !("sid" %in% id_cols | "SID" %in% id_cols) ){
+        stop("There is no SID column")
     }
     
-    assignment_names <- col_names[seq(from = 5, to = length(col_names), by = 4)]
-    n <- length(assignment_names)
-    formatting_additions <-  c("", " - Max Points",  " - Submission Time", " - Lateness (H:M:S)")[rep(1:4, times = n)]
-    expected_colnames <- stringr::str_c(assignment_names[rep(1:n, each = 4)],
-                                        formatting_additions)
+    #REGEX pattern: case INsensitive, then matches the extensions
+    #works with untouched GS dataframe so we can match the pattern
+    regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
     
-    if ( !setequal(col_names[-1:-4], expected_colnames) ){
-        wrong_names <- setdiff(col_names[-1:-4], expected_colnames)
-        stop(paste("Incorrect formatting for columns names:", wrong_names))
+    # extract base names and excludes the extensions (max points, submission time and lateness)
+    base_names <- stringr::str_replace_all(names(gs_data),regex, "")
+    
+    # Count occurrences of base names
+    base_name_counts <- table(base_names)
+    
+    # identify base names that repeat exactly 4 times
+    assignment_names <- names(base_name_counts[base_name_counts == 4])
+    
+    if (is.null(assignment_names) | length(assignment_names) == 0){
+        stop("There are no assignments in this dataframe")
     }
     
-    get_id_cols(gs_data)
+    alert <- function() {
+        cli::cli_div(theme = list(span.emph = list(color = "orange")))
+        cli::cli_text("{.emph Important Message}")
+        cli::cli_end()
+        cli::cli_alert_info("The assignments from Gradescope are {assignment_names}")
+    }
+    alert()
+    
     
     return (gs_data)
 }

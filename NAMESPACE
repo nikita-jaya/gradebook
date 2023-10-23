@@ -2,7 +2,7 @@
 
 export(check_assignment_names)
 export(check_cat_names)
-export(check_data_names)
+export(check_data_colnames_format)
 export(check_names)
 export(convert_to_min)
 export(create_assigns_table)
