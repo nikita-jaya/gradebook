@@ -125,10 +125,12 @@ merge_replicated_records <- function(single_sid_df) {
 #' @importFrom stringr str_c
 #' @export
 check_data_names <- function(gs_data){
-    if (! (length(gs_data)%%4 == 0) ){
-        stop("Incorrect number of columns")
-    }
     
+    if (! (length(gs_data)%%4 == 0) ){
+        
+        stop("Incorrect number of columns")
+        
+    }
     col_names <- colnames(gs_data)
     
     if ( !setequal(col_names[1:4], c("Names", "Email", "SID", "Sections")) ){

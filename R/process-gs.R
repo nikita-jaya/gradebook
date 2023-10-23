@@ -168,3 +168,44 @@ get_id_cols <- function(df){
   
   return(columns_to_keep)
 }
+#' Get the ID Columns for Unprocessed Gradescope Data
+#'
+#' This function identified the id columns from unprocessed gradescope data
+#'
+#' @param gs_data unprocessed Gradescope dataframe
+#' 
+#' @return a list of unprocessed id columns 
+#' @importFrom stringr str_replace_all regex
+#' @importFrom cli cli_alert_info
+#' @export
+#' 
+#' 
+get_id_cols_unprocessed_data <- function(df){
+    #REGEX pattern: case INsensitive, then matches the extensions
+    #works with untouched GS dataframe so we can match the pattern
+    regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
+    
+    # extract base names and excludes the extensions (max points, submission time and lateness)
+    base_names <- stringr::str_replace_all(names(df),regex, "")
+    
+    # Count occurrences of base names
+    base_name_counts <- table(base_names)
+    
+    # identify base names that repeat exactly 4 times
+    repeating <- names(base_name_counts[base_name_counts == 4])
+    
+    # identify columns to keep: those not repeating 4 times
+    columns_to_keep <- names(df)[!(base_names %in% repeating)]
+    
+    alert <- function() {
+        cli::cli_div(theme = list(span.emph = list(color = "orange")))
+        cli::cli_text("{.emph Important Message}")
+        cli::cli_end()
+        cli::cli_alert_info("The ID columns from Gradescope are {columns_to_keep}")
+    }
+    alert()
+    
+    
+    
+    return(columns_to_keep)
+}
