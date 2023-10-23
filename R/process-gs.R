@@ -50,7 +50,8 @@
 #' 
 #' student_assignments_long_data <- pivot_gs(processed_data)
 #' 
-#' @importFrom tidyr pivot_longer replace_na
+#' @importFrom tidyr pivot_longer replace_na 
+#' @importFrom dplyr mutate_at vars
 #' @importFrom tibble as_tibble
 
 #' @export
@@ -60,6 +61,8 @@ pivot_gs <- function(processed_data, names_sep = "_-_"){
 #yields 8 columns:  "name", "section", "email", "sid", "assignments", 
 #                   "max points","submission time", "lateness (h:m:s)"
   
+    
+    processed_data <- processed_data |> mutate_at(vars(contains("lateness")), as.character)
   #get_id_cols(): extracts the col names
   id_cols <- get_id_cols(processed_data)
   
@@ -69,6 +72,7 @@ pivot_gs <- function(processed_data, names_sep = "_-_"){
                   names_to = c("assignments", ".value"),
                   names_sep = names_sep
       )
+  
   return(sxa)
 }
 
@@ -167,4 +171,87 @@ get_id_cols <- function(df){
   
   
   return(columns_to_keep)
+}
+#' Get the ID Columns for Unprocessed Gradescope Data
+#'
+#' This function identified the id columns from unprocessed gradescope data
+#'
+#' @param gs_data unprocessed Gradescope dataframe
+#' 
+#' @return a list of unprocessed id columns 
+#' @importFrom stringr str_replace_all regex
+#' @importFrom cli cli_alert_info
+#' @export
+#' 
+#' 
+get_id_cols_unprocessed_data <- function(df, give_alert = TRUE){
+    #REGEX pattern: case INsensitive, then matches the extensions
+    #works with untouched GS dataframe so we can match the pattern
+    regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
+    
+    # extract base names and excludes the extensions (max points, submission time and lateness)
+    base_names <- stringr::str_replace_all(names(df),regex, "")
+    
+    # Count occurrences of base names
+    base_name_counts <- table(base_names)
+    
+    # identify base names that repeat exactly 4 times
+    repeating <- names(base_name_counts[base_name_counts == 4])
+    
+    # identify columns to keep: those not repeating 4 times
+    columns_to_keep <- names(df)[!(base_names %in% repeating)]
+    
+    alert <- function() {
+        cli::cli_div(theme = list(span.emph = list(color = "orange")))
+        cli::cli_text("{.emph Important Message}")
+        cli::cli_end()
+        cli::cli_alert_info("The ID columns from Gradescope are {columns_to_keep}")
+    }
+    
+    if (give_alert){
+        alert()
+    }
+    
+    
+    return(columns_to_keep)
+}
+
+#' Get the Assignment Names for Unprocessed Gradescope Data
+#'
+#' This function identified the assignments from unprocessed gradescope data
+#'
+#' @param gs_data unprocessed Gradescope dataframe
+#' 
+#' @return a list of assignments 
+#' @importFrom stringr str_replace_all regex
+#' @importFrom cli cli_alert_info
+#' @export
+#' 
+#' 
+get_assignments_unprocessed_data <- function(df, give_alert = TRUE){
+    #REGEX pattern: case INsensitive, then matches the extensions
+    #works with untouched GS dataframe so we can match the pattern
+    regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
+    
+    # extract base names and excludes the extensions (max points, submission time and lateness)
+    base_names <- stringr::str_replace_all(names(df),regex, "")
+    
+    # Count occurrences of base names
+    base_name_counts <- table(base_names)
+    
+    # identify base names that repeat exactly 4 times
+    assignment_names <- names(base_name_counts[base_name_counts == 4])
+    
+    alert <- function() {
+        cli::cli_div(theme = list(span.emph = list(color = "orange")))
+        cli::cli_text("{.emph Important Message}")
+        cli::cli_end()
+        cli::cli_alert_info("The assignments from Gradescope are {assignment_names}")
+    }
+    
+    if (give_alert){
+        alert()
+    }
+    
+    return (assignment_names)
 }

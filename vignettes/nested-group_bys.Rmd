@@ -286,7 +286,7 @@ The idea would be:
 There will be some conversions that need to happen to be sure each of those bits of data in the policy file are passed as their appropriate things (a name, a function, a data frame, column names). The package `rlang` will be helpful here.
 
 ```{r}
-library(tidyverse)
+library(tidyr)
 policy <- list(list(category = "ps_1",
                     aggregation = "sum",
                     assignments = c("ps_1_written", "ps_1_code")),
