@@ -62,7 +62,7 @@ check_assignment_names <- function(policy, pivot_df){
     
     pivot_assigns <- unique(pivot_df$assignments)
     
-    additional_assigns <- as.data.frame(policy_assigns) %>%
+    additional_assigns <- as.data.frame(policy_assigns) |> 
         filter(!(policy_assigns %in% pivot_assigns)) 
     
     if (nrow(additional_assigns) > 0){

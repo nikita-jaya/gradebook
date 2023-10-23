@@ -25,7 +25,7 @@
 #'  )
 #' processed_data <- process_id(data)
 #' 
-#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across group_split last
+#' @importFrom dplyr filter group_by ungroup arrange summarize everything n across group_split last mutate across everything
 #' @importFrom tidyr drop_na
 #' @importFrom purrr map_dfr
 #' @export
@@ -42,6 +42,11 @@ process_id <- function(gs_data) {
     dplyr::group_split() |>
     purrr::map_dfr(merge_replicated_records)
   
+  #replace any -Inf with NA
+  unique_ids <- unique_ids |>
+      mutate(
+          across(everything(), ~replace(.x, .x == -Inf, values = NA))
+      )
   return(unique_ids)
 }
 
@@ -115,40 +120,61 @@ merge_replicated_records <- function(single_sid_df) {
   }
 }
 
-#' Check Names for Gradescope Data
+#' Check Formatting of Column Names for Gradescope Data
 #'
-#' This functions checks the names throughout the Gradescope data
+#' This functions checks the column names throughout the Gradescope data
 #'
 #' @param gs_data Grades data that's validated for having the right format in terms of names and nesting
 #'
-#' @return No output, only stops and warnings
+#' @return Outputs same dataframe if no error
 #' @importFrom stringr str_c
 #' @export
-check_data_names <- function(gs_data){
-    if (! (length(gs_data)%%4 == 0) ){
-        stop("Incorrect number of columns")
-    }
+check_data_colnames_format <- function(gs_data){
     
     col_names <- colnames(gs_data)
     
-    if ( !setequal(col_names[1:4], c("Names", "Email", "SID", "Sections")) ){
-        stop("Formatting for first four columns is incorrect")
+    id_cols <- get_id_cols_unprocessed_data(gs_data)
+    
+    if ( !("sid" %in% id_cols | "SID" %in% id_cols) ){
+        stop("There is no SID column")
     }
     
-    assignment_names <- col_names[seq(from = 5, to = length(col_names), by = 4)]
-    n <- length(assignment_names)
-    formatting_additions <-  c("", " - Max Points",  " - Submission Time", " - Lateness (H:M:S)")[rep(1:4, times = n)]
-    expected_colnames <- stringr::str_c(assignment_names[rep(1:n, each = 4)],
-                                        formatting_additions)
+    assignment_names <- get_assignments_unprocessed_data(gs_data)
     
-    if ( !setequal(col_names[-1:-4], expected_colnames) ){
-        wrong_names <- setdiff(col_names[-1:-4], expected_colnames)
-        stop(paste("Incorrect formatting for columns names:", wrong_names))
+    if (is.null(assignment_names) | length(assignment_names) == 0){
+        stop("There are no assignments in this dataframe")
     }
     
-    get_id_cols(gs_data)
     
     return (gs_data)
+}
+
+
+#' Drop Ungraded Assignments
+#'
+#' This functions drops any assignments that have no grades for any students and replaced -Inf values
+#'
+#' @param gs_data A Gradescope data
+#' @importFrom dplyr filter select
+#' @importFrom purrr keep
+#' @return same dataframe without graded assignments
+#' @export
+drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
+    
+    assignments <- get_assignments_unprocessed_data(gs_data, give_alert = FALSE)
+    #These are the dropped assignments with all NAs for raw-score
+    dropped <- gs_data |> keep(~all(is.na(.x))) |> names()
+    dropped <- dropped[dropped %in% assignments]
+    alert <- function() {
+        cli::cli_div(theme = list(span.emph = list(color = "orange")))
+        cli::cli_text("{.emph Important Message}")
+        cli::cli_end()
+        cli::cli_alert_info("These are your ungraded assignments: {dropped}")
+    }
+    if (give_alert){
+        alert()
+    }
+    gs_data <- gs_data |> select(-contains(dropped))
 }
 
 #' Check Column Names for Gradescope Data
@@ -163,12 +189,12 @@ check_data_names <- function(gs_data){
 #'   'NAME' = c('Al', 'Ben'),
 #'   'EMAIL' = c('al@company.com', 'ben@company.com')
 #' )
-#' lower <- check_colnames(data)
+#' lower <- lower_colnames(data)
 #'
 #' @return same dataframe with lower case column names
 #' @importFrom stringr str_c
 #' @export
-check_colnames <- function(processed_data) {
+lower_colnames <- function(processed_data) {
     
     colnames(processed_data) <- tolower(colnames(processed_data))
     return (processed_data)

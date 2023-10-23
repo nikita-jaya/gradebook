@@ -1,0 +1,351 @@
+---
+title: "How to implement nested grouped operations?"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Nested Grouped Operations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+A challenge of authoring software to calculate course grades is that different courses can use very different grading policies. Consider two policies:
+
+> A. Assignments include 2 problem sets and 1 exam. Problem sets are aggregated by weighting each one equally. To calculate a course grade, problem sets and exams are aggregated by weighting them 50-50.
+> 
+> B. Assignments include 2 problem sets and 1 exam but problem sets are comprised of two parts, a written component and a coding component. The score on a given problem set is the number of total points earned over the total points possible. Problem sets are aggregated by weighting each one equally. To calculate a course grade, problem sets and exams are aggregated by weighting them 50-50.
+
+A surprisingly robust abstraction to encompass these two policies is to cast them as sequences of grouped aggregations. In his vignette we use `group_by()` and `summarize()` to implement these two policies on a demo data set. The ultimate objective is to figure out:
+
+*How should we implement functions that will allow for an arbitrary number of nested groupings and arbitrary aggregation functions?*
+
+
+#### Definitions
+
+**Category**
+
+A set of assignments and/or other categories along with an aggregation function. Aggregation can include number of drops and a lateness penalty.
+
+Front end aggregation functions:
+
+1. Equal weights
+2. By total points
+3. Min
+4. Max
+
+
+### The demo data set
+
+```{r}
+#| message: false
+library(dplyr)
+
+grades_a <- tibble(student_id = rep(c("4863", "5211", "4893"), each = 3),
+                   assignment = rep(c("ps_1", "ps_2", "exam"), 3),
+                   pts_earned = c(17, 32, 86,
+                                  17, 29, 75,
+                                  16, 23, 92),
+                   pts_max    = rep(c(25, 36, 100), 3),
+                   category   = rep(c("ps", "ps", "exam"), 3))
+grades_a
+```
+
+```yaml
+# policy a
+course_grade:
+  aggregation:
+    weights: even
+    drops: 0 
+    lateness: etc...
+  categories:
+    exams:
+      aggregation: mean
+      assignments:
+        - exam
+    ps:
+      aggregation: mean
+      assignments:
+        - ps_1_written
+        - ps_1_code
+        - ps_2_written
+        - ps_2_code
+```
+
+
+```{r}
+grades_b <- tibble(student_id = rep(c("4863", "5211", "4893"), each = 5),
+                   assignment = rep(c("ps_1_written", 
+                                      "ps_1_code",
+                                      "ps_2_written",
+                                      "ps_2_code",
+                                      "exam"), 3),
+                   pts_earned = c(12, 5, 19, 13, 86,
+                                  11, 6, 19, 10, 75,
+                                  8, 8, 10, 13, 92),
+                   pts_max    = rep(c(15, 10, 20, 16, 100), 3),
+                   category   = rep(c("ps", "ps", "ps", "ps", "exam"), 3),
+                   subcategory = rep(c("ps_1", "ps_1", "ps_2", "ps_2", "exam"), 3))
+grades_b
+```
+
+
+```yaml
+# policy b
+categories:
+  aggregation: mean
+  exams:
+    aggregation: mean
+    assignments:
+      - exam
+  ps:
+    aggregation: mean
+    categories:
+      ps_1:
+        aggregation: by points
+        assignments:
+          - ps_1_written
+          - ps_1_code
+      ps_2:
+        aggregation: by points
+        assignments:
+          - ps_2_written
+          - ps_2_code
+    
+```
+
+```yaml
+# policy b take 2
+categories:
+  exams:
+    assignments:
+      - exam
+  ps:
+    categories:
+      agg: equally weighted
+      ps_1:
+        agg: by points
+        assignments:
+          - ps_1_written
+          - ps_1_code
+      ps_2:
+        agg: by points
+        assignments:
+          - ps_2_written
+          - ps_2_code
+```
+
+```yaml
+quiz:
+  agg: equally weighted
+  assignments:
+    - name: quiz 1
+      agg: equally weighted
+      assignments:
+        - name: ind quiz
+          agg: max
+          assignments:
+            - ind version a
+            - ind version b
+            - ind version c
+            - ind version d
+        - name: group quiz
+          agg: max
+          assignments:
+            - group version a
+            - group version b
+            - group version c
+            - group version d
+    - name: quiz 2
+      agg: equally weighted
+      assignments:
+        - name: ind quiz
+          agg: max
+          assignments:
+            - ind version a
+            - ind version b
+            - ind version c
+            - ind version d
+        - name: group quiz
+          agg: max
+          assignments:
+            - group version a
+            - group version b
+            - group version c
+            - group version d
+```
+
+### Policy A
+
+#### I. Hardcode scores
+
+```{r}
+grades_a |>
+    mutate(score = pts_earned / pts_max) |>
+    group_by(student_id, category) |>
+    summarize(cat_score = mean(score)) |>
+    summarize(course_grade = mean(cat_score))
+```
+
+
+### Policy B
+
+#### I. Hardcode scores
+
+```{r}
+grades_b |>
+    group_by(student_id, category, subcategory) |>
+    summarize(tot_earned = sum(pts_earned),
+              tot_max    = sum(pts_max)) |>
+    ungroup() |>
+    mutate(score = tot_earned / tot_max) |>
+    group_by(student_id, category) |>
+    summarize(cat_score = mean(score)) |>
+    summarize(course_grade = mean(cat_score))
+```
+
+### Questions
+
+1. Can this be made more general by replacing the `mutate()` step with the inclusion of a `weights` column so that all aggregations are just weighted sums?
+
+2. How to represent subcategories in the data frame that are category-specific? E.g. should `exam` be both a category and a subcategory? If it is NA, won't it be lumped with all other NA in the group_by?
+
+3. This approach will be pulling categories from the list (a ragged array) and appending them to the grades data frame (a square array). Would it work better to effectively take the scores from the data frame and append them to the list? Said another way, should we be using `dplyr` functions like `group_by()` and `summarize()`, `purrr` functions like `group_map()`, or `nest()` from `tidyr`?
+
+
+# Second Try
+
+Here is an attempt at solving the nested categories by doing a few things. As an example, consider this simple nested policy:
+
+```yaml
+categories:
+  - category: exam
+    aggregation: mean
+    assignments:
+      - final exam
+  - category: problem sets
+    aggregation: mean
+    assignments:
+      - category: ps-1
+        aggregation: by points
+        assignments:
+          - ps_1_written
+          - ps_1_code
+      - category: ps-2
+        aggregation: by points
+        assignments:
+          - ps_2_written
+          - ps_2_code
+```
+
+The idea would be:
+
+1. Keeping the grade data in wide instead of tall form, where the post-lateness grade for every assignment can be found in a column.
+2. Set up a map that will iterate over a list of every category and subcategory starting with the leaves of the tree. Essentially like this:
+   ```yaml
+   - category: ps_1
+     aggregation: by_points
+     assignments:
+       - ps_1_written
+       - ps_1_code
+   - category: ps_2
+     aggregation: by_points
+     assignments:
+       - ps_2_written
+       - ps_2_code
+   - category: problem_sets
+     aggregation: mean
+     assignments:
+       - ps_1
+       - ps_2
+   - category: exam
+     aggregation: mean
+     assignments:
+       - final_exam
+   ```
+4. The operation that we want to enable is something like this:
+   ```r
+   gs_data |>
+     mutate(ps_1 = by_points(ps_1_written, ps_1_code)) |>
+     mutate(ps_2 = by_points(ps_2_written, ps_2_code)) |>
+     mutate(problem_sets = mean(ps_1, ps2)) |>
+     mutate(exam = mean(final_exam)) |>
+     mutate(course_grade = weighted_sum(problem_sets, weights))
+   ```
+   Note that this won't quite work as written. `mutate()` wants to do column-wise operations, so `mean()`, for example, won't work as intended. It's possible `dplyr::rowwise()` is the solution (we'd start our pipe with it).
+3. The map would be something like (I forget map syntax):
+   ```r
+   map(policy_list, mutate(x$category = x$aggregation(gs_wide, cols = x$assignments)))
+   ```
+4. I'm not quite sure how to get the output of a given iteration accessible to the next iteration (so that `ps_1` can get passed to `ps`), but the general idea is just to tack columns onto the right side of `gs_wide`.
+
+There will be some conversions that need to happen to be sure each of those bits of data in the policy file are passed as their appropriate things (a name, a function, a data frame, column names). The package `rlang` will be helpful here.
+
+```{r}
+library(tidyr)
+policy <- list(list(category = "ps_1",
+                    aggregation = "sum",
+                    assignments = c("ps_1_written", "ps_1_code")),
+               list(category = "ps_2",
+                    aggregation = "sum",
+                    assignments = c("ps_2_written", "ps_2_code")),
+               list(category = "problem-sets",
+                    aggregation = "mean",
+                    assignments = c("ps_2", "ps_2")),
+               list(category = "exam",
+                    aggregation = "mean",
+                    assignments = c("final_exam")))
+
+grades_b <- tibble(student_id = rep(c("4863", "5211", "4893"), 
+                                    each = 5),
+                   assignment = rep(c("ps_1_written", 
+                                      "ps_1_code",
+                                      "ps_2_written",
+                                      "ps_2_code",
+                                      "final_exam"), 3),
+                   pts_earned = c(12, 5, 19, 13, 86,
+                                  11, 6, 19, 10, 75,
+                                  8, 8, 10, 13, 92),
+                   pts_max    = rep(c(15, 10, 20, 16, 100), 3),
+                   category   = rep(c("ps", "ps", "ps", "ps", "exam"), 3),
+                   subcategory = rep(c("ps_1", "ps_1", "ps_2", "ps_2", "exam"), 3))
+
+gs_wide <- grades_b |>
+    mutate(score = pts_earned / pts_max) |>
+    pivot_wider(id_cols = student_id,
+                names_from = assignment,
+                values_from = score)
+
+pol1 <- policy[[1]]
+
+
+agg_assigns <- function(pol1, gs_wide) {
+    gs_wide[[pol1$category]] = get(pol1$aggregation)(pol1$assignments)
+}
+
+gs_wide |>
+    map(agg_assigns)
+
+library(glue)
+gs_wide |>
+    rowwise() |>
+    mutate(get(pol1$aggregation)(!!!rlang::syms(pol1$assignments)))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
