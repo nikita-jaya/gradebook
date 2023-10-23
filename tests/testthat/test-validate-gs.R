@@ -4,7 +4,7 @@ test_that("from capital col names to lower case", {
       NAMES = c("John Smith"),
       EMAIL = c("john.smith@berkeley.edu"))
     
-    lower_data <- check_colnames(data)
+    lower_data <- lower_colnames(data)
     
     correct_data <- data.frame(
       sid = c(3032412514),
@@ -20,7 +20,7 @@ test_that("from  Title Case col names lto ower case", {
     `User Name` = c("John Smith"),
     `Email` = c("john.smith@berkeley.edu"))
   
-  lower_data <- check_colnames(data)
+  lower_data <- lower_colnames(data)
   
   correct_data <- data.frame(
     sid = c(3032412514),
@@ -36,7 +36,7 @@ test_that("no changes", {
     `user name` = c("John Smith"),
     `email` = c("john.smith@berkeley.edu"))
   
-  lower_data <- check_colnames(data)
+  lower_data <- lower_colnames(data)
   
   correct_data <- data.frame(
     sid = c(3032412514),

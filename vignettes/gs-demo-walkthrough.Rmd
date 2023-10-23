@@ -28,12 +28,12 @@ Student data is formatted according to Gradescope .csv format, where each unit o
 gs_demo
 ```
 
-### check_colnames()
+### lower_colnames()
 This function changes all column names to lowercase for consistent data processing.
 
 ```{r}
 gs_demo |>
-    check_colnames()
+    lower_colnames()
 ```
 
 ### check_data_names()
@@ -41,7 +41,7 @@ This function checks that the general formatting for the column names of the Gra
 
 ```{r}
 gs_demo |>
-    check_colnames()
+    lower_colnames()
     #check_data_names() |> need to add REGEX
 ```
 
@@ -50,7 +50,7 @@ This function drops any students with missing student IDs and merges any replica
 
 ```{r}
 gs_demo |>
-    check_colnames() |>
+    lower_colnames() |>
     #check_data_names() |> need to add REGEX
     process_id()
 ```
@@ -60,7 +60,7 @@ This function removes any white spaces and special characters from column names.
 
 ```{r}
 gs_demo |>
-    check_colnames() |>
+    lower_colnames() |>
     #check_data_names() |> need to add REGEX
     process_id() |>
     process_assignments()
@@ -71,7 +71,7 @@ This function applies the pivot-longer function to allow for unit of observation
 
 ```{r}
 pivot_df <- gs_demo |>
-    check_colnames() |>
+    lower_colnames() |>
     #check_data_names() |> need to add REGEX
     process_id() |>
     process_assignments() |>

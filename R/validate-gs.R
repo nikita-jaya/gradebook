@@ -163,12 +163,12 @@ check_data_names <- function(gs_data){
 #'   'NAME' = c('Al', 'Ben'),
 #'   'EMAIL' = c('al@company.com', 'ben@company.com')
 #' )
-#' lower <- check_colnames(data)
+#' lower <- lower_colnames(data)
 #'
 #' @return same dataframe with lower case column names
 #' @importFrom stringr str_c
 #' @export
-check_colnames <- function(processed_data) {
+lower_colnames <- function(processed_data) {
     
     colnames(processed_data) <- tolower(colnames(processed_data))
     return (processed_data)
