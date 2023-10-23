@@ -61,6 +61,8 @@ pivot_gs <- function(processed_data, names_sep = "_-_"){
 #yields 8 columns:  "name", "section", "email", "sid", "assignments", 
 #                   "max points","submission time", "lateness (h:m:s)"
   
+    
+    processed_data <- processed_data |> mutate_at(vars(contains("lateness")), as.character)
   #get_id_cols(): extracts the col names
   id_cols <- get_id_cols(processed_data)
   
@@ -71,7 +73,6 @@ pivot_gs <- function(processed_data, names_sep = "_-_"){
                   names_sep = names_sep
       )
   
-  sxa <- sxa |> mutate_at(vars(contains("lateness")), as.character)
   return(sxa)
 }
 
