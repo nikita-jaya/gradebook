@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = FALSE
 )
 ```
 
@@ -80,9 +81,9 @@ gs_wide |>
 
 ```{r}
 #| message: false
-library(tidyverse)
-library(future.apply)
-plan(multisession)
+# library(tidyverse)
+# library(future.apply)
+# plan(multisession)
 
 policy <- list(list(category = "ps_1",
                     aggregation = "weighted_by_points",
