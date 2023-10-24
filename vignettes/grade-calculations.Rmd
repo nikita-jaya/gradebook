@@ -20,7 +20,8 @@ knitr::opts_chunk$set(
 ### Load demo data
 
 ```{r}
-library(tidyverse)
+library(dplyr)
+library(tidyr)
 library(gradebook)
 
 policy_nested <- list(
