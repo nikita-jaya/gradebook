@@ -106,10 +106,10 @@ calculate_grades_with_for_loop <- function(gs_data, policy){
     final_grades <- gs_data
     for (i in 1:length(policy$name)){
         if (policy$aggregation[i] == "by_weight"){
-            final_grades <- choose_aggregation(policy$name[i], policy$aggregation[i], unlist(policy$assignments[i]), final_grades, weights = policy$weights)
+            final_grades <- choose_aggregation(policy$category[i], policy$aggregation[i], unlist(policy$assignments[i]), final_grades, weights = policy$weights)
         }
         else {
-            final_grades <- choose_aggregation(policy$name[i], policy$aggregation[i], unlist(policy$assignments[i]), final_grades) 
+            final_grades <- choose_aggregation(policy$category[i], policy$aggregation[i], unlist(policy$assignments[i]), final_grades) 
         }
     }
 }
@@ -119,7 +119,7 @@ create_overall_category <- function(policy_nested){
     weights <- purrr::map(policy_nested, ~.x$weight) |> unlist()
     i <- length(policy_nested)
     overall_grade_category <- list(category = "Overall Grade",
-                                   aggregation = "by weight",
+                                   aggregation = "by_weight",
                                    weights = weights,
                                    assignments = assignments)
     policy_nested <- append(policy_nested, list(overall_grade_category))
