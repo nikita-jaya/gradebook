@@ -19,7 +19,7 @@ Here's an approach of mutating a new assignment for each sub-category and catego
 Here's an example of gs_wide:
 
 ```{r}
-library(tidyverse)
+library(tidyr)
 
 gs_data <- tibble(
   sid = c(007),
