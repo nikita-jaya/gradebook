@@ -20,7 +20,6 @@ Here's an example of gs_wide:
 
 ```{r}
 library(tidyr)
-
 gs_data <- tibble(
   sid = c(007),
   ps_1_written = c(8),
@@ -204,7 +203,7 @@ sub_assigns <- list(c("ps_1_written", "ps_1_code"), c("ps_2_written", "ps_2_code
 aggregation <- list("by_points", "by_points")
 baby_policy <- list(aggregate_assign, aggregation, sub_assigns)
 
-grading_with_just_pmap <- pmap(baby_policy, pmap_function)
+#grading_with_just_pmap <- pmap(baby_policy, pmap_function)
 
 grading_with_just_pmap
 
