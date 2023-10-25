@@ -148,12 +148,12 @@ none <- function(data){
 Here's an example of how these functions would be run sequentially: (I'm assuming this order will be determined by `map_depth()` and these functions will be called depending on the policy file)
 
 ```{r}
-grades <- gs_data |>
-  by_percent(aggregate_assign = "ps_1", sub_assigns = c("ps_1_written", "ps_1_code") ) |>
-  by_percent(aggregate_assign = "ps_2", sub_assigns = c("ps_2_written", "ps_2_code") ) |>
-  by_percent(aggregate_assign = "problem_sets", sub_assigns = c("ps_1", "ps_2")) |>
-  by_percent(aggregate_assign = "exam", sub_assigns = c("final_exam")) |>
-  by_weight(aggregate_assign = "course_grade", sub_assigns = c("problem_sets", "exam"), weights = c(0.6, 0.4))
+# grades <- gs_data |>
+#   by_percent(aggregate_assign = "ps_1", sub_assigns = c("ps_1_written", "ps_1_code") ) |>
+#   by_percent(aggregate_assign = "ps_2", sub_assigns = c("ps_2_written", "ps_2_code") ) |>
+#   by_percent(aggregate_assign = "problem_sets", sub_assigns = c("ps_1", "ps_2")) |>
+#   by_percent(aggregate_assign = "exam", sub_assigns = c("final_exam")) |>
+#   by_weight(aggregate_assign = "course_grade", sub_assigns = c("problem_sets", "exam"), weights = c(0.6, 0.4))
 
 ```
 
