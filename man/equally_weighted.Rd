@@ -16,7 +16,7 @@ max_score(scores, ...)
 
 min_score(scores, n_drops = 0, ...)
 
-none(scores, ...)
+none(gs_data)
 }
 \arguments{
 \item{scores}{A vector of assignment scores.}

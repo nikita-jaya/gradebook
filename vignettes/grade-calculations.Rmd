@@ -68,11 +68,11 @@ gs_wide <- grades_b |>
 ### Calculate category grades
 
 ```{r}
-policy_flat <- policy_nested |>
-    gradebook::flatten_policy()
-
-gs_wide |>
-    get_category_grades(policy_flat)
+# policy_flat <- policy_nested |>
+#     gradebook::flatten_policy()
+# 
+# gs_wide |>
+#     get_category_grades(policy_flat)
 ```
 
 
