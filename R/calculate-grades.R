@@ -1,3 +1,124 @@
+#' Aggregate assignment scores
+#'
+#' @description
+#' 
+#' A collection of functions to aggregate assignment scores. Their s
+#'
+#' * `equally_weighted()` computes a mean with the option to drop lowest scores.
+#' 
+#' * `weighted_by_points()` computes a weighted mean using a weights vector after
+#' optionally dropping the lowest scores.
+#'
+#' * `max_score()` computes the max score.
+#' 
+#' * `min_score()` computes the min score after optionally dropping lowest scores.
+#' 
+#' * `none()` if there is only 1 score, returns it, otherwise throws an error. 
+#' Serves as a passthrough aggregation for categories with only 1 assignment.
+#'
+#' @param scores A vector of assignment scores.
+#' @param weights A vector of weights of the same length as `scores`. Weights
+#' that do not sum to one are ok - they get normalized.
+#' @param n_drops The number of lowest scores to drop before aggregating.
+#' 
+#' @return A single aggregated score (a vector of length 1). 
+#'
+#' @family {Aggregation functions}
+#' @examples
+#' my_scores <- c(.7, .9, .1)
+#' my_weights <- c(15, 10, 10)
+#' 
+#' equally_weighted(scores = my_scores, n_drops = 1)
+#' weighted_by_points(scores = my_scores, weights = my_weights, n_drops = 1)
+#' max_score(my_scores)
+#' min_score(my_scores, n_drops = 1)
+#' none(my_scores)
+#' 
+#' @export
+equally_weighted <- function(scores, n_drops = 0, ...) {
+    
+    if (n_drops > 0) {scores[order(scores)[1:n_drops]] <- NA}
+    
+    mean(scores, na.rm =TRUE)
+}
+
+#' @rdname equally_weighted
+#' @export
+weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
+    
+    if (n_drops > 0) {
+        drop_idx <- order(scores)[1:n_drops]
+        weights[drop_idx] <- NA
+        scores[drop_idx] <- NA
+    }
+    
+    sum(scores * (weights / sum(weights, na.rm = TRUE)), na.rm =TRUE)
+}
+
+#' @rdname equally_weighted
+#' @export
+max_score <- function(scores, ...) {
+    max(scores)
+}
+
+#' @rdname equally_weighted
+#' @export
+min_score <- function(scores, n_drops = 0, ...) {
+    min(scores)
+}
+
+#' @rdname equally_weighted
+#' @export
+none <- function(scores, ...) {
+    ifelse(length(scores) == 1, scores, stop("Can only use `aggregation: none`
+                                             if there is only 1 assignment in 
+                                             the category."))
+}
+
+#' Get one category grade
+#'
+#' @description
+#' 
+#' Applies one of the aggregation functions to grade data from one student to 
+#' calculate one category grade for that student.
+#'
+#' @param gs_row A vector of assignment scores and weights coming from a row of the
+#' gs data frame.
+#' @param policy_item A single-layer list containing, at least `assignments`,
+#' a vector and optionally `n_drops`, an integer.
+#' 
+#' @return A single aggregated category grade.
+#' @export
+get_one_grade <- function(gs_row, policy_item) {
+    get(policy_item$aggregation)(
+        scores = gs_row[policy_item$assignments],
+        weights = gs_row[paste0(policy_item$assignments, "_max_pts")],
+        n_drops = ifelse(is.null(policy_item$n_drops), 0, policy_item$n_drops))
+}
+
+#' Get category grades for all students
+#'
+#' @description
+#' 
+#' Iterates `get_one_grade()` across all categories of a policy file and across
+#' all students present in a gs file.
+#'
+#' @param gs A vector of assignment scores and weights coming from a row of the
+#' gs data frame.
+#' @param policy_item A single-layer list containing, at least `assignments`,
+#' a vector and optionally `n_drops`, an integer.
+#' 
+#' @return An extended version of the gs data frame, with columns added for each 
+#' category described in the policy file containing the grades for each student.
+#' @export
+get_category_grades <- function(gs, policy) {
+    for (policy_item in policy) {
+        gs[[policy_item$category]] <- apply(gs, 1, get_one_grade, 
+                                            policy_item = policy_item)
+    }
+    gs
+}
+
 #' Drop NA Assignments
 #' 
 #' This function drops any assignments that aren't assigned to a category
