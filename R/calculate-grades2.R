@@ -113,3 +113,15 @@ calculate_grades_with_for_loop <- function(gs_data, policy){
         }
     }
 }
+
+create_overall_category <- function(policy_nested){
+    assignments <- purrr::map(policy_nested, ~.x$category) |> unlist()
+    weights <- purrr::map(policy_nested, ~.x$weight) |> unlist()
+    i <- length(policy_nested)
+    overall_grade_category <- list(category = "Overall Grade",
+                                   aggregation = "by weight",
+                                   weights = weights,
+                                   assignments = assignments)
+    policy_nested <- append(policy_nested, list(overall_grade_category))
+    return (policy_nested)
+}
