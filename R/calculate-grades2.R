@@ -36,7 +36,7 @@ by_points <- function(gs_data, sub_category, sub_assigns){
 #' @return a wide formatted dataframe with raw score, max points and percent for new subcategory
 #' @importFrom dplyr mutate across 
 #' @export
-by_percent <- function(gs_data, aggregate_assign, sub_assigns){
+by_percent <- function(gs_data, sub_category, sub_assigns){
     percent_cols <- paste0(sub_assigns, "_-_percent") #names of raw score columns
     max_cols <- paste0(sub_assigns, "_-_max_points") #names of max points columns
     
@@ -108,19 +108,19 @@ by_none <- function(gs_data){
 #' @export
 choose_aggregation <- function(aggregation, ...){
     if (aggregation ==  "weighted_by_points"){
-        return ( by_points(gs_data, aggregate_assign = aggregate_assign, 
+        return ( by_points(gs_data, sub_category = sub_category, 
                            sub_assigns = sub_assigns) )
     } else if (aggregation == "equally_weighted"){
-        return ( by_percent(gs_data, aggregate_assign = aggregate_assign, 
+        return ( by_percent(gs_data, sub_category = sub_category, 
                             sub_assigns = sub_assigns) )
     } #else if (aggregation == "by_weight"){
-    #     return ( by_weight(gs_data, aggregate_assign = aggregate_assign, 
+    #     return ( by_weight(gs_data, sub_category = sub_category, 
     #                        sub_assigns = sub_assigns, weights = weights) )
     # } else if (aggregation == "by_max"){
-    #     return ( by_max(gs_data, aggregate_assign = aggregate_assign, 
+    #     return ( by_max(gs_data, sub_category = sub_category, 
     #                         sub_assigns = sub_assigns) )
     # } else if (aggregation == "by_min"){
-    #     return ( by_min(gs_data, aggregate_assign = aggregate_assign, 
+    #     return ( by_min(gs_data, sub_category = sub_category, 
     #                         sub_assigns = sub_assigns) )
     # }
     

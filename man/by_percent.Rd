@@ -4,14 +4,14 @@
 \alias{by_percent}
 \title{Calculate Grade Weighted by Percent}
 \usage{
-by_percent(gs_data, aggregate_assign, sub_assigns)
+by_percent(gs_data, sub_category, sub_assigns)
 }
 \arguments{
 \item{gs_data}{a wide formatted, processed Gradescope data}
 
-\item{sub_assigns}{assignments within this subcategory}
-
 \item{sub_category}{name of sub-category grade that is being calculated}
+
+\item{sub_assigns}{assignments within this subcategory}
 }
 \value{
 a wide formatted dataframe with raw score, max points and percent for new subcategory
