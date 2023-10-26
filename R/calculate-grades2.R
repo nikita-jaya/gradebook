@@ -140,9 +140,20 @@ calculate_grades_with_for_loop <- function(gs_data, policy){
     }
 }
 
+
+#' Create Overall Grade Category in Policy File
+#' 
+#' This function creates a super-category called "Overall Grade" within the policy file.
+#' This represents the overall grade for the course.
+#'
+#' @param policy_nested policy file with (nested) categories
+#'
+#' @return a policy file with an additional "Overall Grade" category
+#' @importFrom purrr map
+#' @export
 create_overall_category <- function(policy_nested){
-    assignments <- purrr::map(policy_nested, ~.x$category) |> unlist()
-    weights <- purrr::map(policy_nested, ~.x$weight) |> unlist()
+    assignments <- map(policy_nested, ~.x$category) |> unlist()
+    weights <- map(policy_nested, ~.x$weight) |> unlist()
     i <- length(policy_nested)
     overall_grade_category <- list(category = "Overall Grade",
                                    aggregation = "by_weight",
