@@ -16,7 +16,7 @@ max_score(scores, ...)
 
 min_score(scores, n_drops = 0, ...)
 
-none(gs_data)
+none(scores, ...)
 }
 \arguments{
 \item{scores}{A vector of assignment scores.}
@@ -49,7 +49,8 @@ equally_weighted(scores = my_scores, n_drops = 1)
 weighted_by_points(scores = my_scores, weights = my_weights, n_drops = 1)
 max_score(my_scores)
 min_score(my_scores, n_drops = 1)
-none(my_scores)
+my_score <- c(.7)
+none(my_score)
 
 }
 \concept{{Aggregation functions}}

@@ -32,7 +32,8 @@
 #' weighted_by_points(scores = my_scores, weights = my_weights, n_drops = 1)
 #' max_score(my_scores)
 #' min_score(my_scores, n_drops = 1)
-#' none(my_scores)
+#' my_score <- c(.7)
+#' none(my_score)
 #' 
 #' @export
 equally_weighted <- function(scores, n_drops = 0, ...) {

@@ -255,3 +255,27 @@ get_assignments_unprocessed_data <- function(df, give_alert = TRUE){
     
     return (assignment_names)
 }
+
+#' Process Gradescope Data
+#' 
+#' This function takes a gradescope dataframe and processes it completely.
+#
+#' @param gs_data A dataframe (csv directly from Gradescope)
+#' @param wide_format if TRUE, keeps in wide format; if FALSE, pivots data
+#'
+#' @return Returns processed Gradescope data in wide or pivotted format
+#'
+#' @export
+process_gs_data <- function(gs_data, wide_format = TRUE){
+    process <- gs_data |>
+        lower_colnames() |>
+        check_data_colnames_format() |>
+        drop_ungraded_assignments() |>
+        process_id() |>
+        process_assignments()
+    
+    if (!wide_format){
+        process <- process |> pivot_gs()
+    }
+    return (process)
+}

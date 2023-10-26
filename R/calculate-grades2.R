@@ -81,7 +81,7 @@ by_max <- function(gs_data){
 } #need to code
 by_min <- function(gs_data){
 } #need to code
-none <- function(gs_data){
+by_none <- function(gs_data){
     return (gs_data)
 }
 
@@ -98,7 +98,7 @@ choose_aggregation <- function(aggregate_assign, aggregation,sub_assigns, gs_dat
     }
     
     #default == none
-    return (none(gs_data))
+    return (by_none(gs_data))
 }
 
 calculate_grades_with_for_loop <- function(gs_data, policy){
@@ -124,4 +124,9 @@ create_overall_category <- function(policy_nested){
                                    assignments = assignments)
     policy_nested <- append(policy_nested, list(overall_grade_category))
     return (policy_nested)
+}
+
+#drop lateness and submission and calcualte scores
+prep_for_grading <- function(gs_data){
+    
 }
