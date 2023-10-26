@@ -1,14 +1,30 @@
-compute_scores <- function(gs_data){
-    #add _score columns!
-} #need to code
+#' Compute Percentages
+#' 
+#' This function computes percents by dividng the raw_scores by max_points for 
+#' each assignment in a wide formatted, processed Gradescope data
+#'
+#' @param processed_gs_data a wide formatted, processed Gradescope data
+#'
+#' @return a wide formatted dataframe with percentages
+#' @importFrom dplyr mutate across ends_with
+#' @importFrom stringr str_replace
+#' @export
+compute_percent <- function(processed_gs_data){
+        computed_data <- processed_gs_data |>
+            mutate(across(ends_with('_raw_score'), ~ ./get(str_replace(cur_column(), 
+                                                                       '_-_raw_score', '_-_max_points')), .names = '{.col}_percent'))
+        colnames(computed_data) <- str_replace(colnames(computed_data), "raw_score_percent", "percent")
+    return (computed_data)
+}
 
 by_points <- function(gs_data, aggregate_assign, sub_assigns){
+    raw_cols <- paste0(sub_assigns, "_-_raw_score")
     total_raw <- gs_data |>   #sum up all earned points
         rowwise() |>
         summarize(raw = sum(c_across(sub_assigns))) %>%
         pull()
     
-    max_cols <- paste0(sub_assigns, "_max_pts")
+    max_cols <- paste0(sub_assigns, "_-_max_points")
     
     total_max <- gs_data |>   #sum up all max points
         rowwise() |>
@@ -21,19 +37,19 @@ by_points <- function(gs_data, aggregate_assign, sub_assigns){
                max = total_max) #total max points for whole category
     l <- length(colnames(gs_data))
     #below is naming columns by my convention of `lab1`, `lab1_score` and `lab1_max_pts`
-    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_max_pts"))
+    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_-_max_points"))
     
     return (gs_data)
 }
 by_percent <- function(gs_data, aggregate_assign, sub_assigns){
-    percent_cols <- paste0(sub_assigns, "_score")
+    percent_cols <- paste0(sub_assigns, "_-_percent")
     
     total_percent <- gs_data |> #get total score for category
         rowwise() |>
         summarize(raw = mean(c_across(percent_cols))) %>%
         pull()
     
-    max_cols <- paste0(sub_assigns, "_max_pts")
+    max_cols <- paste0(sub_assigns, "_-_max_points")
     
     total_max <- gs_data |> #get total max_pts for category
         rowwise() |>
@@ -46,7 +62,7 @@ by_percent <- function(gs_data, aggregate_assign, sub_assigns){
                max = total_max) #total max_pts for category
     l <- length(colnames(gs_data))
     #below is naming columns by my convention of `lab1`, `lab1_score` and `lab1_max_pts`
-    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_max_pts"))
+    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_-_max_pts"))
     
     return (gs_data)
 }
@@ -58,7 +74,7 @@ by_weight <- function(gs_data, aggregate_assign, sub_assigns, weights) {
         summarize(raw = sum(c_across(percent_cols)*weights)) %>% #uses weights
         pull()
     
-    max_cols <- paste0(sub_assigns, "_max_pts")
+    max_cols <- paste0(sub_assigns, "_-_max_pts")
     
     total_max <- gs_data |> #get total max_pts for category
         rowwise() |>
@@ -72,7 +88,7 @@ by_weight <- function(gs_data, aggregate_assign, sub_assigns, weights) {
     
     l <- length(colnames(gs_data))
     #below is naming columns by my convention of `lab1`, `lab1_score` and `lab1_max_pts`
-    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_max_pts"))
+    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_-_max_pts"))
     
     return (gs_data)
     
@@ -126,7 +142,28 @@ create_overall_category <- function(policy_nested){
     return (policy_nested)
 }
 
-#drop lateness and submission and calcualte scores
-prep_for_grading <- function(gs_data){
+#' Prep Processed Gradescope
+#' 
+#' This function prepares processed Gradescope data for grading by computing percentages.
+#' If wide == TRUE, this function removes all lateness and submission columns
+#'
+#' @param processed_gs_data a wide formatted, processed Gradescope data
+#' @param wide TRUE if in wide format, FALSE if in pivotted format
+#'
+#' @return a wide formatted dataframe with scores
+#' @importFrom dplyr select matches mutate_at vars contains mutate
+#' @export
+prep_for_grading <- function(processed_gs_data, wide = TRUE){
+    prepped_data <- processed_gs_data
+    if (wide){
+        prepped_data <- processed_gs_data |>
+            select(!matches(c("lateness", "submission"))) |>  #only use raw_score and max_pts cols
+            mutate_at(vars(contains("raw")), ~replace(., is.na(.), 0)) |>#change any NA scores to zeros
+            compute_percent() #compute so raw_score column has percentages
+    } else{ #if in pivotted form
+        prepped_data <- processed_gs_data |>
+            mutate(percent = raw_score/max_points)
+    }
     
+    return (prepped_data)
 }
