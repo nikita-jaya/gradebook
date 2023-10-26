@@ -17,86 +17,100 @@ compute_percent <- function(processed_gs_data){
     return (computed_data)
 }
 
-by_points <- function(gs_data, aggregate_assign, sub_assigns){
-    raw_cols <- paste0(sub_assigns, "_-_raw_score")
-    total_raw <- gs_data |>   #sum up all earned points
-        rowwise() |>
-        summarize(raw = sum(c_across(sub_assigns))) %>%
-        pull()
+#' Calculate Grade Weighted by Points
+#' 
+#' This functions calculates the grade of a category with each assignment weighted by 
+#' how many points it is worth.
+#'
+#' @param gs_data a wide formatted, processed Gradescope data
+#' @param sub_category name of sub-category grade that is being calculated
+#' @param sub_assigns assignments within this subcategory
+#'
+#' @return a wide formatted dataframe with raw score, max points and percent for new subcategory
+#' @importFrom dplyr mutate across 
+#' @export
+by_points <- function(gs_data, sub_category, sub_assigns){
+    raw_cols <- paste0(sub_assigns, "_-_raw_score") #names of raw score columns
+    max_cols <- paste0(sub_assigns, "_-_max_points") #names of max points columns
     
-    max_cols <- paste0(sub_assigns, "_-_max_points")
-    
-    total_max <- gs_data |>   #sum up all max points
-        rowwise() |>
-        summarize(raw = sum(c_across(max_cols))) %>%
-        pull()
+    sub_category_raw_name <- paste0(sub_category, "_-_raw_score") #name of new subcategory raw score column
+    sub_category_max_name <- paste0(sub_category, "_-_max_points") #name of new subcategory max points column
     
     gs_data <- gs_data |>
-        mutate(raw = total_raw, #raw pts for whole category
-               score = total_raw/total_max, #computed percentage for whole category
-               max = total_max) #total max points for whole category
-    l <- length(colnames(gs_data))
-    #below is naming columns by my convention of `lab1`, `lab1_score` and `lab1_max_pts`
-    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_-_max_points"))
-    
+        mutate("{sub_category_raw_name}" := rowSums(across(raw_cols)), #compute raw points for new assignment/category
+               "{sub_category_raw_name}" := rowSums(across(max_cols)), #compute max points for new assignment/category
+               "{sub_category}_-_percent" := get(sub_category_raw_name)/get(sub_category_max_name) #compute percents for new assignment/category
+               ) 
     return (gs_data)
 }
+
+#' Calculate Grade Weighted by Percent
+#' 
+#' This functions calculates the grade of a category with each assignment weighted equally
+#'
+#' @param gs_data a wide formatted, processed Gradescope data
+#' @param sub_category name of sub-category grade that is being calculated
+#' @param sub_assigns assignments within this subcategory
+#'
+#' @return a wide formatted dataframe with raw score, max points and percent for new subcategory
+#' @importFrom dplyr mutate across 
+#' @export
 by_percent <- function(gs_data, aggregate_assign, sub_assigns){
-    percent_cols <- paste0(sub_assigns, "_-_percent")
+    percent_cols <- paste0(sub_assigns, "_-_percent") #names of raw score columns
+    max_cols <- paste0(sub_assigns, "_-_max_points") #names of max points columns
     
-    total_percent <- gs_data |> #get total score for category
-        rowwise() |>
-        summarize(raw = mean(c_across(percent_cols))) %>%
-        pull()
-    
-    max_cols <- paste0(sub_assigns, "_-_max_points")
-    
-    total_max <- gs_data |> #get total max_pts for category
-        rowwise() |>
-        summarize(raw = sum(c_across(max_cols))) %>%
-        pull()
+    sub_category_percent_name <- paste0(sub_category, "_-_percent") #name of new subcategory raw score column
+    sub_category_max_name <- paste0(sub_category, "_-_max_points") #name of new subcategory max points column
     
     gs_data <- gs_data |>
-        mutate(raw = total_percent*total_max, #computed raw_pts for category
-               score = total_percent, #score for category
-               max = total_max) #total max_pts for category
-    l <- length(colnames(gs_data))
-    #below is naming columns by my convention of `lab1`, `lab1_score` and `lab1_max_pts`
-    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_-_max_pts"))
+        mutate("{sub_category_percent_name}" := rowMeans(across(percent_cols)), #compute raw points for new assignment/category
+               "{sub_category_max_name}" := rowSums(across(max_cols)), #compute max points for new assignment/category
+               "{sub_category}_-_raw_score" := get(sub_category_percent_name)*get(sub_category_max_name) #compute percents for new assignment/category
+        ) 
     
     return (gs_data)
 }
-by_weight <- function(gs_data, aggregate_assign, sub_assigns, weights) {
-    percent_cols <- paste0(sub_assigns, "_score")
-    
-    total_percent <- gs_data |> #get total score for category
-        rowwise() |>
-        summarize(raw = sum(c_across(percent_cols)*weights)) %>% #uses weights
-        pull()
-    
-    max_cols <- paste0(sub_assigns, "_-_max_pts")
-    
-    total_max <- gs_data |> #get total max_pts for category
-        rowwise() |>
-        summarize(raw = sum(c_across(max_cols))) %>%
-        pull()
-    
-    gs_data <- gs_data |>
-        mutate(raw = total_percent*total_max, #computed raw_pts for category
-               score = total_percent, #score for category
-               max = total_max) #total max_pts for category
-    
-    l <- length(colnames(gs_data))
-    #below is naming columns by my convention of `lab1`, `lab1_score` and `lab1_max_pts`
-    colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_-_max_pts"))
-    
-    return (gs_data)
-    
-}
+
+# by_weight <- function(gs_data, aggregate_assign, sub_assigns, weights) {
+#     percent_cols <- paste0(sub_assigns, "_score")
+#     
+#     total_percent <- gs_data |> #get total score for category
+#         rowwise() |>
+#         summarize(raw = sum(c_across(percent_cols)*weights)) %>% #uses weights
+#         pull()
+#     
+#     max_cols <- paste0(sub_assigns, "_-_max_pts")
+#     
+#     total_max <- gs_data |> #get total max_pts for category
+#         rowwise() |>
+#         summarize(raw = sum(c_across(max_cols))) %>%
+#         pull()
+#     
+#     gs_data <- gs_data |>
+#         mutate(raw = total_percent*total_max, #computed raw_pts for category
+#                score = total_percent, #score for category
+#                max = total_max) #total max_pts for category
+#     
+#     l <- length(colnames(gs_data))
+#     #below is naming columns by my convention of `lab1`, `lab1_score` and `lab1_max_pts`
+#     colnames(gs_data)[(l-2):l] <- paste0(aggregate_assign, c("", "_score", "_-_max_pts"))
+#     
+#     return (gs_data)
+#     
+# } #need to re-code
 by_max <- function(gs_data){
 } #need to code
 by_min <- function(gs_data){
 } #need to code
+
+#' No Grading Policy Function
+#' 
+#' This functions is used as a placeholder function when there is no grading policy.
+#'
+#' @param gs_data a wide formatted, processed Gradescope data
+#'
+#' @return the same wide formatted dataframe
+#' @export
 by_none <- function(gs_data){
     return (gs_data)
 }
