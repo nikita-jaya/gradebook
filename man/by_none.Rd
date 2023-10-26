@@ -13,5 +13,5 @@ by_none(gs_data)
 the same wide formatted dataframe
 }
 \description{
-This functions is used as a placeholder function when there is no grading policy.
+This function is used as a placeholder function when there is no grading policy.
 }

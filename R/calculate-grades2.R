@@ -1,22 +1,3 @@
-#' Compute Percentages
-#' 
-#' This function computes percents by dividng the raw_scores by max_points for 
-#' each assignment in a wide formatted, processed Gradescope data
-#'
-#' @param processed_gs_data a wide formatted, processed Gradescope data
-#'
-#' @return a wide formatted dataframe with percentages
-#' @importFrom dplyr mutate across ends_with
-#' @importFrom stringr str_replace
-#' @export
-compute_percent <- function(processed_gs_data){
-        computed_data <- processed_gs_data |>
-            mutate(across(ends_with('_raw_score'), ~ ./get(str_replace(cur_column(), 
-                                                                       '_-_raw_score', '_-_max_points')), .names = '{.col}_percent'))
-        colnames(computed_data) <- str_replace(colnames(computed_data), "raw_score_percent", "percent")
-    return (computed_data)
-}
-
 #' Calculate Grade Weighted by Points
 #' 
 #' This functions calculates the grade of a category with each assignment weighted by 
@@ -105,7 +86,7 @@ by_min <- function(gs_data){
 
 #' No Grading Policy Function
 #' 
-#' This functions is used as a placeholder function when there is no grading policy.
+#' This function is used as a placeholder function when there is no grading policy.
 #'
 #' @param gs_data a wide formatted, processed Gradescope data
 #'
@@ -115,24 +96,39 @@ by_none <- function(gs_data){
     return (gs_data)
 }
 
-choose_aggregation <- function(aggregate_assign, aggregation,sub_assigns, gs_data, weights = c(), ...){
-    if (aggregation ==  "by_points"){
+#' Choose Aggregation Function
+#' 
+#' This function determines which aggregation function to apply for calculating
+#' the grade of a subcategory.
+#'
+#' @param aggregation a string denoting which aggregation to use
+#' @param ... other values needed for the relevant grade calculation
+#'
+#' @return the  wide formatted dataframe with the new calculated subcategory
+#' @export
+choose_aggregation <- function(aggregation, ...){
+    if (aggregation ==  "weighted_by_points"){
         return ( by_points(gs_data, aggregate_assign = aggregate_assign, 
                            sub_assigns = sub_assigns) )
-    } else if (aggregation == "by_percent"){
+    } else if (aggregation == "equally_weighted"){
         return ( by_percent(gs_data, aggregate_assign = aggregate_assign, 
                             sub_assigns = sub_assigns) )
-    } else if (aggregation == "by_weight"){
-        return ( by_weight(gs_data, aggregate_assign = aggregate_assign, 
-                           sub_assigns = sub_assigns, weights = weights) )
-    }
+    } #else if (aggregation == "by_weight"){
+    #     return ( by_weight(gs_data, aggregate_assign = aggregate_assign, 
+    #                        sub_assigns = sub_assigns, weights = weights) )
+    # } else if (aggregation == "by_max"){
+    #     return ( by_max(gs_data, aggregate_assign = aggregate_assign, 
+    #                         sub_assigns = sub_assigns) )
+    # } else if (aggregation == "by_min"){
+    #     return ( by_min(gs_data, aggregate_assign = aggregate_assign, 
+    #                         sub_assigns = sub_assigns) )
+    # }
     
     #default == none
     return (by_none(gs_data))
 }
 
 calculate_grades_with_for_loop <- function(gs_data, policy){
-    #NOTE TO SELF: add policy$weights to policy file!!!!
     final_grades <- gs_data
     for (i in 1:length(policy$name)){
         if (policy$aggregation[i] == "by_weight"){
@@ -180,4 +176,24 @@ prep_for_grading <- function(processed_gs_data, wide = TRUE){
     }
     
     return (prepped_data)
+}
+
+
+#' Compute Percentages
+#' 
+#' This function computes percents by dividng the raw_scores by max_points for 
+#' each assignment in a wide formatted, processed Gradescope data
+#'
+#' @param processed_gs_data a wide formatted, processed Gradescope data
+#'
+#' @return a wide formatted dataframe with percentages
+#' @importFrom dplyr mutate across ends_with
+#' @importFrom stringr str_replace
+#' @export
+compute_percent <- function(processed_gs_data){
+    computed_data <- processed_gs_data |>
+        mutate(across(ends_with('_raw_score'), ~ ./get(str_replace(cur_column(), 
+                                                                   '_-_raw_score', '_-_max_points')), .names = '{.col}_percent'))
+    colnames(computed_data) <- str_replace(colnames(computed_data), "raw_score_percent", "percent")
+    return (computed_data)
 }
