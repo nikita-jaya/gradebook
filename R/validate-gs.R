@@ -31,23 +31,29 @@
 #' @export
 
 process_id <- function(gs_data) {
+    
+    # Remove NAs
+    gs_data <- gs_data |>
+        tidyr::drop_na(sid)
+        
+    # Identify duplicated records
+    dup_sids <- gs_data |>
+        dplyr::group_by(sid) |>
+        dplyr::mutate(n_sid = n()) |>
+        dplyr::filter(n_sid > 1) |>
+        dplyr::select(-n_sid)
   
-  # First, remove NAs and group by sid
-  grouped_data <- gs_data |>
-    tidyr::drop_na(sid) |>
-    dplyr::group_by(sid)
-  
-  # Then, split the data by group and apply merge_replicated_records
-  unique_ids <- grouped_data |>
-    dplyr::group_split() |>
-    purrr::map_dfr(merge_replicated_records)
-  
-  #replace any -Inf with NA
-  unique_ids <- unique_ids |>
-      mutate(
-          across(everything(), ~replace(.x, .x == -Inf, values = NA))
-      )
-  return(unique_ids)
+    # Then, split the data by group and apply merge_replicated_records
+    unique_ids <- dup_sids |>
+        dplyr::group_split() |>
+        purrr::map_dfr(merge_replicated_records)
+    
+    #replace any -Inf with NA
+    unique_ids <- unique_ids |>
+        mutate(
+            across(everything(), ~replace(.x, .x == -Inf, values = NA))
+        )
+    return(unique_ids)
 }
 
 
@@ -98,26 +104,18 @@ get_duplicate_ids <- function(gs_data) {
 # 3) if cell is NA, leave as NA
 merge_replicated_records <- function(single_sid_df) {
   
-  if (nrow(single_sid_df) == 1) {
-    return(single_sid_df)
-  } else {
     new_id <- single_sid_df |>
-      summarize(across(
-        everything(),
-        ~ if (inherits(., "Period")) {
-          last(na.omit(.))
-        } else if (is.numeric(.)) {
-          max(., na.rm = TRUE)
-        } else {
-          if (all(is.na(.))) {
-            NA
-          } else {
-            last(na.omit(.))
-          }
-        }
-      ))
+        summarize(across(
+            everything(),
+            ~ if (inherits(., "Period")) {
+                last(na.omit(.))
+            } else if (is.numeric(.)) {
+                ifelse(all(is.na(.)), NA, max(., na.rm = TRUE))
+            } else {
+                last(na.omit(.))
+            }
+        ))
     return(new_id)
-  }
 }
 
 #' Check Formatting of Column Names for Gradescope Data
