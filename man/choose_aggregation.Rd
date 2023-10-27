@@ -4,7 +4,13 @@
 \alias{choose_aggregation}
 \title{Choose Aggregation Function}
 \usage{
-choose_aggregation(aggregation, ...)
+choose_aggregation(
+  aggregation,
+  gs_data,
+  sub_category,
+  sub_assigns,
+  weights = c()
+)
 }
 \arguments{
 \item{aggregation}{a string denoting which aggregation to use}

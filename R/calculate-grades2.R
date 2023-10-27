@@ -106,7 +106,7 @@ by_none <- function(gs_data){
 #'
 #' @return the  wide formatted dataframe with the new calculated subcategory
 #' @export
-choose_aggregation <- function(aggregation, ...){
+choose_aggregation <- function(aggregation, gs_data, sub_category, sub_assigns, weights = c()){
     if (aggregation ==  "weighted_by_points"){
         return ( by_points(gs_data, sub_category = sub_category, 
                            sub_assigns = sub_assigns) )
