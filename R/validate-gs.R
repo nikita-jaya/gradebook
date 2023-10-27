@@ -43,17 +43,18 @@ process_id <- function(gs_data) {
         dplyr::filter(n_sid > 1) |>
         dplyr::select(-n_sid)
   
-    # Then, split the data by group and apply merge_replicated_records
-    unique_ids <- dup_sids |>
+    # Apply merge_replicated_records to each duplicated sid
+    de_duped_sids <- dup_sids |>
         dplyr::group_split() |>
         purrr::map_dfr(merge_replicated_records)
     
-    #replace any -Inf with NA
-    unique_ids <- unique_ids |>
-        mutate(
-            across(everything(), ~replace(.x, .x == -Inf, values = NA))
-        )
-    return(unique_ids)
+    # Attach merged rows to bottom of gs with no dups
+    gs_data |>
+        dplyr::group_by(sid) |>
+        dplyr::mutate(n_sid = n()) |>
+        dplyr::ungroup() |>
+        dplyr::filter(n_sid == 1) |>
+        dplyr::bind_rows(de_duped_sids)
 }
 
 
@@ -107,12 +108,12 @@ merge_replicated_records <- function(single_sid_df) {
     new_id <- single_sid_df |>
         summarize(across(
             everything(),
-            ~ if (inherits(., "Period")) {
-                last(na.omit(.))
+            ~ if (inherits(., c("difftime", "hms"))) {
+                ifelse(all(is.na(.)), NA, last(na.omit(.)))
             } else if (is.numeric(.)) {
                 ifelse(all(is.na(.)), NA, max(., na.rm = TRUE))
             } else {
-                last(na.omit(.))
+                ifelse(all(is.na(.)), NA, last(na.omit(.)))
             }
         ))
     return(new_id)
