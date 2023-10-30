@@ -65,6 +65,7 @@ gs_demo |>
     check_data_colnames_format() |>
     drop_ungraded_assignments() |>
     process_id()
+
 ```
 
 ### process_assignments()
