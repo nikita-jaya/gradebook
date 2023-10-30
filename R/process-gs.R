@@ -106,7 +106,7 @@ process_assignments <- function(processed_data){
   
   # Append " - raw_score" to specific column names
   new_names <- ifelse(
-    !stringr::str_detect(new_names, stringr::regex("name|section|max|time|late|email|sid", ignore_case = TRUE)), 
+    !stringr::str_detect(new_names, stringr::regex("name|section|max|time|lateness|email|sid", ignore_case = TRUE)), 
     paste0(new_names, "_-_raw_score"),
     new_names
   )
