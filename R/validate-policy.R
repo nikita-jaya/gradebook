@@ -72,3 +72,28 @@ check_assignment_names <- function(policy, pivot_df){
     return(policy)
     
 }
+
+#' Process Assignment and Category Names in Policy File
+#'
+#' This functions processes all assignment and subcategory names
+#' by removing spaces, special characters, etc.
+#'
+#' @param policy policy file 
+#'
+#' @return policy file with processed names
+#' @importFrom stringr str_replace_all
+#' @export
+process_policy_names <- function(policy){
+    assigns <- unlist(policy$assignments)
+    assigns <- assigns |>
+        tolower() |>
+        str_replace_all("[\\s:]+", "_") |>
+        str_replace_all(",", ":")
+    policy$assignments <- assigns
+    policy$category <- policy$category |>
+        tolower() |>
+        str_replace_all("[\\s:]+", "_") |>
+        str_replace_all(",", ":")
+    return (policy)
+}
+
