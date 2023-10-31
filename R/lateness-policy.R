@@ -37,8 +37,6 @@ lateness_for_one_category <- function(singular_policy, gs_data){
     return (gs_data)
 }
 
-trial_one <- lateness_for_one_category(flat_policy[[2]], gs_data)
-
 lateness_for_one_assignment <- function(assign_data, lateness_policy){
     column <- assign_data |> pull(ends_with("_-_lateness_(h_m_s)")) |> as.list()
     scalars <- map2(column, list(lateness_policy), calculate_singular_lateness)
@@ -46,17 +44,10 @@ lateness_for_one_assignment <- function(assign_data, lateness_policy){
     return (new_score)
 }
 
+lateness_for_all <- function(flat_policy, gs_data){
+   for (pol in flat_policy){
+       gs_data <- lateness_for_one_category(pol, gs_data)
+   }
+    return (gs_data)
+}
 
-
-
-# lateness_for_one_assignment <- function(assign, gs_data, lateness_policy){
-#     lateness_col <- paste0(assign, "_-_lateness_(h_m_s)")
-#     column <- gs_data[[lateness_col]] |> as.list()
-#     scalars <- map2(column, list(lateness_policy), calculate_singular_lateness)
-#     raw_col <- paste0(assign, "_-_raw_score")
-#     new_score <- gs_data[[raw_col]]*unlist(scalars)
-#     new_late_score <- paste0(assign, "_after_lateness")
-#     gs_data <- gs_data |>
-#         mutate("{new_late_score}" := new_score)
-#     return (gs_data)
-# }
