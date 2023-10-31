@@ -16,19 +16,23 @@
 #' @export
 extract_nested <- function(category) {
     # If there's no more nesting, return the category as a list
-    if (!("assignments" %in% names(category) && is.list(category$assignments))) {
+    if (!("assignments" %in% names(category)
+          && is.list(category$assignments)
+          && any(sapply(category$assignments, is.list)))) {
         return(list(category))
     }
-    
-    # Otherwise, get the nested categories
-    nested_categories <- purrr::map(category$assignments, extract_nested) |>
-        purrr::list_flatten()
-    
+  
+    # Otherwise, get nested categories
+    nested_categories <- purrr::map(category$assignments, extract_nested)
+
+    # Flatten the nested categories
+    nested_categories_flattened <- purrr::list_flatten(nested_categories)
+
     # Modify the current category to contain the nested categories as assignments
-    category$assignments <- purrr::map_chr(nested_categories, "category")
-    
+    category$assignments <- sapply(nested_categories_flattened, function(x) x$category)
+
     # Return the modified current list after nested items
-    c(nested_categories, list(category))
+    c(nested_categories_flattened, list(category))
 }
 
 #' Reshape policy file from nested to flat
@@ -47,7 +51,7 @@ extract_nested <- function(category) {
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
-    purrr::map(policy, extract_nested) |>
+    purrr::map(policy, extract_nested) |> 
         purrr::list_flatten()
 }
 
