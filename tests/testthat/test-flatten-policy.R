@@ -5,7 +5,14 @@ test_that("policy flattens to the correct form", {
              assignments = list(
                  list(category = "ps_1",
                       aggregation = "weighted_by_points",
-                      assignments = c("ps_1_written", "ps_1_code")),
+                      assignments = list(
+                                    list(category = "ps_1_wr",
+                                         aggregation = "weighted_by_points",
+                                         assignments = c("ps_1_written")),
+                                    list(category = "ps_1_co",
+                                         aggregation = "weighted_by_points",
+                                         assignments = c("ps_1_code")
+                                         ))),
                  list(category = "ps_2",
                       aggregation = "weighted_by_points",
                       assignments = c("ps_2_written", "ps_2_code")))),
@@ -13,9 +20,19 @@ test_that("policy flattens to the correct form", {
              aggregation = "none",
              assignments = c("final_exam")))
     
-    policy_flat <- list(list(category = "ps_1",
+    policy_flat <- list(list(category = "ps_1_wr",
                              aggregation = "weighted_by_points",
-                             assignments = c("ps_1_written", "ps_1_code")),
+                             assignments = c("ps_1_written")),
+                        list(category = "ps_1_co",
+                             aggregation = "weighted_by_points",
+                             assignments = c("ps_1_code")),
+      
+                        list(category = "ps_1",
+                             aggregation = "weighted_by_points",
+                             assignments = c("ps_1_wr", "ps_1_co")),
+                        
+                        
+                        
                         list(category = "ps_2",
                              aggregation = "weighted_by_points",
                              assignments = c("ps_2_written", "ps_2_code")),

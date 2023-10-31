@@ -15,23 +15,25 @@
 #' @importFrom purrr map map_chr list_flatten
 #' @export
 extract_nested <- function(category) {
+    
     # If there's no more nesting, return the category as a list
-    if (!("assignments" %in% names(category)
-          && is.list(category$assignments)
-          && any(sapply(category$assignments, is.list)))) {
-        return(list(category))
+    if (!("assignments" %in% names(category) && is.list(category$assignments)
+            )) {
+          return(list(category))
     }
-  
+    
+    
     # Otherwise, get nested categories
     nested_categories <- purrr::map(category$assignments, extract_nested)
-
+    
     # Flatten the nested categories
-    nested_categories_flattened <- purrr::list_flatten(nested_categories)
-
-    # Modify the current category to contain the nested categories as assignments
-    category$assignments <- sapply(nested_categories_flattened, function(x) x$category)
-
-    # Return the modified current list after nested items
+    nested_categories_flattened <- list()
+    nested_categories_flattened <- c(nested_categories_flattened, purrr::list_flatten(nested_categories))
+    
+    # Modify the current category's assignments
+    category$assignments <- sapply(category$assignments, function(x) x$category)
+    
+    # Return the flattened nested categories followed by the current category
     c(nested_categories_flattened, list(category))
 }
 
