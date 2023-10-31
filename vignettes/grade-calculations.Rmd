@@ -2,7 +2,7 @@
 title: "Grade Calculations"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Nested Grouped Operations}
+  %\VignetteIndexEntry{Grade Calculations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
