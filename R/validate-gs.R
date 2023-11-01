@@ -41,7 +41,7 @@ process_id <- function(gs_data) {
         dplyr::group_by(sid) |>
         dplyr::mutate(n_sid = n()) |>
         dplyr::filter(n_sid > 1) |>
-        dplyr::select(-n_sid)
+      dplyr::select(-n_sid)
   
     # Apply merge_replicated_records to each duplicated sid
     de_duped_sids <- dup_sids |>
@@ -117,6 +117,10 @@ merge_replicated_records <- function(single_sid_df) {
                 ifelse(all(is.na(.)), NA, last(na.omit(.)))
             }
         ))
+    # new_id <- new_id |>
+    #   mutate(across(contains("submission"), lubridate::parse_date_time, 
+    #                 orders = "ymd HMS z"),
+    #          across(contains("lateness"), lubridate::hms))
     return(new_id)
 }
 
