@@ -15,7 +15,7 @@
 #' @importFrom purrr map map_chr list_flatten
 #' @export
 extract_nested <- function(category) {
-    
+
     # If there's no more nesting, return the category as a list
     if (!("assignments" %in% names(category) && is.list(category$assignments)
             )) {
