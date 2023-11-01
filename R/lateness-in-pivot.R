@@ -83,6 +83,9 @@ pivot_for_lateness <- function(lateness_table, pivot_df){
 calculate_lateness <- function(lateness_table){
     lateness <- lateness_table |>
         mutate(`lateness_(h_m_s)` = as.numeric(`lateness_(h_m_s)`)) |>
+        mutate(across(starts_with("ub"), as.numeric),
+               across(starts_with("lb"), as.numeric),
+               across(starts_with("scale"), as.numeric)) |> 
         mutate(across(starts_with("scale"), 
                       ~between(`lateness_(h_m_s)`,get(str_replace(cur_column(), "scale", "lb")),
                                get(str_replace(cur_column(), "scale", "ub")))*.x,
