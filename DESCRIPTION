@@ -31,7 +31,8 @@ Imports:
     tidyr,
     purrr,
     cli,
-    readr
+    readr,
+    data.table
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: 

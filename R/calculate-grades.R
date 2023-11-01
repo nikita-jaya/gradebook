@@ -228,8 +228,8 @@ drops <- function(merged_files){
 #' @importFrom lubridate hms period_to_seconds 
 #' @export
 convert_to_min <- function(hms){
-    save <- lubridate::hms(hms)
-    save <- lubridate::period_to_seconds(save)
+    save <- lubridate::hms(hms) |>
+        lubridate::period_to_seconds()
     save <- save/60
     return (save)
 }
