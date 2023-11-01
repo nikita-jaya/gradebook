@@ -199,3 +199,31 @@ lower_colnames <- function(processed_data) {
     colnames(processed_data) <- tolower(colnames(processed_data))
     return (processed_data)
 }
+
+
+#' Read Gradescope .csv
+#'
+#' This functions reads the Gradescope .csv and processes certain columns into 
+#' the expected datatypes.
+#'
+#' @param path Path to Gradescope CSV
+#'
+#' @return dataframe of Gradescope csv
+#' @importFrom readr read_csv
+#' @importFrom dplyr mutate across all_of ends_with
+#' @importFrom tidyr replace_na
+#' @export
+read_gs <- function(path){
+    gs_data <- read_csv(path)
+    raw_cols <- get_assignments_unprocessed_data(gs_data)
+    
+    
+    gs_data <- gs_data |>
+        mutate(across(all_of(raw_cols), replace_na, 0)) |> #all raw_points cols are numeric with zeroes replacing NAs
+        mutate(across(c(all_of(raw_cols), ends_with("Max Points")), as.numeric)) |> #all raw and max points to numeric
+        mutate(across(ends_with("Lateness (H:M:S)"), convert_to_min)) |> #convert lateness to minutes
+        mutate(across(ends_with("Submission Time"), as.character.POSIXt)) #convert submission times to POSIXt
+    
+    
+    return (gs_data)
+}

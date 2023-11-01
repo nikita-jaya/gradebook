@@ -15,4 +15,5 @@ a policy file with an additional "Overall Grade" category
 \description{
 This function creates a super-category called "Overall Grade" within the policy file.
 This represents the overall grade for the course.
+This must be done BEFORE flattening policy file.
 }
