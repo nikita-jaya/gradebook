@@ -81,7 +81,7 @@ pivot_for_lateness <- function(lateness_table, pivot_df){
 #' @importFrom stringr str_replace
 #' @export
 calculate_lateness <- function(lateness_table){
-    lateness <- pivot_for_lateness |>
+    lateness <- lateness_table |>
         mutate(`lateness_(h_m_s)` = as.numeric(`lateness_(h_m_s)`)) |>
         mutate(across(starts_with("scale"), 
                       ~between(`lateness_(h_m_s)`,get(str_replace(cur_column(), "scale", "lb")),
