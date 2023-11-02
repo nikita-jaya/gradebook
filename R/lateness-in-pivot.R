@@ -96,3 +96,24 @@ calculate_lateness <- function(lateness_table){
     
     return (lateness)
 }
+
+
+#' Lateness Scores in Wide Format
+#' This function pivots lateness scores from tall format to wide format.
+#'
+#' @param pivotted_late_scores A pivotted dataframe with scores after lateness
+#'
+#' @return A data frame
+#'
+#' @importFrom dplyr select
+#' @importFrom tidyr pivot_wider
+#' @export
+lateness_scores_in_wide <- function(pivotted_late_scores){
+    wide_late_scores <- pivotted_late_scores |> 
+        select(sid, assignments, score_after_lateness) |>
+        pivot_wider(names_from = assignments,
+                    names_glue = "{assignments}_-_raw_score",
+                    values_from = score_after_lateness)
+    return (wide_late_scores)
+}
+
