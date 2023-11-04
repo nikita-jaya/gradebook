@@ -37,6 +37,7 @@
 #' 
 #' @export
 equally_weighted <- function(scores, n_drops = 0, ...) {
+    scores <- as.numeric(scores)
     
     if (n_drops > 0) {scores[order(scores)[1:n_drops]] <- NA}
     
@@ -46,13 +47,15 @@ equally_weighted <- function(scores, n_drops = 0, ...) {
 #' @rdname equally_weighted
 #' @export
 weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
+    weights <- as.numeric(weights) #fix coercion issues
+    scores <- as.numeric(scores) #fix coercion issues
     
     if (n_drops > 0) {
         drop_idx <- order(scores)[1:n_drops]
         weights[drop_idx] <- NA
         scores[drop_idx] <- NA
     }
-    
+
     sum(scores * (weights / sum(weights, na.rm = TRUE)), na.rm =TRUE)
 }
 
@@ -92,8 +95,8 @@ none <- function(scores, ...) {
 #' @export
 get_one_grade <- function(gs_row, policy_item) {
     get(policy_item$aggregation)(
-        scores = gs_row[policy_item$assignments],
-        weights = gs_row[paste0(policy_item$assignments, "_max_pts")],
+        scores = gs_row[paste0(policy_item$assignments, "_-_percent")],
+        weights = gs_row[paste0(policy_item$assignments, "_-_max_points")],
         n_drops = ifelse(is.null(policy_item$n_drops), 0, policy_item$n_drops))
 }
 

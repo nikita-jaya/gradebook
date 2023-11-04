@@ -133,7 +133,7 @@ replace_raw_with_lateness_scores <- function(wide_processed_data, lateness_score
     
     after_lateness <- wide_processed_data |>
         select(-late_assigns) |>
-        left_join(raw_scores, by = "sid")
+        left_join(lateness_scores, by = "sid")
     
     return (after_lateness)
 }
