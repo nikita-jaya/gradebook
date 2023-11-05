@@ -37,8 +37,6 @@
 #' 
 #' @export
 equally_weighted <- function(scores, n_drops = 0, ...) {
-    scores <- as.numeric(scores)
-    
     if (n_drops > 0) {scores[order(scores)[1:n_drops]] <- NA}
     
     mean(scores, na.rm =TRUE)
@@ -47,8 +45,6 @@ equally_weighted <- function(scores, n_drops = 0, ...) {
 #' @rdname equally_weighted
 #' @export
 weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
-    weights <- as.numeric(weights) #fix coercion issues
-    scores <- as.numeric(scores) #fix coercion issues
     
     if (n_drops > 0) {
         drop_idx <- order(scores)[1:n_drops]
@@ -95,8 +91,8 @@ none <- function(scores, ...) {
 #' @export
 get_one_grade <- function(gs_row, policy_item) {
     get(policy_item$aggregation)(
-        scores = gs_row[paste0(policy_item$assignments, "_-_percent")],
-        weights = gs_row[paste0(policy_item$assignments, "_-_max_points")],
+        scores = gs_row[policy_item$assignments],
+        weights = gs_row[paste0(policy_item$assignments, " - Max Points")],
         n_drops = ifelse(is.null(policy_item$n_drops), 0, policy_item$n_drops))
 }
 
@@ -116,8 +112,24 @@ get_one_grade <- function(gs_row, policy_item) {
 #' category described in the policy file containing the grades for each student.
 #' @export
 get_category_grades <- function(gs, policy) {
+    
+    # pull off assignment scores and weights into matrix
+    assignment_names <- get_assignments_unprocessed_data(gs, give_alert = FALSE)
+    assignment_cols <- c(assignment_names, paste0(assignment_names, " - Max Points"))
+    gs_assignments_mat <- data.matrix(gs[assignment_cols])
+    if (!is.numeric(gs_assignments_mat)) {stop("Cannot calculate category grades. Assignment columns contain non-numeric values.")}
+    
+    # prune unnecessary data from policy file
+    policy <- policy |>
+        # remove ungraded assignments
+        purrr::map(\(item) purrr::modify_at(item, "assignments", ~ .x[.x %in% assignment_names])) |>
+        # remove categories with no assignments from policy file
+        purrr::discard(\(item) length(item$assignments) == 0)
+    
+    # for every category in the policy file...
     for (policy_item in policy) {
-        gs[[policy_item$category]] <- apply(gs, 1, get_one_grade, 
+        # and for every row in the matrix, get a grade
+        gs[[policy_item$category]] <- apply(gs_assignments_mat, 1, get_one_grade, 
                                             policy_item = policy_item)
     }
     gs
