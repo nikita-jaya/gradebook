@@ -62,7 +62,7 @@ create_lateness_table <- function(flat_policy){
 #'
 #' @return A data frame
 #'
-#' @importFrom dplyr mutate across between starts_with cur_column
+#' @importFrom dplyr mutate across between starts_with cur_column select
 #' @importFrom stringr str_replace
 #' @export
 calculate_lateness <- function(lateness_table){
@@ -76,8 +76,9 @@ calculate_lateness <- function(lateness_table){
                                get(str_replace(cur_column(), "scale", "ub")))*.x,
                       .names = '{.col}_final'
         )) |>
-        mutate(final_scalar = rowSums(across(ends_with("_final")))) |>
-        mutate(score_after_lateness = Score*final_scalar)
+        mutate(final_scalar = rowSums(across(ends_with("_final")), na.rm = TRUE)) |>
+        mutate(score_after_lateness = Score*final_scalar) |>
+        select(SID, assignments, score_after_lateness)
 }
 
 #' Compute Lateness
@@ -119,7 +120,6 @@ compute_lateness <- function(gs, policy){
        calculate_lateness() |>
        
        #pivot dataframe back into wide format
-       select(SID, assignments, score_after_lateness) |>
        pivot_wider(names_from = assignments,
                    names_glue = "{assignments} - Score",
                    values_from = score_after_lateness)
