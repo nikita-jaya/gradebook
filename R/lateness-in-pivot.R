@@ -50,25 +50,6 @@ create_lateness_table <- function(flat_policy){
     return (assigns_table)
 }
 
-#' Pivot for Lateness
-#' This function merges processed pivot data with lateness table
-#'
-#' @param pivot_df A processed pivotted data from Gradescope
-#' @param assigns_table A lateness table made from the policy file
-#'
-#' @return A data frame
-#'
-#' @importFrom dplyr left_join filter
-#' @export
-pivot_for_lateness <- function(lateness_table, pivot_df){
-    assigns <- lateness_table$assignments |> unique()
-    add_categories_to_pivot <- pivot_df |>
-        filter(assignments %in% assigns) |>
-        left_join(lateness_table, by = c("assignments" = "assignments"))
-    
-    return (add_categories_to_pivot)
-}
-
 #' Calculate Scores after Lateness
 #' This function uses the merged pivotted data + lateness table to compute
 #' raw scores after lateness.
@@ -81,61 +62,18 @@ pivot_for_lateness <- function(lateness_table, pivot_df){
 #' @importFrom stringr str_replace
 #' @export
 calculate_lateness <- function(lateness_table){
-    lateness <- lateness_table |>
-        mutate(`lateness_(h_m_s)` = as.numeric(`lateness_(h_m_s)`)) |>
+    lateness_table |>
+        mutate(`Lateness (H:M:S)` = as.numeric(convert_to_min(`Lateness (H:M:S)`))) |>
         mutate(across(starts_with("ub"), as.numeric),
                across(starts_with("lb"), as.numeric),
                across(starts_with("scale"), as.numeric)) |> 
         mutate(across(starts_with("scale"), 
-                      ~between(`lateness_(h_m_s)`,get(str_replace(cur_column(), "scale", "lb")),
+                      ~between(`Lateness (H:M:S)`,get(str_replace(cur_column(), "scale", "lb")),
                                get(str_replace(cur_column(), "scale", "ub")))*.x,
                       .names = '{.col}_final'
         )) |>
         mutate(final_scalar = rowSums(across(ends_with("_final")))) |>
-        mutate(score_after_lateness = raw_score*final_scalar)
-    
-    return (lateness)
-}
-
-
-#' Lateness Scores in Wide Format
-#' This function pivots lateness scores from tall format to wide format.
-#'
-#' @param pivotted_late_scores A pivotted dataframe with scores after lateness
-#'
-#' @return A data frame
-#'
-#' @importFrom dplyr select
-#' @importFrom tidyr pivot_wider
-#' @export
-lateness_scores_in_wide <- function(pivotted_late_scores){
-    wide_late_scores <- pivotted_late_scores |> 
-        select(sid, assignments, score_after_lateness) |>
-        pivot_wider(names_from = assignments,
-                    names_glue = "{assignments}_-_raw_score",
-                    values_from = score_after_lateness)
-    return (wide_late_scores)
-}
-
-#' Replace Raw Scores with Lateness Scores
-#' This function replaces original raw points with the scores after lateness 
-#' policies have been applied.
-#'
-#' @param wide_processed_data A processed data in wide format
-#' @param lateness_scores A dataframe with scores after lateness
-#'
-#' @return A data frame
-#'
-#' @importFrom dplyr select left_join
-#' @export
-replace_raw_with_lateness_scores <- function(wide_processed_data, lateness_scores){
-    late_assigns <- names(lateness_scores)[names(lateness_scores) != "sid"] #all assignments with late scores
-    
-    after_lateness <- wide_processed_data |>
-        select(-late_assigns) |>
-        left_join(lateness_scores, by = "sid")
-    
-    return (after_lateness)
+        mutate(score_after_lateness = Score*final_scalar)
 }
 
 #' Compute Lateness
@@ -146,16 +84,42 @@ replace_raw_with_lateness_scores <- function(wide_processed_data, lateness_score
 #'
 #' @return A data frame
 #'
+#' @importFrom dplyr filter left_join select
+#' @importFrom tidyr pivot_wider
+#' @importFrom stringr str_replace_all
+#' 
 #' @export
-compute_lateness <- function(wide_processed_data, flat_policy){
-    lateness_table <- flat_policy |> create_lateness_table()
+compute_lateness <- function(gs, policy){
     
-   after_lateness <-  wide_processed_data |>
-        pivot_gs() |>
-        pivot_for_lateness(lateness_table = lateness_table) |>
-        calculate_lateness() |>
-        lateness_scores_in_wide() |>
-        replace_raw_with_lateness_scores(wide_processed_data = wide_processed_data)
+    #create lateness table from flat_policy
+    lateness_table <- policy |> create_lateness_table()
+    
+    #pivot gs into tall format
+    pivotted_gs <-  gs |>
+        pivot_gs()
    
-   return (after_lateness)
+    #list of assignments with lateness policy
+   assigns <- lateness_table$assignments |> unique()
+   
+   after_lateness_scores <- pivotted_gs |>
+       filter(assignments %in% assigns) |>
+       
+       #append lateness table to pivotted gs
+       left_join(lateness_table, by = c("assignments" = "assignments")) |>
+   
+       #calculate scores after lateness
+       calculate_lateness() |>
+       
+       #pivot dataframe back into wide format
+       select(SID, assignments, score_after_lateness) |>
+       pivot_wider(names_from = assignments,
+                   names_glue = "{assignments} - Score",
+                   values_from = score_after_lateness)
+   
+   late_assigns <- names(after_lateness_scores)[(names(after_lateness_scores)) != "SID"] #all assignments with late scores
+   late_assigns <- str_remove_all(late_assigns, " - Score")
+   #replace new lateness scores in original dataframe
+   gs |>
+       select(-late_assigns) |>
+       left_join(after_lateness_scores, by = "SID") 
 }

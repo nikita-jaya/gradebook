@@ -4,7 +4,7 @@
 \alias{pivot_gs}
 \title{Convert GS data to longer table}
 \usage{
-pivot_gs(processed_data, names_sep = "_-_")
+pivot_gs(processed_data, names_sep = " - ")
 }
 \arguments{
 \item{processed_data}{A dataframe (csv from Gradescope) containing a column named "sid" which holds student IDs.}
@@ -20,40 +20,40 @@ and it applies pivot longer function to allow for unit of observation be a stude
 \examples{
 # Example
 processed_data <- tibble::tibble(
-  `sid` = c(3032412514, 3032122516, 3032412516,
+  `SID` = c(3032412514, 3032122516, 3032412516,
             3032412517, 3032412518, 3032412519,
             3032412521, 3032412521),
-  `sections` = c("Stat20", "Stat20", "Stat20", "Stat20",
+  `Sections` = c("Stat20", "Stat20", "Stat20", "Stat20",
                 "Stat20", "Stat20", "Stat20", "Stat20"),
   
-  `names` = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+  `Names` = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
              "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson"),
-  `email` = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu",
+  `Email` = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu",
               "robert.brown@berkeley.edu", "emily.johnson@berkeley.edu",
               "michael.davis@berkeley.edu", "linda.wilson@berkeley.edu",
               "james.taylor@berkeley.edu", "patricia.anderson@berkeley.edu"),
-  `lab1_-_Raw_Score` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.8),
-  `lab1_-_Max_Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-  `lab1_-_Submission_Time` = c("1/19/2023 9:25:00 AM", "0", "1/19/2023 10:00:00 AM", "0",
+  `lab1` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.8),
+  `lab1 - Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
+  `lab1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0", "1/19/2023 10:00:00 AM", "0",
                                "1/19/2023 9:00:00 AM", "1/19/2023 9:30:00 AM", "1/19/2023 9:20:00 AM", "1/19/2023 9:15:00 AM"),
-  `lab1_-_Lateness_(H_M_S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00",
+  `lab1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00",
                                 "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
   
-  `lab2_-_Raw_Score` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
-  `lab2_-_Max_Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-  `lab2_-_Submission_Time` = c("1/20/2023 9:25:00 AM", "0", "1/20/2023 10:00:00 AM", "1/20/2023 9:50:00 AM",
+  `lab2` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
+  `lab2 - Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
+  `lab2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0", "1/20/2023 10:00:00 AM", "1/20/2023 9:50:00 AM",
                                "1/20/2023 9:00:00 AM", "0", "1/20/2023 9:20:00 AM", "1/20/2023 9:30:00 AM"),
-  `lab2_-_Lateness_(H_M_S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+  `lab2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
   
-  `lab3_-_Raw_Score` = c(0, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
-  `lab3_-_Max_Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-  `lab3_-_Submission_Time` = c("0", "0", "1/21/2023 10:00:00 AM", "1/21/2023 9:50:00 AM", "1/21/2023 9:00:00 AM", "1/21/2023 9:30:00 AM", "1/21/2023 9:20:00 AM", "1/21/2023 9:45:00 AM"),
-  `lab3_-_Lateness_(H_M_S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+  `lab3` = c(0, 0, 0.9, 0.5, 1, 0.9, 1, 0.9),
+  `lab3 - Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
+  `lab3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM", "1/21/2023 9:50:00 AM", "1/21/2023 9:00:00 AM", "1/21/2023 9:30:00 AM", "1/21/2023 9:20:00 AM", "1/21/2023 9:45:00 AM"),
+  `lab3 -Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
   
-  `project1_-_Raw_Score` = c(0.9, 0, 0.4, 0, 0.99, 0.9, 1, 0.9),
-  `project1_-_Max_Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
-  `project1_-_Submission_Time` = c("1/22/2023 9:25:00 AM", "0", "1/22/2023 10:00:00 AM", "0", "1/22/2023 9:00:00 AM", "1/22/2023 9:30:00 AM", "1/22/2023 9:20:00 AM", "1/22/2023 9:45:00 AM"),
-  `project1_-_Lateness_(H_M_S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00")
+  `project1` = c(0.9, 0, 0.4, 0, 0.99, 0.9, 1, 0.9),
+  `project1 - Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
+  `project1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0", "1/22/2023 10:00:00 AM", "0", "1/22/2023 9:00:00 AM", "1/22/2023 9:30:00 AM", "1/22/2023 9:20:00 AM", "1/22/2023 9:45:00 AM"),
+  `project1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00", "0:00:00")
 )
 
 student_assignments_long_data <- pivot_gs(processed_data)
