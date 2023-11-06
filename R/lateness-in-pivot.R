@@ -91,7 +91,7 @@ calculate_lateness <- function(lateness_table){
 #'
 #' @importFrom dplyr filter left_join select
 #' @importFrom tidyr pivot_wider
-#' @importFrom stringr str_replace_all
+#' @importFrom stringr str_remove_all
 #' 
 #' @export
 compute_lateness <- function(gs, policy){
