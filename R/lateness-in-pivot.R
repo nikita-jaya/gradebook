@@ -16,6 +16,10 @@ create_lateness_table <- function(flat_policy){
         }
     })
     
+    if (is.null(late_policies[[1]])){
+        return (NULL)
+    }
+    
     late_policies <- late_policies[lengths(late_policies) != 0]
     
     assignments <- purrr::map(late_policies, "assignments")
@@ -93,6 +97,10 @@ compute_lateness <- function(gs, policy){
     
     #create lateness table from flat_policy
     lateness_table <- policy |> create_lateness_table()
+    
+    if (is.null(lateness_table)) {
+        return (gs) #if no lateness policy
+    }
     
     #pivot gs into tall format
     pivotted_gs <-  gs |>
