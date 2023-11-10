@@ -133,11 +133,15 @@ get_category_grades <- function(gs, policy) {
     
     # for every category in the policy file...
     for (policy_item in policy) {
-        # and for every row in the matrix, get a grade
-        gs[[policy_item$category]] <- apply(gs_assignments_mat, 1, get_one_grade, 
-                                            policy_item = policy_item)
+        # and for every row in the matrix, get a grade and a total weight (max points)
+        grades_weights <- t(apply(gs_assignments_mat, 1,
+                                  get_one_grade, 
+                                  policy_item = policy_item))
+        colnames(grades_weights) <- c(policy_item$category,
+                                      paste0(policy_item$category, " - Max Points"))
+        gs_assignments_mat <- cbind(gs_assignments_mat, grades_weights)
     }
-    gs
+    gs_assignments_mat
 }
 
 #' Drop NA Assignments
