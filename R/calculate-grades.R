@@ -119,10 +119,12 @@ get_category_grades <- function(gs, policy) {
     gs_assignments_mat <- data.matrix(gs[assignment_cols])
     if (!is.numeric(gs_assignments_mat)) {stop("Cannot calculate category grades. Assignment columns contain non-numeric values.")}
     
+        
     # prune unnecessary data from policy file
+    assgns_and_cats <- c(assignment_names, purrr::map(policy, "category"))
     policy <- policy |>
         # remove ungraded assignments
-        purrr::map(\(item) purrr::modify_at(item, "assignments", ~ .x[.x %in% assignment_names])) |>
+        purrr::map(\(item) purrr::modify_at(item, "assignments", ~ .x[.x %in% assgns_and_cats])) |>
         # remove categories with no assignments from policy file
         purrr::discard(\(item) length(item$assignments) == 0)
     
