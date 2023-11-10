@@ -36,10 +36,10 @@
 #' none(my_score)
 #' 
 #' @export
-equally_weighted <- function(scores, n_drops = 0, ...) {
+equally_weighted <- function(scores, weights, n_drops = 0, ...) {
     if (n_drops > 0) {scores[order(scores)[1:n_drops]] <- NA}
     
-    mean(scores, na.rm =TRUE)
+    c(mean(scores, na.rm =TRUE), sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
@@ -52,27 +52,30 @@ weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
         scores[drop_idx] <- NA
     }
 
-    sum(scores * (weights / sum(weights, na.rm = TRUE)), na.rm =TRUE)
+    c(sum(scores * (weights / sum(weights, na.rm = TRUE)), na.rm =TRUE),
+      sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
-max_score <- function(scores, ...) {
-    max(scores)
+max_score <- function(scores, weights, n_drops = 0, ...) {
+    c(max(scores), sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
-min_score <- function(scores, n_drops = 0, ...) {
-    min(scores)
+min_score <- function(scores, weights, n_drops = 0, ...) {
+    c(min(scores), sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
-none <- function(scores, ...) {
-    ifelse(length(scores) == 1, scores, stop("Can only use `aggregation: none`
-                                             if there is only 1 assignment in 
-                                             the category."))
+none <- function(scores, weights, n_drops = 0, ...) {
+    ifelse(length(scores) == 1, 
+           c(scores, weights),
+           stop("Can only use `aggregation: none`
+                 if there is only 1 assignment in 
+                 the category."))
 }
 
 #' Get one category grade
