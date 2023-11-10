@@ -5,7 +5,7 @@
 \title{Compute Lateness
 This function computes scores after lateness policy has been applied.}
 \usage{
-compute_lateness(wide_processed_data, flat_policy)
+compute_lateness(gs, policy)
 }
 \arguments{
 \item{wide_processed_data}{A processed data in wide format}
