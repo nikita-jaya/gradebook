@@ -36,19 +36,15 @@
 #' none(my_score)
 #' 
 #' @export
-equally_weighted <- function(scores, n_drops = 0, ...) {
-    scores <- as.numeric(scores)
-    
+equally_weighted <- function(scores, weights, n_drops = 0, ...) {
     if (n_drops > 0) {scores[order(scores)[1:n_drops]] <- NA}
     
-    mean(scores, na.rm =TRUE)
+    c(mean(scores, na.rm =TRUE), sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
 weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
-    weights <- as.numeric(weights) #fix coercion issues
-    scores <- as.numeric(scores) #fix coercion issues
     
     if (n_drops > 0) {
         drop_idx <- order(scores)[1:n_drops]
@@ -56,27 +52,30 @@ weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
         scores[drop_idx] <- NA
     }
 
-    sum(scores * (weights / sum(weights, na.rm = TRUE)), na.rm =TRUE)
+    c(sum(scores * (weights / sum(weights, na.rm = TRUE)), na.rm =TRUE),
+      sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
-max_score <- function(scores, ...) {
-    max(scores)
+max_score <- function(scores, weights, n_drops = 0, ...) {
+    c(max(scores, na.rm = TRUE), sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
-min_score <- function(scores, n_drops = 0, ...) {
-    min(scores)
+min_score <- function(scores, weights, n_drops = 0, ...) {
+    c(min(scores, na.rm = TRUE), sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
-none <- function(scores, ...) {
-    ifelse(length(scores) == 1, scores, stop("Can only use `aggregation: none`
-                                             if there is only 1 assignment in 
-                                             the category."))
+none <- function(scores, weights, n_drops = 0, ...) {
+    ifelse(length(scores) == 1, 
+           c(scores, weights),
+           stop("Can only use `aggregation: none`
+                 if there is only 1 assignment in 
+                 the category."))
 }
 
 #' Get one category grade
@@ -95,8 +94,8 @@ none <- function(scores, ...) {
 #' @export
 get_one_grade <- function(gs_row, policy_item) {
     get(policy_item$aggregation)(
-        scores = gs_row[paste0(policy_item$assignments, "_-_percent")],
-        weights = gs_row[paste0(policy_item$assignments, "_-_max_points")],
+        scores = gs_row[policy_item$assignments],
+        weights = gs_row[paste0(policy_item$assignments, " - Max Points")],
         n_drops = ifelse(is.null(policy_item$n_drops), 0, policy_item$n_drops))
 }
 
@@ -116,11 +115,34 @@ get_one_grade <- function(gs_row, policy_item) {
 #' category described in the policy file containing the grades for each student.
 #' @export
 get_category_grades <- function(gs, policy) {
+    
+    # pull off assignment scores and weights into matrix
+    assignment_names <- get_assignments_unprocessed_data(gs, give_alert = FALSE)
+    assignment_cols <- c(assignment_names, paste0(assignment_names, " - Max Points"))
+    gs_assignments_mat <- data.matrix(gs[assignment_cols])
+    rownames(gs_assignments_mat) <- gs$SID
+    if (!is.numeric(gs_assignments_mat)) {stop("Cannot calculate category grades. Assignment columns contain non-numeric values.")}
+    
+        
+    # prune unnecessary data from policy file
+    assgns_and_cats <- c(assignment_names, purrr::map(policy, "category"))
+    policy <- policy |>
+        # remove ungraded assignments
+        purrr::map(\(item) purrr::modify_at(item, "assignments", ~ .x[.x %in% assgns_and_cats])) |>
+        # remove categories with no assignments from policy file
+        purrr::discard(\(item) length(item$assignments) == 0)
+    
+    # for every category in the policy file...
     for (policy_item in policy) {
-        gs[[policy_item$category]] <- apply(gs, 1, get_one_grade, 
-                                            policy_item = policy_item)
+        # and for every row in the matrix, get a grade and a total weight (max points)
+        grades_weights <- t(apply(gs_assignments_mat, 1,
+                                  get_one_grade, 
+                                  policy_item = policy_item))
+        colnames(grades_weights) <- c(policy_item$category,
+                                      paste0(policy_item$category, " - Max Points"))
+        gs_assignments_mat <- cbind(gs_assignments_mat, grades_weights)
     }
-    gs
+    gs_assignments_mat
 }
 
 #' Drop NA Assignments
