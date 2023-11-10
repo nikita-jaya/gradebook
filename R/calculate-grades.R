@@ -59,13 +59,13 @@ weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
 #' @rdname equally_weighted
 #' @export
 max_score <- function(scores, weights, n_drops = 0, ...) {
-    c(max(scores), sum(weights, na.rm = TRUE))
+    c(max(scores, na.rm = TRUE), sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
 min_score <- function(scores, weights, n_drops = 0, ...) {
-    c(min(scores), sum(weights, na.rm = TRUE))
+    c(min(scores, na.rm = TRUE), sum(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
@@ -120,6 +120,7 @@ get_category_grades <- function(gs, policy) {
     assignment_names <- get_assignments_unprocessed_data(gs, give_alert = FALSE)
     assignment_cols <- c(assignment_names, paste0(assignment_names, " - Max Points"))
     gs_assignments_mat <- data.matrix(gs[assignment_cols])
+    rownames(gs_assignments_mat) <- gs$SID
     if (!is.numeric(gs_assignments_mat)) {stop("Cannot calculate category grades. Assignment columns contain non-numeric values.")}
     
         
