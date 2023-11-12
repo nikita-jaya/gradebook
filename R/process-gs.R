@@ -121,25 +121,25 @@ get_assignments <- function(gs_data, give_alert = TRUE){
 #' @return A dataframe "student_assignments_long": A dataframe with a unit of observation a student + each assignment.
 #'
 #' @examples
-#' # Example
+#'
 #' gs_data <- tibble::tibble(
-#'   `SID` = c(3032412514, 3032122516, 3032412516,3032412517, 3032412518, 3032412519,
+#'   `SID` = c(3032412514, 3032122516, 3032412516,3032412517,
 #'             3032412518, 3032412519,3032412521, 3032412521),
-#'   `Sections` = c("Stat20", "Stat20", "Stat20", "Stat20",
-#'                 "Stat20", "Stat20", "Stat20", "Stat20"),
+#'   `Sections` = c("Class 001", "Class 001", "Class 001", "Class 001",
+#'                 "Class 001", "Class 001", "Class 001", "Class 001"),
 #'   
 #'   `Names` = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
 #'              "Michael Davis", "Linda Wilson", "James Taylor", "Patricia Anderson"),
 #'   `Email` = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu",
 #'               "robert.brown@berkeley.edu", "emily.johnson@berkeley.edu",
 #'               "michael.davis@berkeley.edu", "linda.wilson@berkeley.edu",
-#'               "james.taylor@berkeley.edu", "patricia.anderson@berkeley.edu"),
+#'               "james.taylor@berkeley.edu", "patricia.anderson@berkeley.edu" ),
 #'   `Lab 1` = c(1, 0, 0.9, 0.5, 1, 0.9, 1, 0.8),
 #'   `Lab 1 - Max Points` = c(1, 1, 1, 1, 1, 1, 1, 1),
 #'   `Lab 1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0", 
 #'                                "1/19/2023 10:00:00 AM", "0",
 #'                                "1/19/2023 9:00:00 AM", "0", 
-#'                                "1/19/2023 9:20:00 AM", "0),
+#'                                "1/19/2023 9:20:00 AM", "0"),
 #'   `Lab 1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00",
 #'                                 "0:00:00", "0:00:00", "0:00:00", "0:00:00"),
 #'   
