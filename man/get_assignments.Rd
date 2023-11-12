@@ -4,7 +4,7 @@
 \alias{get_assignments}
 \title{Get the Assignment Names for Gradescope Data}
 \usage{
-get_assignments(gs_data, give_alert = TRUE)
+get_assignments(gs_data, give_alert = FALSE)
 }
 \arguments{
 \item{gs_data}{unprocessed Gradescope dataframe}

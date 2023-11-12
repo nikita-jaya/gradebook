@@ -4,7 +4,7 @@
 \alias{get_id_cols}
 \title{Get the ID Columns for Gradescope Data}
 \usage{
-get_id_cols(gs_data, give_alert = TRUE)
+get_id_cols(gs_data, give_alert = FALSE)
 }
 \arguments{
 \item{gs_data}{Gradescope dataframe}

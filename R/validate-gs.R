@@ -14,11 +14,43 @@ read_gs <- function(path){
   gs_data <- read_csv(path)
   
   gs_data|>
+    #check format
+    check_data_format()
     # convert all NA raw-point values into zeros
     mutate_at(vars(all_of( get_assignments(gs_data) )), ~replace(., is.na(.), 0)) |>
     # replace raw pts with score
     mutate(across(get_assignments(gs_data),
                   ~ . / get(paste0(cur_column(), " - Max Points"))))
+}
+
+#' Check Formatting of Gradescope Data
+#'
+#' This functions checks the column names throughout the Gradescope data.
+#' There must be an SID column and at least one assignment.
+#' It also gives an alert for what id cols and assignments are in the data.
+#'
+#' @param gs_data Gradescope data 
+#'
+#' @return Same dataframe if no error
+#' @export
+check_data_format <- function(gs_data){
+  
+  col_names <- colnames(gs_data)
+  
+  id_cols <- get_id_cols(gs_data, TRUE)
+  
+  if ( !("SID" %in% id_cols) ){
+    stop("There is no SID column")
+  }
+  
+  assignment_names <- get_assignments(gs_data, TRUE)
+  
+  if (is.null(assignment_names) | length(assignment_names) == 0){
+    stop("There are no assignments in this dataframe")
+  }
+  
+  #if correct format, return same dataframe
+  return (gs_data)
 }
 
 #' Get the ID Columns for Gradescope Data
@@ -34,7 +66,7 @@ read_gs <- function(path){
 #' @export
 #' 
 #' 
-get_id_cols <- function(gs_data, give_alert = TRUE){
+get_id_cols <- function(gs_data, give_alert = FALSE){
   #REGEX pattern: case INsensitive, then matches the extensions
   #works with untouched GS dataframe so we can match the pattern
   regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
@@ -80,7 +112,7 @@ get_id_cols <- function(gs_data, give_alert = TRUE){
 #' 
 #' 
 #' 
-get_assignments <- function(gs_data, give_alert = TRUE){
+get_assignments <- function(gs_data, give_alert = FALSE){
   #REGEX pattern: case INsensitive, then matches the extensions
   #works with untouched GS dataframe so we can match the pattern
   regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
