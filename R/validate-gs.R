@@ -15,7 +15,7 @@ read_gs <- function(path){
   
   gs_data|>
     #check format
-    check_data_format()
+    check_data_format() |>
     # convert all NA raw-point values into zeros
     mutate_at(vars(all_of( get_assignments(gs_data) )), ~replace(., is.na(.), 0)) |>
     # replace raw pts with score
