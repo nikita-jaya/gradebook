@@ -2,7 +2,7 @@
 % Please edit documentation in R/process-gs.R
 \name{get_assignments}
 \alias{get_assignments}
-\title{Get the Assignment Names for Unprocessed Gradescope Data}
+\title{Get the Assignment Names for Gradescope Data}
 \usage{
 get_assignments(gs_data, give_alert = TRUE)
 }
