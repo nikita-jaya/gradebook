@@ -26,6 +26,7 @@ Encoding: UTF-8
 Imports: 
     cli,
     dplyr,
+    purrr,
     stringr,
     tibble,
     tidyr,

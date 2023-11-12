@@ -1,3 +1,125 @@
+#' Process Student IDs
+#'
+#' This function processes a dataset with student IDs. It handles 
+#' erroneous student IDs by filtering out duplicates and handling NA values. 
+#' The function returns a dataframe with unique student IDs  
+#'
+#' @param gs_data A dataframe (csv from Gradescope) containing a column named "sid" which holds student IDs.
+#'
+#' @return A dataframe "unique_ids": A dataframe containing unique student IDs.
+#' 
+#'
+#' @examples
+#' # Example dataframe
+#' data <- data.frame(
+#'   SID = c(3032412514, NA, 3032412516,
+#'           3032412517, 3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
+#'
+#'   names = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+#'            "Michael Davis", "Linda Wilson", "James Taylor", 
+#'            "Patricia Anderson", "Patricia Anderson"),
+#'   email = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", "robert.brown@berkeley.edu",
+#'             "emily.johnson@berkeley.edu", "michael.davis@berkeley.edu",
+#'             "linda.wilson@berkeley.edu", "james.taylor@berkeley.edu",
+#'             "patricia.anderson@berkeley.edu", "patricia.anderson@berkeley.edu"
+#'             )
+#'  )
+#' processed_data <- process_id(data)
+#' 
+#' @importFrom dplyr group_by mutate filter select group_split ungroup bind_rows n
+#' @importFrom tidyr drop_na
+#' @importFrom purrr map_dfr
+#' @export
+
+process_id <- function(gs_data) {
+  
+  # Remove NAs
+  gs_data <- gs_data |>
+    tidyr::drop_na(SID)
+  
+  # Identify duplicated records
+  dup_sids <- gs_data |>
+    dplyr::group_by(SID) |>
+    dplyr::mutate(n_sid = n()) |>
+    dplyr::filter(n_sid > 1) |>
+    dplyr::select(-n_sid)
+  
+  # Apply merge_replicated_records to each duplicated sid
+  de_duped_sids <- dup_sids |>
+    dplyr::group_split() |>
+    purrr::map_dfr(merge_replicated_records)
+  
+  # Attach merged rows to bottom of gs with no dups
+  gs_data |>
+    dplyr::group_by(SID) |>
+    dplyr::mutate(n_sid = n()) |>
+    dplyr::ungroup() |>
+    dplyr::filter(n_sid == 1) |>
+    dplyr::bind_rows(de_duped_sids) |>
+    dplyr::select(-n_sid)
+}
+
+
+
+#' Get Duplicate Student IDs
+#'
+#' Returns all the duplicate Student IDs in the data. 
+#'
+#' @param gs_data Gradescope data containing a column named "SID" which holds student IDs.
+#'
+#' @return A dataframe "get_duplicate_ids": A dataframe containing all duplicate students from the data.
+#'
+#' @examples
+#' # Example dataframe
+#' data <- data.frame(
+#'   SID = c(3032412514, NA, 3032412516, 3032412517, 
+#'           3032412518, 3032412519, 3032412520, 3032412521, 3032412521),
+#'   names = c("John Smith", "Jane Doe", "Robert Brown", "Emily Johnson",
+#'            "Michael Davis", "Linda Wilson", "James Taylor", 
+#'            "Patricia Anderson", "Patricia Anderson"),
+#'   email = c("john.smith@berkeley.edu", "jane.doe@berkeley.edu", 
+#'   "robert.brown@berkeley.edu","emily.johnson@berkeley.edu",
+#'    "michael.davis@berkeley.edu","linda.wilson@berkeley.edu",
+#'    "james.taylor@berkeley.edu",
+#'    "patricia.anderson@berkeley.edu", "patricia.anderson@berkeley.edu"
+#'             )
+#'  )
+#' processed_data <- get_duplicate_ids(data)
+#' 
+#' @importFrom dplyr group_by mutate filter distinct select n
+#' @export
+get_duplicate_ids <- function(gs_data) {
+  gs_data |>
+    dplyr::group_by(SID) |>
+    dplyr::mutate(n_records = n()) |>
+    dplyr::filter(n_records > 1) |>
+    dplyr::distinct() |>
+    dplyr::select(-n_records)|>
+    as.data.frame()
+}
+
+# internal function which merges replicated rows by several rules:
+# 1) if cell is a datetime, it removes NAs and takes the last datetime
+# 2) if cell is numeric, it takes the max
+# 3) if cell is NA, leave as NA
+#' @importFrom dplyr summarize across everything last
+merge_replicated_records <- function(single_sid_df) {
+  
+  new_id <- single_sid_df |>
+    summarize(across(
+      everything(),
+      ~ if (inherits(., c("difftime", "hms"))) {
+        ifelse(all(is.na(.)), NA, last(na.omit(.)))
+      } else if (is.numeric(.)) {
+        ifelse(all(is.na(.)), NA, max(., na.rm = TRUE))
+      } else {
+        ifelse(all(is.na(.)), NA, last(na.omit(.)))
+      }
+    ))
+
+  return(new_id)
+}
+
 #' Convert GS data to longer table
 #'
 #' This function takes a gradescope dataframe after it has been processed
