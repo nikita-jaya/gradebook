@@ -69,7 +69,7 @@ check_data_format <- function(gs_data){
 #' 
 #' @return a list of id columns 
 #' @importFrom stringr str_replace_all regex
-#' @importFrom cli cli_alert_info
+#' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @export
 #' 
 #' 
@@ -114,7 +114,7 @@ get_id_cols <- function(gs_data, give_alert = FALSE){
 #' 
 #' @return vector 
 #' @importFrom stringr str_replace_all regex
-#' @importFrom cli cli_alert_info
+#' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @export
 #' 
 #' 
@@ -155,6 +155,7 @@ get_assignments <- function(gs_data, give_alert = FALSE){
 #' @param give_alert whether or not to return an alert of assignments
 #' @importFrom dplyr filter select
 #' @importFrom purrr keep
+#' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @return same dataframe without graded assignments
 #' @export
 drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
@@ -163,11 +164,16 @@ drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
   #These are the dropped assignments with all NAs for raw-score
   dropped <- gs_data |> keep(~all(is.na(.x))) |> names()
   dropped <- dropped[dropped %in% assignments]
+  
   alert <- function() {
     cli::cli_div(theme = list(span.emph = list(color = "orange")))
     cli::cli_text("{.emph Important Message}")
     cli::cli_end()
-    cli::cli_alert_info("These are your ungraded assignments: {dropped}")
+    if (length(dropped) != 0) {
+      cli::cli_alert_info("These are your ungraded assignments: {dropped}")
+    } else {
+      cli::cli_alert_info("These are no ungraded assignments")
+    }
   }
   if (give_alert){
     alert()
