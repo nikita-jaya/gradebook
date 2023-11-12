@@ -1,0 +1,155 @@
+#' Aggregate assignment scores
+#'
+#' @description
+#' 
+#' A collection of functions to aggregate assignment scores. Their s
+#'
+#' * `equally_weighted()` computes a mean with the option to drop lowest scores.
+#' 
+#' * `weighted_by_points()` computes a weighted mean using a weights vector after
+#' optionally dropping the lowest scores.
+#'
+#' * `max_score()` computes the max score.
+#' 
+#' * `min_score()` computes the min score after optionally dropping lowest scores.
+#' 
+#' * `none()` if there is only 1 score, returns it, otherwise throws an error. 
+#' Serves as a passthrough aggregation for categories with only 1 assignment.
+#'
+#' @param scores A vector of assignment scores.
+#' @param weights A vector of weights of the same length as `scores`. Weights
+#' that do not sum to one are ok - they get normalized.
+#' @param n_drops The number of lowest scores to drop before aggregating.
+#' 
+#' @return A single aggregated score (a vector of length 1). 
+#'
+#' @family {Aggregation functions}
+#' @examples
+#' my_scores <- c(.7, .9, .1)
+#' my_weights <- c(15, 10, 10)
+#' 
+#' equally_weighted(scores = my_scores, weights = my_weights, n_drops = 1)
+#' weighted_by_points(scores = my_scores, weights = my_weights, n_drops = 1)
+#' max_score(my_scores, weights = my_weights)
+#' min_score(my_scores,weights = my_weights, n_drops = 1)
+#' my_score <- c(.7)
+#' my_weight <- c(10)
+#' none(my_score, weights = my_weight)
+#' 
+#' @export
+equally_weighted <- function(scores, weights, n_drops = 0, ...) {
+  if (n_drops > 0) {scores[order(scores)[1:n_drops]] <- NA}
+  
+  c(mean(scores, na.rm =TRUE), sum(weights, na.rm = TRUE))
+}
+
+#' @rdname equally_weighted
+#' @export
+weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
+  
+  if (n_drops > 0) {
+    drop_idx <- order(scores)[1:n_drops]
+    weights[drop_idx] <- NA
+    scores[drop_idx] <- NA
+  }
+  
+  c(sum(scores * (weights / sum(weights, na.rm = TRUE)), na.rm =TRUE),
+    sum(weights, na.rm = TRUE))
+}
+
+#' @rdname equally_weighted
+#' @export
+max_score <- function(scores, weights, n_drops = 0, ...) {
+  c(max(scores, na.rm = TRUE), sum(weights, na.rm = TRUE))
+}
+
+#' @rdname equally_weighted
+#' @export
+min_score <- function(scores, weights, n_drops = 0, ...) {
+  c(min(scores, na.rm = TRUE), sum(weights, na.rm = TRUE))
+}
+
+#' @rdname equally_weighted
+#' @export
+none <- function(scores, weights, n_drops = 0, ...) {
+  ifelse(length(scores) == 1, 
+         c(scores, weights),
+         stop("Can only use `aggregation: none`
+                 if there is only 1 assignment in 
+                 the category."))
+}
+
+#' Get one category grade
+#'
+#' @description
+#' 
+#' Applies one of the aggregation functions to grade data from one student to 
+#' calculate one category grade for that student.
+#'
+#' @param gs_row A vector of assignment scores and weights coming from a row of the
+#' gs data frame.
+#' @param policy_item A single-layer list containing, at least `assignments`,
+#' a vector and optionally `n_drops`, an integer.
+#' 
+#' @return A single aggregated category grade.
+#' @export
+get_one_grade <- function(gs_row, policy_item) {
+  get(policy_item$aggregation)(
+    scores = gs_row[policy_item$assignments],
+    weights = gs_row[paste0(policy_item$assignments, " - Max Points")],
+    n_drops = ifelse(is.null(policy_item$n_drops), 0, policy_item$n_drops))
+}
+
+#' Get category grades for all students
+#'
+#' @description
+#' 
+#' Iterates `get_one_grade()` across all categories of a policy file and across
+#' all students present in a gs file.
+#'
+#' @param gs A vector of assignment scores and weights coming from a row of the
+#' gs data frame.
+#' @param policy A single-layer list containing, at least `assignments`,
+#' a vector and optionally `n_drops`, an integer.
+#' 
+#' @return An extended version of the gs data frame, with columns added for each 
+#' category described in the policy file containing the grades for each student.
+#' @export
+get_category_grades <- function(gs, policy) {
+  
+  # pull off assignment scores and weights into matrix
+  assignment_names <- get_assignments_unprocessed_data(gs, give_alert = FALSE)
+  assignment_cols <- c(assignment_names, paste0(assignment_names, " - Max Points"))
+  gs_assignments_mat <- data.matrix(gs[assignment_cols])
+  rownames(gs_assignments_mat) <- gs$SID
+  if (!is.numeric(gs_assignments_mat)) {stop("Cannot calculate category grades. Assignment columns contain non-numeric values.")}
+  
+  
+  # prune unnecessary data from policy file
+  assgns_and_cats <- c(assignment_names, purrr::map(policy, "category"))
+  policy <- policy |>
+    # remove ungraded assignments
+    purrr::map(\(item) purrr::modify_at(item, "assignments", ~ .x[.x %in% assgns_and_cats])) |>
+    # remove categories with no assignments from policy file
+    purrr::discard(\(item) length(item$assignments) == 0)
+  
+  # for every category in the policy file...
+  for (policy_item in policy) {
+    # and for every row in the matrix, get a grade and a total weight (max points)
+    grades_weights <- t(apply(gs_assignments_mat, 1,
+                              get_one_grade, 
+                              policy_item = policy_item))
+    colnames(grades_weights) <- c(policy_item$category,
+                                  paste0(policy_item$category, " - Max Points"))
+    gs_assignments_mat <- cbind(gs_assignments_mat, grades_weights)
+  }
+  gs_assignments_mat
+}
+
+#' @importFrom lubridate hms period_to_seconds 
+convert_to_min <- function(hms){
+  save <- lubridate::hms(hms) |>
+    lubridate::period_to_seconds()
+  save <- save/60
+  return (save)
+}
