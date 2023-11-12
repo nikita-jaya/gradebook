@@ -18,22 +18,7 @@ flatten_policy <- function(policy) {
     purrr::list_flatten()
 }
 
-#' Unnest subcategories from a category
-#' 
-#' Takes a top level category of a policy file (e.g. problem sets) and acts recursively
-#' to extract all categories that are nested within and return them as a list of a 
-#' single level.
-#'
-#' @param category An element of a policy file, itself an R list.
-#'
-#' @return A list of categories (themselves lists of depth 1) beginning the with the
-#' most deeply nested and ending with the outer layer of the input category.
-#'
-#' @examples
-#' # Example
-#' extract_nested(policy_demo[[1]])
 #' @importFrom purrr map map_chr list_flatten
-#' @export
 extract_nested <- function(category) {
   
   # If there's no more nesting, return the category as a list

@@ -2,7 +2,6 @@
 
 export(check_data_format)
 export(drop_ungraded_assignments)
-export(extract_nested)
 export(flatten_policy)
 export(get_assignments)
 export(get_duplicate_ids)
