@@ -4,13 +4,19 @@
 #' for faster processing.
 #' 
 #' @param gs_data A dataframe (csv from Gradescope)
+#' @param wide_format whether or not to pivot into wide format
 #' @return A dataframe
-process_gs <- function(gs_data){
-  gs_data |>
+process_gs <- function(gs_data, wide_format = FALSE){
+  gs_data <- gs_data |>
     #merge any duplicated students
-    process_id() |>
-    #drop any ungraded assignments
-    drop_ungraded_assignments()
+    process_id()
+  
+  if (wide_format) {
+    gs_data <- gs_data |>
+      pivot_gs()
+  }
+  
+  return (gs_data)
 }
 
 
@@ -134,35 +140,6 @@ merge_replicated_records <- function(single_sid_df) {
 
   return(new_id)
 }
-
-#' Drop Ungraded Assignments
-#'
-#' This functions drops any assignments that have no grades for any students and replaced -Inf values
-#'
-#' @param gs_data A Gradescope data
-#' @param give_alert whether or not to return an alert of assignments
-#' @importFrom dplyr filter select
-#' @importFrom purrr keep
-#' @return same dataframe without graded assignments
-#' @export
-drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
-  
-  assignments <- get_assignments(gs_data)
-  #These are the dropped assignments with all NAs for raw-score
-  dropped <- gs_data |> keep(~all(is.na(.x))) |> names()
-  dropped <- dropped[dropped %in% assignments]
-  alert <- function() {
-    cli::cli_div(theme = list(span.emph = list(color = "orange")))
-    cli::cli_text("{.emph Important Message}")
-    cli::cli_end()
-    cli::cli_alert_info("These are your ungraded assignments: {dropped}")
-  }
-  if (give_alert){
-    alert()
-  }
-  gs_data |> select(-contains(dropped))
-}
-
 
 #' Convert GS data to longer table
 #'

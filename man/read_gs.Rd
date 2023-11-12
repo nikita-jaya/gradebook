@@ -4,10 +4,12 @@
 \alias{read_gs}
 \title{Read Gradescope .csv}
 \usage{
-read_gs(path)
+read_gs(path, drop_ungraded = FALSE)
 }
 \arguments{
 \item{path}{Path to Gradescope CSV}
+
+\item{drop_ungraded}{whether or not to drop ungraded assignments}
 }
 \value{
 dataframe
@@ -15,4 +17,5 @@ dataframe
 \description{
 This functions reads the Gradescope .csv, checks for correct format,
 converts NA values to zeros and computes scores for each assignment.
+This function can also drop ungraded assignments
 }

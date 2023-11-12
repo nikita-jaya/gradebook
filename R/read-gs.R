@@ -2,20 +2,27 @@
 #'
 #' This functions reads the Gradescope .csv, checks for correct format,
 #'  converts NA values to zeros and computes scores for each assignment.
+#'  This function can also drop ungraded assignments
 #'
 #' @param path Path to Gradescope CSV
+#' @param drop_ungraded whether or not to drop ungraded assignments
 #'
 #' @return dataframe
 #' @importFrom readr read_csv
 #' @importFrom dplyr mutate across cur_column mutate_at vars all_of
 #' @export
-read_gs <- function(path){
+read_gs <- function(path, drop_ungraded = FALSE){
   # read in csv
-  gs_data <- read_csv(path)
-  
-  gs_data|>
+  gs_data <- read_csv(path) |>
     #check format
-    check_data_format() |>
+    check_data_format()
+  
+  if (drop_ungraded) {
+    gs_data <- gs_data |>
+      drop_ungraded_assignments()
+  }
+  
+  gs_data |>
     # convert all NA raw-point values into zeros
     mutate_at(vars(all_of( get_assignments(gs_data) )), ~replace(., is.na(.), 0)) |>
     # replace raw pts with score
@@ -138,4 +145,32 @@ get_assignments <- function(gs_data, give_alert = FALSE){
   }
   
   return (assignment_names)
+}
+
+#' Drop Ungraded Assignments
+#'
+#' This functions drops any assignments that have no grades for any students and replaced -Inf values
+#'
+#' @param gs_data A Gradescope data
+#' @param give_alert whether or not to return an alert of assignments
+#' @importFrom dplyr filter select
+#' @importFrom purrr keep
+#' @return same dataframe without graded assignments
+#' @export
+drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
+  
+  assignments <- get_assignments(gs_data)
+  #These are the dropped assignments with all NAs for raw-score
+  dropped <- gs_data |> keep(~all(is.na(.x))) |> names()
+  dropped <- dropped[dropped %in% assignments]
+  alert <- function() {
+    cli::cli_div(theme = list(span.emph = list(color = "orange")))
+    cli::cli_text("{.emph Important Message}")
+    cli::cli_end()
+    cli::cli_alert_info("These are your ungraded assignments: {dropped}")
+  }
+  if (give_alert){
+    alert()
+  }
+  gs_data |> select(-contains(dropped))
 }

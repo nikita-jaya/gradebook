@@ -4,10 +4,12 @@
 \alias{process_gs}
 \title{Process Gradescope Data}
 \usage{
-process_gs(gs_data)
+process_gs(gs_data, wide_format = FALSE)
 }
 \arguments{
 \item{gs_data}{A dataframe (csv from Gradescope)}
+
+\item{wide_format}{whether or not to pivot into wide format}
 }
 \value{
 A dataframe
