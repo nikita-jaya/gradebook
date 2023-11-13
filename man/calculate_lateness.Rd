@@ -8,9 +8,9 @@ This function computes scores after lateness policy has been applied.}
 calculate_lateness(gs, policy)
 }
 \arguments{
-\item{wide_processed_data}{A processed data in wide format}
+\item{gs}{A processed data in wide format}
 
-\item{flat_policy}{A flattened policy file}
+\item{policy}{A flattened policy file}
 }
 \value{
 A data frame

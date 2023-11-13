@@ -9,7 +9,7 @@
 #'
 #' @return dataframe
 #' @importFrom readr read_csv
-#' @importFrom dplyr mutate across cur_column mutate_at vars all_of
+#' @importFrom dplyr mutate across cur_column mutate_at vars all_of ends_with
 #' @export
 read_gs <- function(path, drop_ungraded = FALSE){
   # read in csv
@@ -22,12 +22,18 @@ read_gs <- function(path, drop_ungraded = FALSE){
       drop_ungraded_assignments()
   }
   
+  raw_cols <- get_assignments(gs_data)
+  
   gs_data |>
     # convert all NA raw-point values into zeros
-    mutate_at(vars(all_of( get_assignments(gs_data) )), ~replace(., is.na(.), 0)) |>
+    mutate_at(vars(all_of(raw_cols )), ~replace(., is.na(.), 0)) |>
     # replace raw pts with score
-    mutate(across(get_assignments(gs_data),
-                  ~ . / get(paste0(cur_column(), " - Max Points"))))
+    mutate(across(raw_cols,
+                  ~ . / get(paste0(cur_column(), " - Max Points")))) |>
+    mutate(across( c(raw_cols, ends_with("Max Points")) , as.numeric ),
+           across( ends_with("Lateness (H:M:S)") , convert_to_min ),
+           across( ends_with("Submission Time") , as.character.POSIXt )
+           )
 }
 
 #' Check Formatting of Gradescope Data
@@ -179,4 +185,10 @@ drop_ungraded_assignments<- function(gs_data, give_alert = TRUE){
     alert()
   }
   gs_data |> select(-contains(dropped))
+}
+
+#' @importFrom lubridate period_to_seconds
+convert_to_min <- function (hms) 
+{
+  lubridate::period_to_seconds(lubridate::hms(hms))/60
 }
