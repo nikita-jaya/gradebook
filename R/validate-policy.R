@@ -16,7 +16,7 @@
 #' @export
 flatten_policy <- function(policy) {
     policy |>
-        purrr::map(\(x) copy_key_to_children(x, key = "lateness")) |>
+        purrr::map(\(x) copy_element_to_children(x, key = "lateness")) |>
         purrr::map(extract_nested) |> 
         purrr::list_flatten()
 }
