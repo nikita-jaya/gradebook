@@ -1,7 +1,8 @@
 #' Reshape policy file from nested to flat
 #' 
-#' Cycles through the top-level categories of a policy file and unnested all
-#' subcategories to create a single level list of all categories and subcategories.
+#' First propagates `lateness` to all child categories then cycles through the
+#' top-level categories of a policy file and unnests all subcategories to create
+#' a single level list of all categories and subcategories.
 #'
 #' @param policy A valid policy file stored as a list.
 #'
@@ -14,8 +15,9 @@
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
-  purrr::map(policy, extract_nested) |> 
-    purrr::list_flatten()
+    purrr::map(policy, \(x) copy_key_to_children(x, key = "lateness")) |>
+        purrr::map(extract_nested) |> 
+        purrr::list_flatten()
 }
 
 #' @importFrom purrr map map_chr list_flatten
@@ -40,4 +42,44 @@ extract_nested <- function(category) {
   
   # Return the flattened nested categories followed by the current category
   c(nested_categories_flattened, list(category))
+}
+
+
+#' Copy list element to child assignment categories
+#' 
+#' A recursive function to copy an element of a policy file to
+#' all children categories that lack that element. If a child category has that
+#' element, that existing child element will not get overwritten by the parent element.
+#' 
+#' Can be used to propagate a field like `lateness` to all child categories of 
+#' a given category.
+#'
+#' @param category A list from a policy file corresponding to a category like "Labs".
+#' Must contain an element called `assignments`.
+#' @param key A character string of the name of the element that you wish to copy.
+#'
+#' @return A list of the same structure as the input category, but with specified
+#' element copied to all child categories that lack an element of that name.
+copy_element_to_children <- function(category, key) {
+    
+    # if the category has no children, just return the category
+    if (is.vector(category$assignments, mode = "character")) {
+        return(category)
+    }
+    
+    # for every child assignment...
+    for (child in seq_along(category$assignments)) {
+        
+        # if the key isn't found in the child list, copy it there
+        if (!(key %in% names(category$assignments[[child]]))) {
+            category$assignments[[child]][[key]] <- category[[key]]
+        }
+        
+        # if the child assignment has a child, call the function again
+        if (is.list(category$assignments[[child]]$assignments)) {
+            category$assignments[[child]] <- copy_element_to_children(category$assignments[[child]], key)
+        }
+    }
+    
+    return(category)
 }
