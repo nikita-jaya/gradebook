@@ -21,7 +21,7 @@ flatten_policy <- function(policy) {
         purrr::list_flatten()
 }
 
-#' @importFrom purrr map map_chr list_flatten
+#' @importFrom purrr map list_flatten
 extract_nested <- function(category) {
   
   # If there's no more nesting, return the category as a list
