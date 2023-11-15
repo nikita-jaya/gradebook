@@ -15,10 +15,12 @@
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
-    policy |>
+    policy$categories <- policy$categories |>
         purrr::map(\(x) copy_element_to_children(x, key = "lateness")) |>
         purrr::map(extract_nested) |> 
         purrr::list_flatten()
+    
+    return(policy)
 }
 
 #' @importFrom purrr map list_flatten

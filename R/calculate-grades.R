@@ -124,17 +124,16 @@ get_category_grades <- function(gs, policy) {
   rownames(gs_assignments_mat) <- gs$SID
   if (!is.numeric(gs_assignments_mat)) {stop("Cannot calculate category grades. Assignment columns contain non-numeric values.")}
   
-  
   # prune unnecessary data from policy file
-  assgns_and_cats <- c(assignment_names, purrr::map(policy, "category"))
-  policy <- policy |>
+  assgns_and_cats <- c(assignment_names, purrr::map(policy$categories, "category"))
+  policy$categories <- policy$categories |>
     # remove ungraded assignments
     purrr::map(\(item) purrr::modify_at(item, "assignments", ~ .x[.x %in% assgns_and_cats])) |>
     # remove categories with no assignments from policy file
     purrr::discard(\(item) length(item$assignments) == 0)
   
   # for every category in the policy file...
-  for (policy_item in policy) {
+  for (policy_item in policy$categories) {
     # and for every row in the matrix, get a grade and a total weight (max points)
     grades_weights <- t(apply(gs_assignments_mat, 1,
                               get_one_grade, 
