@@ -118,11 +118,10 @@ get_one_grade <- function(gs_row, policy_item) {
 get_category_grades <- function(gs, policy) {
   
   # pull off assignment scores and weights into matrix
-  assignment_names <- get_assignments_unprocessed_data(gs, give_alert = FALSE)
+  assignment_names <- get_assignments(gs)
   assignment_cols <- c(assignment_names, paste0(assignment_names, " - Max Points"))
-  gs_assignments_mat <- data.matrix(gs[assignment_cols])
-  rownames(gs_assignments_mat) <- gs$SID
-  if (!is.numeric(gs_assignments_mat)) {stop("Cannot calculate category grades. Assignment columns contain non-numeric values.")}
+  assignments_mat <- data.matrix(gs[assignment_cols])
+  if (!is.numeric(assignments_mat)) {stop("Cannot calculate category grades. Assignment columns contain non-numeric values.")}
   
   # prune unnecessary data from policy file
   assgns_and_cats <- c(assignment_names, purrr::map(policy$categories, "category"))
@@ -132,17 +131,51 @@ get_category_grades <- function(gs, policy) {
     # remove categories with no assignments from policy file
     purrr::discard(\(item) length(item$assignments) == 0)
   
+  category_grades_mat <- matrix(nrow = nrow(assignments_mat), ncol = 0)
+
   # for every category in the policy file...
   for (policy_item in policy$categories) {
+      
     # and for every row in the matrix, get a grade and a total weight (max points)
-    grades_weights <- t(apply(gs_assignments_mat, 1,
+    grades_weights_mat <- t(apply(cbind(assignments_mat, category_grades_mat), 1,
                               get_one_grade, 
                               policy_item = policy_item))
-    colnames(grades_weights) <- c(policy_item$category,
+    colnames(grades_weights_mat) <- c(policy_item$category,
                                   paste0(policy_item$category, " - Max Points"))
-    gs_assignments_mat <- cbind(gs_assignments_mat, grades_weights)
+    category_grades_mat <- cbind(category_grades_mat, grades_weights_mat)
   }
-  gs_assignments_mat
+  
+  gs_w_cats <- bind_cols(gs, category_grades_mat)
+  
+  # extract main categories and weights
+  main_cat_weights <- policy$categories |>
+      purrr::map(\(x) get_main_cat_weights(x)) |>
+      purrr::compact() |>
+      unlist()
+  
+  # normalize weights
+  main_cat_weights <- main_cat_weights/sum(main_cat_weights)
+  
+  # calculate overall score
+  overall_score <- gs_w_cats[names(main_cat_weights)] |>
+      data.matrix() |>
+      t() |>
+      crossprod(main_cat_weights) |>
+      as.vector()
+  
+  gs_w_cats <- cbind(gs_w_cats, `Overall Score` = overall_score)
+  
+  return(gs_w_cats)
+}
+
+get_main_cat_weights <- function(x) {
+    out <- list()
+    if (exists("weight", x)) {
+        out[[x[["category"]]]] <- x[["weight"]]
+        return(out)
+    } else {
+        return(NULL)
+        }
 }
 
 #' @importFrom lubridate hms period_to_seconds 
