@@ -110,12 +110,12 @@ create_lateness_table <- function(flat_policy){
 calculate_scores_after_lateness <- function(lateness_table){
   lateness_table |>
     mutate(`Lateness (H:M:S)` = as.numeric(convert_to_min(`Lateness (H:M:S)`))) |>
-    mutate(across(starts_with("ub"), as.numeric),
-           across(starts_with("lb"), as.numeric),
+    mutate(across(starts_with("to"), as.numeric),
+           across(starts_with("from"), as.numeric),
            across(starts_with("scale"), as.numeric)) |> 
     mutate(across(starts_with("scale"), 
-                  ~between(`Lateness (H:M:S)`,get(str_replace(cur_column(), "scale", "lb")),
-                           get(str_replace(cur_column(), "scale", "ub")))*.x,
+                  ~between(`Lateness (H:M:S)`,get(str_replace(cur_column(), "scale", "from")),
+                           get(str_replace(cur_column(), "scale", "to")))*.x,
                   .names = '{.col}_final'
     )) |>
     mutate(final_scalar = rowSums(across(ends_with("_final")), na.rm = TRUE)) |>
