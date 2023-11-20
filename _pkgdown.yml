@@ -1,8 +1,6 @@
 url: https://gradebook-dev.github.io/gradebook/
 template:
   bootstrap: 5
-development:
-  mode: auto
 
 
 reference:
@@ -50,3 +48,5 @@ reference:
   - max_score
   - min_score
   - none
+development:
+  mode: auto
