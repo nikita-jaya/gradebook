@@ -14,8 +14,9 @@ A single level list of all categories and subcategories ordered where
 all leaves will precede the parent category in the list order.
 }
 \description{
-Cycles through the top-level categories of a policy file and unnested all
-subcategories to create a single level list of all categories and subcategories.
+First propagates \code{lateness} to all child categories then cycles through the
+top-level categories of a policy file and unnests all subcategories to create
+a single level list of all categories and subcategories.
 }
 \examples{
 # Example

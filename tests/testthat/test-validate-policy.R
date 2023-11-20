@@ -1,5 +1,5 @@
 test_that("flatten policy - works correctly", {
-  policy <- list(
+  categories <- list(
     list(
       category = "Labs",
       aggregation = "equally_weighted",
@@ -24,6 +24,8 @@ test_that("flatten policy - works correctly", {
       assignments = c("Quiz 1", "Quiz 2", "Quiz 3")
     )
   )
+  
+  policy <- list(categories = categories)
   
   actual <- flatten_policy(policy)
   
@@ -52,12 +54,12 @@ test_that("flatten policy - works correctly", {
     )
   )
   
-  expect_equal(actual, expected)
+  expect_equal(actual$categories, expected)
   
 })
 
 test_that("flatten policy - unnested policy", {
-  policy <- list(
+  categories <- list(
     list(
       category = "Labs",
       aggregation = "equally_weighted",
@@ -71,6 +73,8 @@ test_that("flatten policy - unnested policy", {
       assignments = c("Quiz 1", "Quiz 2", "Quiz 3")
     )
   )
+  
+  policy <- list(categories = categories)
   
   actual <- flatten_policy(policy)
   

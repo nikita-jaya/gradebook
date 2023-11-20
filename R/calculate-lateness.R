@@ -14,7 +14,7 @@
 calculate_lateness <- function(gs, policy){
   
   #create lateness table from flat_policy
-  lateness_table <- policy |> create_lateness_table()
+  lateness_table <- policy$categories |> create_lateness_table()
   
   if (is.null(lateness_table)) {
     return (gs) #if no lateness policy
@@ -56,51 +56,42 @@ calculate_lateness <- function(gs, policy){
 #'
 #' @return A data frame
 #'
-#' @importFrom purrr map
+#' @importFrom purrr map discard map_dfr
 #' @importFrom data.table rbindlist
-#' @importFrom dplyr mutate across starts_with
+#' @importFrom dplyr mutate across starts_with left_join
+#' @importFrom tibble as_tibble_row
 #' @export
 create_lateness_table <- function(flat_policy){
-  late_policies <- map(flat_policy, function(x){
-    if ("lateness" %in% names(x)){
-      return (x)
-    }
-  })
+
+  #get lateness policies
+  late_policies <- flat_policy$categories|>
+    discard(function(p){
+      !("lateness" %in% names(p))
+    }) 
   
-  if (is.null(late_policies[[1]])){
-    return (NULL)
-  }
+  names(late_policies) <- purrr::map(late_policies, "category") |> unlist()
   
-  late_policies <- late_policies[lengths(late_policies) != 0]
-  
-  assignments <- purrr::map(late_policies, "assignments")
-  category <- purrr::map(late_policies, "category") |> unlist()
-  
-  
-  n_assigns_per_cat <- unlist(purrr::map(assignments, length))
-  num_cat <- length(category)
-  iterations_of_each <- rep(1:num_cat, times = n_assigns_per_cat)
-  
-  
-  assigns_table <- data.frame(assignments = unlist(assignments),
-                              category = category[iterations_of_each]
-  )
-  
+  assigns_table <- map_dfr(names(late_policies), ~tibble(Assignmnents = late_policies[[.x]]$assignments,
+                                        Category = .x
+                                        ))
+
   late_len <- purrr::map(late_policies, function(x){
-    l <- length(x$lateness$scale)
+    l <- length(x$lateness)
     return (l)
   }) |> unlist() |> max()
   
-  scalars <- purrr::map(late_policies, function(x){
-    l <- c(x$category, x$lateness$scale, unlist(x$lateness$interval))
-    len <- length(x$lateness$scale)
-    names(l) <- c("category",paste0("scale", 1:len), paste0(c("lb", "ub"), rep (1:len, each = 2)))
-    return (l)
-  }) |> data.table::rbindlist(fill = TRUE)
   
-  assigns_table <- left_join(assigns_table, scalars, by = "category") |>
-    mutate(across(starts_with("ub"), ~ifelse(.x %in% c(-Inf, Inf), .x,convert_to_min(.x)))) |>
-    mutate(across(starts_with("lb"), ~ifelse(.x %in% c(-Inf, Inf), .x,convert_to_min(.x))))
+  lateness <- map(late_policies, "lateness")
+  
+  lateness_by_cat <- map_dfr(names(lateness), function(x){
+    individ_late_policy <- lateness[[x]] |> unlist()
+    names(individ_late_policy) <- paste0(names(individ_late_policy),rep(1:late_len, each = 3))
+    as_tibble_row(c(Category = x, individ_late_policy))
+  })
+  
+  assigns_table <- left_join(assigns_table, lateness_by_cat, by = "Category") |>
+    mutate(across(starts_with("from"), ~ifelse(.x %in% c(-Inf, Inf), .x,convert_to_min(.x)))) |>
+    mutate(across(starts_with("to"), ~ifelse(.x %in% c(-Inf, Inf), .x,convert_to_min(.x))))
   
   return (assigns_table)
 }
