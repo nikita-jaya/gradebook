@@ -6,7 +6,7 @@
 #'
 #' @return A data frame
 #'
-#' @importFrom dplyr filter left_join select
+#' @importFrom dplyr filter left_join select inner_join
 #' @importFrom tidyr pivot_wider
 #' @importFrom stringr str_remove_all
 #' 
@@ -14,7 +14,7 @@
 calculate_lateness <- function(gs, policy){
   
   #create lateness table from flat_policy
-  lateness_table <- policy$categories |> create_lateness_table()
+  lateness_table <- policy |> create_lateness_table()
   
   if (is.null(lateness_table)) {
     return (gs) #if no lateness policy
@@ -24,21 +24,17 @@ calculate_lateness <- function(gs, policy){
   pivotted_gs <-  gs |>
     pivot_gs()
   
-  #list of assignments with lateness policy
-  assigns <- lateness_table$assignments |> unique()
-  
   after_lateness_scores <- pivotted_gs |>
-    filter(assignments %in% assigns) |>
     
     #append lateness table to pivotted gs
-    left_join(lateness_table, by = c("assignments" = "assignments")) |>
+    dplyr::inner_join(lateness_table, by = "Assignments") |>
     
     #calculate scores after lateness
     calculate_scores_after_lateness() |>
     
     #pivot dataframe back into wide format
-    pivot_wider(names_from = assignments,
-                names_glue = "{assignments} - Score",
+    pivot_wider(names_from = Assignments,
+                names_glue = "{Assignments} - Score",
                 values_from = score_after_lateness)
   
   late_assigns <- names(after_lateness_scores)[(names(after_lateness_scores)) != "SID"] #all assignments with late scores
@@ -69,9 +65,13 @@ create_lateness_table <- function(flat_policy){
       !("lateness" %in% names(p))
     }) 
   
+  if (length(late_policies) == 0){
+    return (NULL)
+  }
+  
   names(late_policies) <- purrr::map(late_policies, "category") |> unlist()
   
-  assigns_table <- map_dfr(names(late_policies), ~tibble(Assignmnents = late_policies[[.x]]$assignments,
+  assigns_table <- map_dfr(names(late_policies), ~tibble(Assignments = late_policies[[.x]]$assignments,
                                         Category = .x
                                         ))
 
@@ -109,7 +109,7 @@ create_lateness_table <- function(flat_policy){
 #' @export
 calculate_scores_after_lateness <- function(lateness_table){
   lateness_table |>
-    mutate(`Lateness (H:M:S)` = as.numeric(convert_to_min(`Lateness (H:M:S)`))) |>
+    mutate(`Lateness (H:M:S)` = as.numeric(`Lateness (H:M:S)`)) |>
     mutate(across(starts_with("to"), as.numeric),
            across(starts_with("from"), as.numeric),
            across(starts_with("scale"), as.numeric)) |> 
@@ -120,5 +120,5 @@ calculate_scores_after_lateness <- function(lateness_table){
     )) |>
     mutate(final_scalar = rowSums(across(ends_with("_final")), na.rm = TRUE)) |>
     mutate(score_after_lateness = Score*final_scalar) |>
-    select(SID, assignments, score_after_lateness)
+    select(SID, Assignments, score_after_lateness)
 }
