@@ -3,3 +3,50 @@ template:
   bootstrap: 5
 development:
   mode: auto
+
+
+reference:
+- title: Gradescope Data Functions
+  desc: >
+    These functions are to validate and process the Gradescope data.
+- subtitle: Validate Gradescope Data
+  contents:
+  - read_gs
+  - check_data_form
+  - get_id_cols
+  - get_assignments
+  - drop_ungraded_assignments
+  
+- title: Process Gradescope Data
+  contents:
+  - process_gs
+  - process_id
+  - get_duplicate_ids
+  - pivot_gs
+  
+- title: Policy File Functions
+  desc: >
+    These functions are to validate and process the policy file.
+  contents:
+  - flatten_policy
+  
+- title: Lateness Functions
+  desc: >
+    These functions are to apply any lateness policies from the policy file
+    to the processed Gradescope data.
+  contents:
+  - calculate_lateness
+  - calculate_scores_after_lateness
+  - create_lateness_table
+- title: Grading Functions
+  desc: >
+    These functions are to grade the processed Gradescope data 
+    based on the criteria in the processed policy file
+  contents:
+  - get_category_grades
+  - get_one_grade
+  - equally_weighted
+  - weighted_by_points
+  - max_score
+  - min_score
+  - none

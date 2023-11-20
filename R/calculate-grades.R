@@ -28,12 +28,13 @@
 #' my_scores <- c(.7, .9, .1)
 #' my_weights <- c(15, 10, 10)
 #' 
-#' equally_weighted(scores = my_scores, n_drops = 1)
+#' equally_weighted(scores = my_scores, weights = my_weights, n_drops = 1)
 #' weighted_by_points(scores = my_scores, weights = my_weights, n_drops = 1)
-#' max_score(my_scores)
-#' min_score(my_scores, n_drops = 1)
+#' max_score(scores = my_scores, weights = my_weights, n_drops = 1)
+#' min_score(scores = my_scores, weights = my_weights, n_drops = 1)
 #' my_score <- c(.7)
-#' none(my_score)
+#' my_weight <- c(10)
+#' none(my_score, my_weight)
 #' 
 #' @export
 equally_weighted <- function(scores, weights, n_drops = 0, ...) {

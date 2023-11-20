@@ -8,23 +8,23 @@
 \alias{none}
 \title{Aggregate assignment scores}
 \usage{
-equally_weighted(scores, n_drops = 0, ...)
+equally_weighted(scores, weights, n_drops = 0, ...)
 
 weighted_by_points(scores, weights, n_drops = 0, ...)
 
-max_score(scores, ...)
+max_score(scores, weights, n_drops = 0, ...)
 
-min_score(scores, n_drops = 0, ...)
+min_score(scores, weights, n_drops = 0, ...)
 
-none(scores, ...)
+none(scores, weights, n_drops = 0, ...)
 }
 \arguments{
 \item{scores}{A vector of assignment scores.}
 
-\item{n_drops}{The number of lowest scores to drop before aggregating.}
-
 \item{weights}{A vector of weights of the same length as \code{scores}. Weights
 that do not sum to one are ok - they get normalized.}
+
+\item{n_drops}{The number of lowest scores to drop before aggregating.}
 }
 \value{
 A single aggregated score (a vector of length 1).
@@ -45,12 +45,13 @@ Serves as a passthrough aggregation for categories with only 1 assignment.
 my_scores <- c(.7, .9, .1)
 my_weights <- c(15, 10, 10)
 
-equally_weighted(scores = my_scores, n_drops = 1)
+equally_weighted(scores = my_scores, weights = my_weights, n_drops = 1)
 weighted_by_points(scores = my_scores, weights = my_weights, n_drops = 1)
-max_score(my_scores)
-min_score(my_scores, n_drops = 1)
+max_score(scores = my_scores, weights = my_weights, n_drops = 1)
+min_score(scores = my_scores, weights = my_weights, n_drops = 1)
 my_score <- c(.7)
-none(my_score)
+my_weight <- c(10)
+none(my_score, my_weight)
 
 }
 \concept{{Aggregation functions}}
