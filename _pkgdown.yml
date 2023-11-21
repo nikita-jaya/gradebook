@@ -2,6 +2,9 @@ url: https://gradebook-dev.github.io/gradebook/
 template:
   package: tidytemplate
   bootstrap: 5
+  includes:
+    in_header: |
+      <script defer data-domain="gradebook,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script> 
 
 reference:
 - title: Gradescope Data Functions
