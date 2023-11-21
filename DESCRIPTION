@@ -32,7 +32,6 @@ Imports:
     stringr,
     tibble,
     tidyr,
-    tidyverse,
     readr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
