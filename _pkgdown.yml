@@ -1,5 +1,6 @@
 url: https://gradebook-dev.github.io/gradebook/
 template:
+  package: tidytemplate
   bootstrap: 5
 
 reference:
@@ -14,7 +15,7 @@ reference:
   - get_assignments
   - drop_ungraded_assignments
   
-- title: Process Gradescope Data
+- subtitle: Process Gradescope Data
   contents:
   - process_gs
   - process_id
