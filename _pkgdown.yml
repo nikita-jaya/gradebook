@@ -10,7 +10,7 @@ reference:
 - title: Gradescope Data Functions
   desc: >
     These functions are to validate and process the Gradescope data.
- - subtitle: Validate Gradescope Data
+- subtitle: Validate Gradescope Data
   contents:
   - read_gs
   - check_data_format
@@ -18,8 +18,8 @@ reference:
   - get_assignments
   - drop_ungraded_assignments
   
- - subtitle: Process Gradescope Data
-    contents:
+- subtitle: Process Gradescope Data
+  contents:
   - process_gs
   - process_id
   - get_duplicate_ids
