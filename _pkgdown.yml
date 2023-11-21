@@ -1,7 +1,7 @@
 url: https://gradebook-dev.github.io/gradebook/
 template:
   bootstrap: 5
-  
+
 reference:
 - title: Gradescope Data Functions
   desc: >
@@ -48,13 +48,13 @@ reference:
   - max_score
   - min_score
   - none
+
 - title: Demo Items
   desc: >
     These items are used to demonstrate the functionality of this package.
   contents:
   - gs_demo
   - policy_demo
-  
 
 development:
   mode: auto
