@@ -6,6 +6,7 @@
 #' @param gs_data A dataframe (csv from Gradescope)
 #' @param wide_format whether or not to pivot into wide format
 #' @return A dataframe
+#' @export
 process_gs <- function(gs_data, wide_format = FALSE){
   gs_data <- gs_data |>
     #merge any duplicated students
