@@ -1,99 +1,88 @@
-#' Check Names for Policy File
+#' Reshape policy file from nested to flat
+#' 
+#' First propagates `lateness` to all child categories then cycles through the
+#' top-level categories of a policy file and unnests all subcategories to create
+#' a single level list of all categories and subcategories.
 #'
-#' This functions checks the names throughout the policy file
+#' @param policy A valid policy file stored as a list.
 #'
-#' @param policy_file A policy file that's validated for having the right format in terms of names and nesting
+#' @return A single level list of all categories and subcategories ordered where 
+#' all leaves will precede the parent category in the list order.
 #'
-#' @return No output, only stops and warnings
-#' @importFrom purrr map
+#' @examples
+#' # Example
+#' flatten_policy(policy_demo)
+#' @importFrom purrr map list_flatten
 #' @export
-check_names <- function(policy){
-    level_one_names <- names(policy)
-    
-    if (! setequal(level_one_names, c("coursewide", "categories", "cutoff") ) ){
-        stop("Incorrect names of nested lists in policy files")
-    }
-    
-    cutoff_grades <- names(policy$cutoff)
-    
-    if (! setequal(cutoff_grades, c("A", "B", "C", "D", "F") )){
-        stop("Incorrect names of nested list, cutoff")
-    }
-    
-    category_names <- purrr::map(policy$categories, names)
-    
-    are_valid_cat_names <- purrr::map(category_names, check_cat_names) |>
-        unlist()
-    
-    if (sum(!are_valid_cat_names) > 0){
-        stop("One of the categories has incorrectly formatted names")
-    }
-    
-    return (policy)
-    
-}
-
-#' Check Category Names
-#'
-#' This functions checks the names of a single category in a policy file
-#'
-#' @param category_name the names within a category in a policy file
-#'
-#' @return returns logical vector
-#' @export
-check_cat_names <- function(category_name){
-    setequal(category_name, c("name", "slipdays", "late_time1", "late_time2", 
-                              "late_scale1", "late_scale2", "after", "weight", 
-                              "drops", "weighted_method", "clobber", "assigns"))
-}
-
-#' Check Category Names
-#'
-#' This functions checks that all assignments within categories of policy file exists in the Gradescope data
-#'
-#' @param policy policy file to validate
-#' @param pivot_df pivotted gradescope data
-#'
-#' @return None
-#' @importFrom dplyr filter
-#' @export
-check_assignment_names <- function(policy, pivot_df){
-    policy_assigns <- purrr::map(policy$categories, "assigns") |> unlist()
-    
-    pivot_assigns <- unique(pivot_df$assignments)
-    
-    additional_assigns <- as.data.frame(policy_assigns) |> 
-        filter(!(policy_assigns %in% pivot_assigns)) 
-    
-    if (nrow(additional_assigns) > 0){
-        stop(paste0("There is no data on the following assignments: ", additional_assigns))
-    }
+flatten_policy <- function(policy) {
+    policy$categories <- policy$categories |>
+        purrr::map(\(x) copy_element_to_children(x, key = "lateness")) |>
+        purrr::map(extract_nested) |> 
+        purrr::list_flatten()
     
     return(policy)
+}
+
+#' @importFrom purrr map list_flatten
+extract_nested <- function(category) {
+  
+  # If there's no more nesting, return the category as a list
+  if (!("assignments" %in% names(category) && is.list(category$assignments)
+  )) {
+    return(list(category))
+  }
+  
+  
+  # Otherwise, get nested categories
+  nested_categories <- purrr::map(category$assignments, extract_nested)
+  
+  # Flatten the nested categories
+  nested_categories_flattened <- list()
+  nested_categories_flattened <- c(nested_categories_flattened, purrr::list_flatten(nested_categories))
+  
+  # Modify the current category's assignments
+  category$assignments <- sapply(category$assignments, function(x) x$category)
+  
+  # Return the flattened nested categories followed by the current category
+  c(nested_categories_flattened, list(category))
+}
+
+
+#' Copy list element to child assignment categories
+#' 
+#' A recursive function to copy an element of a policy file to
+#' all children categories that lack that element. If a child category has that
+#' element, that existing child element will not get overwritten by the parent element.
+#' 
+#' Can be used to propagate a field like `lateness` to all child categories of 
+#' a given category.
+#'
+#' @param category A list from a policy file corresponding to a category like "Labs".
+#' Must contain an element called `assignments`.
+#' @param key A character string of the name of the element that you wish to copy.
+#'
+#' @return A list of the same structure as the input category, but with specified
+#' element copied to all child categories that lack an element of that name.
+copy_element_to_children <- function(category, key) {
     
+    # if the category has no children, just return the category
+    if (is.vector(category$assignments, mode = "character")) {
+        return(category)
+    }
+    
+    # for every child assignment...
+    for (child in seq_along(category$assignments)) {
+        
+        # if the key isn't found in the child list, copy it there
+        if (!(key %in% names(category$assignments[[child]]))) {
+            category$assignments[[child]][[key]] <- category[[key]]
+        }
+        
+        # if the child assignment has a child, call the function again
+        if (is.list(category$assignments[[child]]$assignments)) {
+            category$assignments[[child]] <- copy_element_to_children(category$assignments[[child]], key)
+        }
+    }
+    
+    return(category)
 }
-
-#' Process Assignment and Category Names in Policy File
-#'
-#' This functions processes all assignment and subcategory names
-#' by removing spaces, special characters, etc.
-#'
-#' @param policy policy file 
-#'
-#' @return policy file with processed names
-#' @importFrom stringr str_replace_all
-#' @export
-process_policy_names <- function(policy){
-    assigns <- unlist(policy$assignments)
-    assigns <- assigns |>
-        tolower() |>
-        str_replace_all("[\\s:]+", "_") |>
-        str_replace_all(",", ":")
-    policy$assignments <- assigns
-    policy$category <- policy$category |>
-        tolower() |>
-        str_replace_all("[\\s:]+", "_") |>
-        str_replace_all(",", ":")
-    return (policy)
-}
-

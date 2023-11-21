@@ -47,11 +47,11 @@ my_weights <- c(15, 10, 10)
 
 equally_weighted(scores = my_scores, weights = my_weights, n_drops = 1)
 weighted_by_points(scores = my_scores, weights = my_weights, n_drops = 1)
-max_score(scores = my_scores, weights = my_weights, n_drops = 1)
-min_score(scores = my_scores, weights = my_weights, n_drops = 1)
+max_score(my_scores, weights = my_weights)
+min_score(my_scores,weights = my_weights, n_drops = 1)
 my_score <- c(.7)
 my_weight <- c(10)
-none(my_score, my_weight)
+none(my_score, weights = my_weight)
 
 }
 \concept{{Aggregation functions}}

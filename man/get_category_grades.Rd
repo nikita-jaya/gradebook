@@ -10,7 +10,7 @@ get_category_grades(gs, policy)
 \item{gs}{A vector of assignment scores and weights coming from a row of the
 gs data frame.}
 
-\item{policy_item}{A single-layer list containing, at least \code{assignments},
+\item{policy}{A single-layer list containing, at least \code{assignments},
 a vector and optionally \code{n_drops}, an integer.}
 }
 \value{

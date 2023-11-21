@@ -1,5 +1,5 @@
 Package: gradebook
-Title: Calculate course grades based on assignment scores from Gradescope and a description of the course grading policy.
+Title: Calculate course grades based on assignment scores from Gradescope and a description of the course grading policy
 Version: 0.0.0.9000
 Authors@R: c(person(
                     given = "Nikita", 
@@ -24,15 +24,15 @@ Description: A system to make course grade calculations easy, fast,
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports: 
+    cli,
+    data.table,
     dplyr,
     lubridate,
+    purrr,
     stringr,
     tibble,
     tidyr,
-    purrr,
-    cli,
-    readr,
-    data.table
+    readr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: 
