@@ -71,7 +71,7 @@ check_data_format <- function(gs){
 #' This function identified the id columns from gradescope data
 #'
 #' @param gs  Gradescope dataframe
-#' @param give_alert whether or not to return an alert of assignments
+#' @param verbose whether or not to return an alert of assignments
 #' 
 #' @return a list of id columns 
 #' @importFrom stringr str_replace_all regex
@@ -79,7 +79,7 @@ check_data_format <- function(gs){
 #' @export
 #' 
 #' 
-get_id_cols <- function(gs, give_alert = FALSE){
+get_id_cols <- function(gs, verbose = FALSE){
   #REGEX pattern: case INsensitive, then matches the extensions
   #works with untouched GS dataframe so we can match the pattern
   regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
@@ -103,7 +103,7 @@ get_id_cols <- function(gs, give_alert = FALSE){
     cli::cli_alert_info("The ID columns from Gradescope are {columns_to_keep}")
   }
   
-  if (give_alert){
+  if (verbose){
     alert()
   }
   
@@ -116,7 +116,7 @@ get_id_cols <- function(gs, give_alert = FALSE){
 #' This function identified the assignments from Gradescope data
 #'
 #' @param gs unprocessed Gradescope dataframe
-#' @param give_alert whether or not to return an alert of assignments
+#' @param verbose whether or not to return an alert of assignments
 #' 
 #' @return vector 
 #' @importFrom stringr str_replace_all regex
@@ -125,7 +125,7 @@ get_id_cols <- function(gs, give_alert = FALSE){
 #' 
 #' 
 #' 
-get_assignments <- function(gs, give_alert = FALSE){
+get_assignments <- function(gs, verbose = FALSE){
   #REGEX pattern: case INsensitive, then matches the extensions
   #works with untouched GS dataframe so we can match the pattern
   regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
@@ -146,7 +146,7 @@ get_assignments <- function(gs, give_alert = FALSE){
     cli::cli_alert_info("The assignments from Gradescope are {assignment_names}")
   }
   
-  if (give_alert){
+  if (verbose){
     alert()
   }
   
@@ -158,13 +158,13 @@ get_assignments <- function(gs, give_alert = FALSE){
 #' This functions drops any assignments that have no grades for any students and replaced -Inf values
 #'
 #' @param gs A Gradescope data
-#' @param give_alert whether or not to return an alert of assignments
+#' @param verbose whether or not to return an alert of assignments
 #' @importFrom dplyr filter select
 #' @importFrom purrr keep
 #' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @return same dataframe without graded assignments
 #' @export
-drop_ungraded_assignments<- function(gs, give_alert = TRUE){
+drop_ungraded_assignments<- function(gs, verbose = TRUE){
   
   assignments <- get_assignments(gs)
   #These are the dropped assignments with all NAs for raw-score
@@ -181,7 +181,7 @@ drop_ungraded_assignments<- function(gs, give_alert = TRUE){
       cli::cli_alert_info("These are no ungraded assignments")
     }
   }
-  if (give_alert){
+  if (verbose){
     alert()
   }
   gs |> select(-contains(dropped))
