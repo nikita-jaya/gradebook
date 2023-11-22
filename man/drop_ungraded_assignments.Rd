@@ -4,12 +4,12 @@
 \alias{drop_ungraded_assignments}
 \title{Drop Ungraded Assignments}
 \usage{
-drop_ungraded_assignments(gs_data, give_alert = TRUE)
+drop_ungraded_assignments(gs, verbose = FALSE)
 }
 \arguments{
-\item{gs_data}{A Gradescope data}
+\item{gs}{A Gradescope data frame}
 
-\item{give_alert}{whether or not to return an alert of assignments}
+\item{verbose}{whether or not to print message with the graded and ungraded assignments}
 }
 \value{
 same dataframe without graded assignments

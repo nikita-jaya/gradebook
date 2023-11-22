@@ -180,6 +180,41 @@ get_main_cat_weights <- function(x) {
         }
 }
 
+#' Get letter grades for all students
+#'
+#'
+#' @param gs A vector of assignment scores and weights coming from a row of the
+#' gs data frame with all category and overall grades
+#' @param policy A policy file with course description, grading policy and 
+#' bounds for letter grades
+#' 
+#' @return An extended version of the gs data frame, with a column added for  
+#' letter grades, allotted as described in the policy file 
+#' 
+#' @importFrom dplyr mutate
+#' 
+#' @export
+get_letter_grades <- function(gs, policy){
+  
+  gs <- gs |> mutate(`Letter Grade` = NA)
+  
+  for (letter in policy$letter_grades){
+    within_bounds <- gs$`Overall Score` >= letter$lower_bound/100 & 
+                      gs$`Overall Score`  < letter$upper_bound/100
+    
+    if (is.null(letter$lower_bound)){
+      within_bounds <- gs$`Overall Score`  < letter$upper_bound/100
+      
+    } else if (is.null(letter$upper_bound)){
+      within_bounds <- gs$`Overall Score` >= letter$lower_bound/100
+    }
+    
+    gs$`Letter Grade`[within_bounds] <- letter$letter
+  }
+  
+  return (gs)
+}
+
 #' @importFrom lubridate hms period_to_seconds 
 convert_to_min <- function(hms){
   save <- lubridate::hms(hms) |>

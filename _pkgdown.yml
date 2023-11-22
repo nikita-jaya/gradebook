@@ -46,6 +46,7 @@ reference:
     based on the criteria in the processed policy file
   contents:
   - get_category_grades
+  - get_letter_grades
   - get_one_grade
   - equally_weighted
   - weighted_by_points

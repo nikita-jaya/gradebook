@@ -4,12 +4,12 @@
 \alias{get_assignments}
 \title{Get the Assignment Names for Gradescope Data}
 \usage{
-get_assignments(gs_data, give_alert = FALSE)
+get_assignments(gs, verbose = FALSE)
 }
 \arguments{
-\item{gs_data}{unprocessed Gradescope dataframe}
+\item{gs}{unprocessed Gradescope dataframe}
 
-\item{give_alert}{whether or not to return an alert of assignments}
+\item{verbose}{whether or not to print assignment names}
 }
 \value{
 vector

@@ -4,12 +4,12 @@
 \alias{get_id_cols}
 \title{Get the ID Columns for Gradescope Data}
 \usage{
-get_id_cols(gs_data, give_alert = FALSE)
+get_id_cols(gs, verbose = FALSE)
 }
 \arguments{
-\item{gs_data}{Gradescope dataframe}
+\item{gs}{Gradescope dataframe}
 
-\item{give_alert}{whether or not to return an alert of assignments}
+\item{verbose}{whether or not to return an alert of assignments}
 }
 \value{
 a list of id columns

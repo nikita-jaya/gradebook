@@ -4,12 +4,14 @@
 \alias{read_gs}
 \title{Read Gradescope .csv}
 \usage{
-read_gs(path, drop_ungraded = FALSE)
+read_gs(path, drop_ungraded = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{path}{Path to Gradescope CSV}
 
 \item{drop_ungraded}{whether or not to drop ungraded assignments}
+
+\item{verbose}{whether or not to print messages}
 }
 \value{
 dataframe

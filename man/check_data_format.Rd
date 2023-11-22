@@ -4,13 +4,15 @@
 \alias{check_data_format}
 \title{Check Formatting of Gradescope Data}
 \usage{
-check_data_format(gs_data)
+check_data_format(gs, verbose = FALSE)
 }
 \arguments{
-\item{gs_data}{Gradescope data}
+\item{gs}{Gradescope data frame}
+
+\item{verbose}{whether or not to print messages}
 }
 \value{
-Same dataframe if no error
+Same gs dataframe if no errors.
 }
 \description{
 This functions checks the column names throughout the Gradescope data.
