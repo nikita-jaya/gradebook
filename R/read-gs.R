@@ -162,7 +162,7 @@ get_assignments <- function(gs, verbose = FALSE){
 #' @return same dataframe without graded assignments
 #' @export
 
-drop_ungraded_assignments<- function(gs, verbose = TRUE){
+drop_ungraded_assignments <- function(gs, verbose = FALSE) {
   
   assignments <- get_assignments(gs)
   #These are the dropped assignments with all NAs for raw-score
