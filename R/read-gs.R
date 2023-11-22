@@ -80,13 +80,12 @@ check_data_format <- function(gs, verbose = FALSE){
 #' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @export
 
-get_id_cols <- function(gs, verbose = FALSE){
+get_id_cols <- function(gs, verbose = FALSE) {
   #REGEX pattern: case INsensitive, then matches the extensions
-  #works with untouched GS dataframe so we can match the pattern
-  regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
+  regex <- "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
   
   # extract base names and excludes the extensions (max points, submission time and lateness)
-  base_names <- stringr::str_replace_all(names(gs),regex, "")
+  base_names <- stringr::str_replace_all(names(gs), regex, "")
   
   # Count occurrences of base names
   base_name_counts <- table(base_names)
