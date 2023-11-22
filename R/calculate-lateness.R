@@ -37,8 +37,9 @@ calculate_lateness <- function(gs, policy){
                 names_glue = "{Assignments} - Score",
                 values_from = score_after_lateness)
   
+  names(after_lateness_scores) <- str_remove_all(names(after_lateness_scores), " - Score")
   late_assigns <- names(after_lateness_scores)[(names(after_lateness_scores)) != "SID"] #all assignments with late scores
-  late_assigns <- str_remove_all(late_assigns, " - Score")
+  
   #replace new lateness scores in original dataframe
   gs |>
     select(-late_assigns) |>
