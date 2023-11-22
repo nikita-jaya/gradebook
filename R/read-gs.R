@@ -46,17 +46,17 @@ read_gs <- function(path, drop_ungraded = FALSE){
 #'
 #' @return Same dataframe if no error
 #' @export
-check_data_format <- function(gs){
+check_data_format <- function(gs, verbose = FALSE){
   
   col_names <- colnames(gs)
   
-  id_cols <- get_id_cols(gs, TRUE)
+  id_cols <- get_id_cols(gs, verbose = verbose)
   
   if ( !("SID" %in% id_cols) ){
     stop("There is no SID column")
   }
   
-  assignment_names <- get_assignments(gs, TRUE)
+  assignment_names <- get_assignments(gs, verbose = verbose)
   
   if (is.null(assignment_names) | length(assignment_names) == 0){
     stop("There are no assignments in this dataframe")
