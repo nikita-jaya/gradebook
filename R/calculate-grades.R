@@ -72,11 +72,13 @@ min_score <- function(scores, weights, n_drops = 0, ...) {
 #' @rdname equally_weighted
 #' @export
 none <- function(scores, weights, n_drops = 0, ...) {
-  ifelse(length(scores) == 1, 
-         c(scores, weights),
-         stop("Can only use `aggregation: none`
-                 if there is only 1 assignment in 
-                 the category."))
+  if (length(scores) == 1) {
+      c(scores, weights)
+  } else {
+      stop("Can only use `aggregation: none`
+           if there is only 1 assignment in 
+           the category.")
+  }
 }
 
 #' Get one category grade
@@ -135,7 +137,7 @@ get_category_grades <- function(gs, policy) {
 
   # for every category in the policy file...
   for (policy_item in policy$categories) {
-      
+
     # and for every row in the matrix, get a grade and a total weight (max points)
     grades_weights_mat <- t(apply(cbind(assignments_mat, category_grades_mat), 1,
                               get_one_grade, 
