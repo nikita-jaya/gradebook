@@ -6,12 +6,13 @@
 #'
 #' @param path Path to Gradescope CSV
 #' @param drop_ungraded whether or not to drop ungraded assignments
+#' @param verbose whether or not to print messages
 #'
 #' @return dataframe
 #' @importFrom readr read_csv
 #' @importFrom dplyr mutate across cur_column mutate_at vars all_of ends_with
 #' @export
-read_gs <- function(path, drop_ungraded = FALSE){
+read_gs <- function(path, drop_ungraded = TRUE, verbose = FALSE){
   # read in csv
   gs <- read_csv(path) |>
     #check format
@@ -42,21 +43,22 @@ read_gs <- function(path, drop_ungraded = FALSE){
 #' There must be an SID column and at least one assignment.
 #' It also gives an alert for what id cols and assignments are in the data.
 #'
-#' @param gs Gradescope data 
+#' @param gs Gradescope data frame
+#' @param verbose whether or not to print messages
 #'
-#' @return Same dataframe if no error
+#' @return Same gs dataframe if no errors.
 #' @export
-check_data_format <- function(gs){
+check_data_format <- function(gs, verbose = FALSE){
   
   col_names <- colnames(gs)
   
-  id_cols <- get_id_cols(gs, TRUE)
+  id_cols <- get_id_cols(gs, verbose = verbose)
   
   if ( !("SID" %in% id_cols) ){
     stop("There is no SID column")
   }
   
-  assignment_names <- get_assignments(gs, TRUE)
+  assignment_names <- get_assignments(gs, verbose = verbose)
   
   if (is.null(assignment_names) | length(assignment_names) == 0){
     stop("There are no assignments in this dataframe")
@@ -77,15 +79,13 @@ check_data_format <- function(gs){
 #' @importFrom stringr str_replace_all regex
 #' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @export
-#' 
-#' 
-get_id_cols <- function(gs, verbose = FALSE){
+
+get_id_cols <- function(gs, verbose = FALSE) {
   #REGEX pattern: case INsensitive, then matches the extensions
-  #works with untouched GS dataframe so we can match the pattern
-  regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
+  regex <- "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
   
   # extract base names and excludes the extensions (max points, submission time and lateness)
-  base_names <- stringr::str_replace_all(names(gs),regex, "")
+  base_names <- stringr::str_replace_all(names(gs), regex, "")
   
   # Count occurrences of base names
   base_name_counts <- table(base_names)
@@ -107,7 +107,6 @@ get_id_cols <- function(gs, verbose = FALSE){
     alert()
   }
   
-  
   return(columns_to_keep)
 }
 
@@ -116,22 +115,20 @@ get_id_cols <- function(gs, verbose = FALSE){
 #' This function identified the assignments from Gradescope data
 #'
 #' @param gs unprocessed Gradescope dataframe
-#' @param verbose whether or not to return an alert of assignments
+#' @param verbose whether or not to print assignment names
 #' 
 #' @return vector 
 #' @importFrom stringr str_replace_all regex
 #' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @export
-#' 
-#' 
-#' 
+
 get_assignments <- function(gs, verbose = FALSE){
   #REGEX pattern: case INsensitive, then matches the extensions
   #works with untouched GS dataframe so we can match the pattern
   regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
   
   # extract base names and excludes the extensions (max points, submission time and lateness)
-  base_names <- stringr::str_replace_all(names(gs),regex, "")
+  base_names <- stringr::str_replace_all(names(gs), regex, "")
   
   # Count occurrences of base names
   base_name_counts <- table(base_names)
@@ -157,14 +154,15 @@ get_assignments <- function(gs, verbose = FALSE){
 #'
 #' This functions drops any assignments that have no grades for any students and replaced -Inf values
 #'
-#' @param gs A Gradescope data
-#' @param verbose whether or not to return an alert of assignments
+#' @param gs A Gradescope data frame
+#' @param verbose whether or not to print message with the graded and ungraded assignments
 #' @importFrom dplyr filter select
 #' @importFrom purrr keep
 #' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @return same dataframe without graded assignments
 #' @export
-drop_ungraded_assignments<- function(gs, verbose = TRUE){
+
+drop_ungraded_assignments <- function(gs, verbose = FALSE) {
   
   assignments <- get_assignments(gs)
   #These are the dropped assignments with all NAs for raw-score
@@ -187,8 +185,7 @@ drop_ungraded_assignments<- function(gs, verbose = TRUE){
   gs |> select(-contains(dropped))
 }
 
-#' @importFrom lubridate period_to_seconds
-convert_to_min <- function (hms) 
-{
+#' @importFrom lubridate period_to_seconds hms
+convert_to_min <- function(hms) {
   lubridate::period_to_seconds(lubridate::hms(hms))/60
 }
