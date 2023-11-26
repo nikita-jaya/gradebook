@@ -60,13 +60,13 @@ weighted_by_points <- function(scores, weights, n_drops = 0, ...) {
 #' @rdname equally_weighted
 #' @export
 max_score <- function(scores, weights, n_drops = 0, ...) {
-  c(max(scores, na.rm = TRUE), sum(weights, na.rm = TRUE))
+  c(max(scores, na.rm = TRUE), mean(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
 #' @export
 min_score <- function(scores, weights, n_drops = 0, ...) {
-  c(min(scores, na.rm = TRUE), sum(weights, na.rm = TRUE))
+  c(min(scores, na.rm = TRUE), mean(weights, na.rm = TRUE))
 }
 
 #' @rdname equally_weighted
@@ -116,6 +116,8 @@ get_one_grade <- function(gs_row, policy_item) {
 #' 
 #' @return An extended version of the gs data frame, with columns added for each 
 #' category described in the policy file containing the grades for each student.
+#' @importFrom dplyr bind_cols
+#' @importFrom purrr map modify_at compact
 #' @export
 get_category_grades <- function(gs, policy) {
   
