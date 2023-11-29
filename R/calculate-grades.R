@@ -221,4 +221,6 @@ convert_to_min <- function(hms){
     lubridate::period_to_seconds()
   save <- save/60
   return (save)
+  
+  # placeholder for apply_clobbers()
 }
