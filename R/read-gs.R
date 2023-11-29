@@ -33,7 +33,7 @@ read_gs <- function(path, drop_ungraded = TRUE, verbose = FALSE){
                   ~ . / get(paste0(cur_column(), " - Max Points")))) |>
     mutate(across( c(raw_cols, ends_with("Max Points")) , as.numeric ),
            across( ends_with("Lateness (H:M:S)") , convert_to_min ),
-           across( ends_with("Submission Time") , as.character.POSIXt )
+           across( ends_with("Submission Time") , as.character )
            )
 }
 
