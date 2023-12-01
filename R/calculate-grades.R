@@ -149,7 +149,8 @@ get_category_grades <- function(gs, policy) {
     category_grades_mat <- cbind(category_grades_mat, grades_weights_mat)
   }
   
-  gs_w_cats <- bind_cols(gs, category_grades_mat)
+  gs_w_cats <- bind_cols(gs, category_grades_mat) |>
+    apply_clobber(policy)
   
   # extract main categories and weights
   main_cat_weights <- policy$categories |>
@@ -223,4 +224,38 @@ convert_to_min <- function(hms){
     lubridate::period_to_seconds()
   save <- save/60
   return (save)
+  
+  # placeholder for apply_clobbers()
+}
+
+#' Apply Clobber Policy
+#'
+#' @description
+#' This computes any clobber policy, where the category grade is determined by the
+#' maximum score between two categories.
+#'
+#' @param gs A vector of assignment scores and weights coming from a row of the
+#' gs data frame.
+#' @param policy A single-layer list containing, at least `assignments`,
+#' a vector and optionally `n_drops`, an integer.
+#' 
+#' @return A gs dataframe with clobber policies applied to relevant categories
+#' @export
+apply_clobber <- function(gs, policy){
+  clobber_policy <- purrr::map(policy$categories, function(x){
+    return (c(x$category, x$clobber))
+  }) |>
+    purrr::discard(function(p){
+      (length(p) != 2)
+    }) 
+  
+  if (length(clobber_policy) == 0){
+    return (gs)
+  }
+  #apply clobber
+  for (clobber in clobber_policy){
+    gs[[clobber[1]]] <- pmax(gs[[clobber[1]]], gs[[clobber[2]]])
+  }
+  
+  return (gs)
 }
