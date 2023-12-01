@@ -147,7 +147,8 @@ get_category_grades <- function(gs, policy) {
     category_grades_mat <- cbind(category_grades_mat, grades_weights_mat)
   }
   
-  gs_w_cats <- bind_cols(gs, category_grades_mat)
+  gs_w_cats <- bind_cols(gs, category_grades_mat) |>
+    apply_clobber(policy)
   
   # extract main categories and weights
   main_cat_weights <- policy$categories |>
