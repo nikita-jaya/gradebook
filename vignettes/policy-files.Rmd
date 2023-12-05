@@ -26,5 +26,6 @@ Once you have written your policy file, you can read it into R as a list.
 
 ```{r}
 yaml::read_yaml("inst/extdata/simple_policy.yaml")
+# to be replaced with gradebook::read_policy()
 ```
 
