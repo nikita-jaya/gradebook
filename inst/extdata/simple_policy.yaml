@@ -1,0 +1,30 @@
+coursewide:
+  course: Stat 101
+
+categories:
+  - category: Labs
+    aggregation: weighted_by_points
+    weight: 0.30
+    assignments:
+      - "Lab 1"
+      - "Lab 2"
+      - "Lab 3"
+      - "Lab 4"
+      - "Lab 5"
+      - "Lab 6"
+  - category: Discussion
+    aggregation: equally_weighted
+    weight: 0.10
+    assignments:
+      - "Discussion 1"
+      - "Discussion 2"
+  - category: Midterm
+    aggregation: none
+    weight: 0.30
+    assignments:
+      - "Midterm"
+  - category: Final
+    aggregation: none
+    weight: 0.30
+    assignments:
+      - "Final"

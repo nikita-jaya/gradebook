@@ -1,0 +1,31 @@
+---
+title: "Writing Policy Files"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{policy-files}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+There are two ingredients that are needed to calculate course grades with `gradebook`: a data frame containing assignment scores and a file that encodes the grading policies often described in a syllabus. We call that file a *policy file*.
+
+Policy files are stored as [.yaml](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started) files, a simple format for storing hierarchical data in a text file with minimal markup. Here is an example of a policy file for a course with a fairly simple grading scheme.
+
+```yaml
+`r xfun::file_string(system.file("extdata", "simple_policy.yaml", package = "gradebook"))`
+```
+
+Once you have written your policy file, you can read it into R as a list.
+
+```{r}
+yaml::read_yaml(system.file("extdata", "simple_policy.yaml", package = "gradebook"))
+# to be replaced with gradebook::read_policy()
+```
+
