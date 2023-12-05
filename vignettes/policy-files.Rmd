@@ -25,7 +25,7 @@ Policy files are stored as [.yaml](https://www.cloudbees.com/blog/yaml-tutorial-
 Once you have written your policy file, you can read it into R as a list.
 
 ```{r}
-yaml::read_yaml("inst/extdata/simple_policy.yaml")
+yaml::read_yaml(system.file("extdata", "simple_policy.yaml", package = "gradebook"))
 # to be replaced with gradebook::read_policy()
 ```
 
