@@ -19,7 +19,7 @@ There are two ingredients that are needed to calculate course grades with `grade
 Policy files are stored as [.yaml](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started) files, a simple format for storing hierarchical data in a text file with minimal markup. Here is an example of a policy file for a course with a fairly simple grading scheme.
 
 ```yaml
-`r xfun::file_string('extdata/simple_policy.yaml')`
+`r xfun::file_string(system.file("extdata", "simple_policy.yaml", package = "gradebook"))`
 ```
 
 Once you have written your policy file, you can read it into R as a list.
