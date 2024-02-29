@@ -1,7 +1,7 @@
 #' Compute Lateness
 #' This function computes scores after lateness policy has been applied.
 #'
-#' @param gs A processed data in wide format
+#' @param gs A processed data in wide format 
 #' @param policy A flattened policy file
 #'
 #' @return A data frame
