@@ -104,6 +104,8 @@ aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
 #'
 #' @description
 #' 
+#' * `raw_over_max()` computes score by dividing raw points by max points
+#' 
 #' A collection of functions that calculate score for assignments
 raw_over_max <- function(grades_mat, assignments){
   grades_mat[,assignments] <- grades_mat[, assignments] / grades_mat[, paste0(assignments, " - Max Points")]
