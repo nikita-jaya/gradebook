@@ -11,6 +11,10 @@
 #' @export
 
 get_grades <- function(gs, policy){
+  
+  # flatten policy file
+  policy <- flatten_policy(policy)
+  
   # convert gs into a matrix with only assignment info
   grades_mat <- gs |>
     #only assignment info
@@ -21,9 +25,12 @@ get_grades <- function(gs, policy){
     data.matrix()
   #rownames are SID of student
   rownames(grades_mat) <- gs$SID
+  #pre_allotted cols
+  categories <- unlist(map(policy$categories, "category"))
+  empty <- matrix(nrow = length(gs$SID), ncol = length(categories))
+  colnames(empty) <- categories
+  grades_mat <- cbind(grades_mat, empty)
   
-  # flatten policy file
-  policy <- flatten_policy(policy)
   
   #iterate through each policy item
   for (policy_item in policy$categories){
@@ -85,7 +92,7 @@ score <- function(grades_mat, policy_line, category, assignments){
 }
 
 aggregation <- function(grades_mat, policy_line, category, assignments){
-  # TBD
+  get(policy_line)(grades_mat, category, assignments)
 }
 
 lateness <- function(grades_mat, policy_line, category, assignments){
@@ -113,7 +120,25 @@ raw_over_max <- function(grades_mat, assignments){
 }
 
 
+#' Aggregation Functions
+#'
+#' @description
+#' 
+#' * `equally_weighted()` computes score by dividing raw points by max points
+#' 
+#' A collection of functions that calculate score for assignments
+equally_weighted <- function(grades_mat, category, assignments){
+  grades_mat[,category] <- rowMeans(grades_mat[, assignments])
+  return(grades_mat)
+}
 
+none <- function(grades_mat, category, assignments){
+  if (length(assignments) == 1){
+    grades_mat[,category] <- grades_mat[, assignments]
+    return (grades_mat)
+  }
+  equally_weighted(grades_mat, category, assignments)
+}
 
 
 #' @importFrom lubridate hms period_to_seconds 
