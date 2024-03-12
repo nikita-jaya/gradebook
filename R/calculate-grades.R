@@ -124,7 +124,9 @@ raw_over_max <- function(grades_mat, assignments){
 #'
 #' @description
 #' 
-#' * `equally_weighted()` computes score by dividing raw points by max points
+#' * `equally_weighted()` takes the mean of scores
+#' * `none()` returns a single assignment score as category score; 
+#' if more than 1 assignment, defaults to equally weighted approach
 #' 
 #' A collection of functions that calculate score for assignments
 equally_weighted <- function(grades_mat, category, assignments){
