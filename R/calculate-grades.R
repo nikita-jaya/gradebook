@@ -27,8 +27,8 @@ get_grades <- function(gs, policy){
   rownames(grades_mat) <- gs$SID
   #pre_allotted cols
   categories <- unlist(map(policy$categories, "category"))
-  empty <- matrix(nrow = length(gs$SID), ncol = length(categories))
-  colnames(empty) <- categories
+  empty <- matrix(nrow = length(gs$SID), ncol = length(categories)*2)
+  colnames(empty) <- paste0(rep(categories, each = 2), c("", " - Max Points"))
   grades_mat <- cbind(grades_mat, empty)
   
   
@@ -78,7 +78,7 @@ score <- function(grades_mat, policy_line, category, assignments){
 }
 
 aggregation <- function(grades_mat, policy_line, category, assignments){
-  get(policy_line)(grades_mat, category, assignments)
+  get(policy_line)(grades_mat,category, assignments)
 }
 
 lateness <- function(grades_mat, policy_line, category, assignments){
@@ -143,6 +143,16 @@ none <- function(grades_mat, category, assignments){
   equally_weighted(grades_mat, category, assignments)
 }
 
+## AGGREGATION FOR MAX POINTS FUNCTIONS
+sum_max_pts <- function(grades_mat, category, assignments){
+  grades_mat[,paste0(category, " - Max Points")] <- rowSums(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
+  return (grades_mat)
+}
+
+mean_max_pts <- function(grades_mat, category, assignments){
+  grades_mat[,paste0(category, " - Max Points")] <- rowMeans(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
+  return (grades_mat)
+}
 
 ## LATENESS FUNCTIONS
 
