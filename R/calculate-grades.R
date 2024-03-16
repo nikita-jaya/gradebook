@@ -124,7 +124,7 @@ add <- function(grades_mat, late_policy, original_late_mat, assignments){
   return (grades_mat)
 }
 
-threshold <- function(grades_mat, late_policy, original_late_mat, assignments){
+between <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
   from <- convert_to_min(unlist(late_policy)[1])
   to <- convert_to_min(unlist(late_policy)[2])
