@@ -16,7 +16,7 @@ score(grades_mat, policy_line, category, assignments)
 \item{assignments}{Assignment names for this category}
 }
 \value{
-A single aggregated score (a vector of length 1).
+a mtrix
 }
 \description{
 A collection of functions that access policy_item keys

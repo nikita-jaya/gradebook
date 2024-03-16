@@ -14,6 +14,9 @@ equally_weighted(grades_mat, category, assignments)
 \item{assignments}{Assignment names for this category
 A collection of functions that calculate score for assignments}
 }
+\value{
+a matrix
+}
 \description{
 \itemize{
 \item \code{equally_weighted()} takes the mean of scores
@@ -21,3 +24,4 @@ A collection of functions that calculate score for assignments}
 if more than 1 assignment, defaults to equally weighted approach
 }
 }
+\concept{{Aggregation functions}}

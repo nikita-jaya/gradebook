@@ -9,12 +9,15 @@ raw_over_max(grades_mat, assignments)
 \arguments{
 \item{grades_mat}{Matrix with assignments + associated cols for that category}
 
-\item{assignments}{Assignment names for this category
-
-A collection of functions that calculate score for assignments}
+\item{assignments}{Assignment names for this category}
+}
+\value{
+a matrix
 }
 \description{
 \itemize{
 \item \code{raw_over_max()} computes score by dividing raw points by max points
 }
 }
+\concept{{Score functions}
+A collection of functions that calculate score for assignments}

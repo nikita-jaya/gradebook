@@ -2,6 +2,7 @@
 
 export(check_data_format)
 export(drop_ungraded_assignments)
+export(equally_weighted)
 export(flatten_policy)
 export(get_assignments)
 export(get_category_grade)

@@ -94,7 +94,7 @@ get_category_grade <- function(grades_mat, policy_item){
 #' @param category Category name
 #' @param assignments Assignment names for this category
 #' 
-#' @return A single aggregated score (a vector of length 1). 
+#' @return a mtrix
 #'
 #' @family {Key Functions}
 #' 
@@ -126,7 +126,9 @@ aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
 #' * `raw_over_max()` computes score by dividing raw points by max points
 #' @param grades_mat Matrix with assignments + associated cols for that category
 #' @param assignments Assignment names for this category
+#' @return a matrix
 #' 
+#' @family {Score functions}
 #' A collection of functions that calculate score for assignments
 raw_over_max <- function(grades_mat, assignments){
   grades_mat[,assignments] <- grades_mat[, assignments] / grades_mat[, paste0(assignments, " - Max Points")]
@@ -146,6 +148,11 @@ raw_over_max <- function(grades_mat, assignments){
 #' @param category Category name
 #' @param assignments Assignment names for this category
 #' A collection of functions that calculate score for assignments
+#' 
+#' @return a matrix
+#' 
+#' @family {Aggregation functions}
+#' @export
 equally_weighted <- function(grades_mat, category, assignments){
   grades_mat[,category] <- rowMeans(grades_mat[, assignments])
   return(grades_mat)
@@ -165,6 +172,4 @@ convert_to_min <- function(hms){
     lubridate::period_to_seconds()
   save <- save/60
   return (save)
-  
-  # placeholder for apply_clobbers()
 }
