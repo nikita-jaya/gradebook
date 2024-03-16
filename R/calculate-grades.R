@@ -79,7 +79,11 @@ aggregation <- function(grades_mat, policy_line, category, assignments){
 }
 
 lateness <- function(grades_mat, policy_line, category, assignments){
-  # TBD
+  original_late_mat <- grades_mat[, paste0(assignments, " - Lateness (H:M:S)")]
+  for (late_policy in policy_line){
+   grades_mat <- get(names(late_policy))(grades_mat, late_policy, original_late_mat, assignments)
+  }
+  return (grades_mat)
 }
 drops <- function(grades_mat, policy_line, category, assignments){
   # TBD
@@ -106,6 +110,51 @@ none <- function(grades_mat, category, assignments){
   }
   equally_weighted(grades_mat, category, assignments)
 }
+
+until <- function(grades_mat, late_policy, original_late_mat, assignments){
+  late_cols <- paste0(assignments, " - Lateness (H:M:S)")
+  grades_mat[, late_cols] <- grades_mat[, late_cols] <= convert_to_min(late_policy)
+  return (grades_mat)
+}
+
+add <- function(grades_mat, late_policy, original_late_mat, assignments){
+  late_cols <- paste0(assignments, " - Lateness (H:M:S)")
+  grades_mat[, assignments] <- grades_mat[, assignments] + (grades_mat[, late_cols]*unlist(late_policy))
+  grades_mat[, late_cols] <- original_late_mat
+  return (grades_mat)
+}
+
+threshold <- function(grades_mat, late_policy, original_late_mat, assignments){
+  late_cols <- paste0(assignments, " - Lateness (H:M:S)")
+  from <- convert_to_min(unlist(late_policy)[1])
+  to <- convert_to_min(unlist(late_policy)[2])
+  grades_mat[, late_cols] <- grades_mat[, late_cols] >= from & grades_mat[, late_cols] <= to
+  return (grades_mat)
+}
+
+scale_by <- function(grades_mat, late_policy, original_late_mat, assignments){
+  late_cols <- paste0(assignments, " - Lateness (H:M:S)")
+  grades_mat[, assignments] <- ifelse(grades_mat[, late_cols] == 1, 
+                                      grades_mat[, assignments] * unlist(late_policy), 
+                                      grades_mat[, assignments])
+  grades_mat[, late_cols] <- original_late_mat
+  return (grades_mat)
+}
+
+after <- function(grades_mat, late_policy, original_late_mat, assignments){
+  late_cols <- paste0(assignments, " - Lateness (H:M:S)")
+  grades_mat[, late_cols] <- grades_mat[, late_cols] >= convert_to_min(late_policy)
+  return (grades_mat)
+}
+
+set_to <- function(grades_mat, late_policy, original_late_mat, assignments){
+  late_cols <- paste0(assignments, " - Lateness (H:M:S)")
+  grades_mat[, assignments] <- ifelse(grades_mat[, late_cols] == 1, unlist(late_policy), grades_mat[, assignments])
+  grades_mat[, late_cols] <- original_late_mat
+  return (grades_mat)
+}
+
+
 
 #' @importFrom lubridate hms period_to_seconds 
 convert_to_min <- function(hms){
