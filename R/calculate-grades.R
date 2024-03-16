@@ -70,34 +70,6 @@ get_category_grade <- function(grades_mat, policy_item){
   return (grades_mat)
 }
 
-
-
-#' Key Functions
-#'
-#' @description
-#' 
-#' A collection of functions that access policy_item keys
-#'
-#' * `score()` computes the percentage score and saves back into raw points col
-#' 
-#' * `aggregation()` computes score for category
-#' 
-#' * `lateness()` applies any relevant lateness penalty.
-#'
-#' * `drops()` drops n lowest/highest assignment scores.
-#' 
-#' * `aggregation_max_pts()` computes max points for category.
-#' 
-#'
-#' @param grades_mat Matrix with assignments + associated cols for that category
-#' @param policy_line Policy list item for that key
-#' @param category Category name
-#' @param assignments Assignment names for this category
-#' 
-#' @return a mtrix
-#'
-#' @family {Key Functions}
-#' 
 score <- function(grades_mat, policy_line, category, assignments){
   get(policy_line)(grades_mat, assignments)
 }
@@ -117,41 +89,11 @@ aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
   #TBD
 }
 
-
-#' Score Functions
-#'
-#' @description
-#' 
-#' * `raw_over_max()` computes score by dividing raw points by max points
-#' @param grades_mat Matrix with assignments + associated cols for that category
-#' @param assignments Assignment names for this category
-#' @return a matrix
-#' 
-#' @family {Score functions}
-#' A collection of functions that calculate score for assignments
-#' 
 raw_over_max <- function(grades_mat, assignments){
   grades_mat[,assignments] <- grades_mat[, assignments] / grades_mat[, paste0(assignments, " - Max Points")]
   return(grades_mat)
 }
 
-
-#' Aggregation Functions
-#'
-#' @description
-#' 
-#' * `equally_weighted()` takes the mean of scores
-#' * `none()` returns a single assignment score as category score; 
-#' if more than 1 assignment, defaults to equally weighted approach
-#' 
-#' @param grades_mat Matrix with assignments + associated cols for that category
-#' @param category Category name
-#' @param assignments Assignment names for this category
-#' A collection of functions that calculate score for assignments
-#' 
-#' @return a matrix
-#' 
-#' @family {Aggregation functions}
 equally_weighted <- function(grades_mat, category, assignments){
   grades_mat[,category] <- rowMeans(grades_mat[, assignments])
   return(grades_mat)
