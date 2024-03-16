@@ -70,6 +70,9 @@ get_category_grade <- function(grades_mat, policy_item){
   return (grades_mat)
 }
 
+
+## KEY FUNCTIONS
+
 score <- function(grades_mat, policy_line, category, assignments){
   get(policy_line)(grades_mat, assignments)
 }
@@ -93,13 +96,42 @@ aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
   #TBD
 }
 
+
+## SCORE FUNCTIONS
+
 raw_over_max <- function(grades_mat, assignments){
   grades_mat[,assignments] <- grades_mat[, assignments] / grades_mat[, paste0(assignments, " - Max Points")]
   return(grades_mat)
 }
 
+## AGGREGATION FUNCTIONS
+
 equally_weighted <- function(grades_mat, category, assignments){
-  grades_mat[,category] <- rowMeans(grades_mat[, assignments])
+  grades_mat[,category] <- rowMeans(grades_mat[, assignments], na.rm = TRUE)
+  return(grades_mat)
+}
+
+weighted_by_points <- function(grades_mat, category, assignments){
+  max_cols <- paste0(assignments, " - Max Points")
+  grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols])
+  return(grades_mat)
+}
+
+max_score <- function(grades_mat, category, assignments){
+  if (length(assignments) == 1){
+    grades_mat <- none(grades_mat, category, assignments)
+    return (grades_mat)
+  }
+  grades_mat[,category] <- apply(grades_mat[, assignments],1,function(x) max(x,na.rm=T))
+  return(grades_mat)
+}
+
+min_score <- function(grades_mat, category, assignments){
+  if (length(assignments) == 1){
+    grades_mat <- none(grades_mat, category, assignments)
+    return (grades_mat)
+  }
+  grades_mat[,category] <- apply(grades_mat[, assignments],1,function(x) min(x,na.rm=T))
   return(grades_mat)
 }
 
@@ -110,6 +142,9 @@ none <- function(grades_mat, category, assignments){
   }
   equally_weighted(grades_mat, category, assignments)
 }
+
+
+## LATENESS FUNCTIONS
 
 until <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
