@@ -47,6 +47,17 @@ get_grades <- function(gs, policy){
   return (grades)
 }
 
+#' Calculate Single Category Grade
+#' This function calculates all grades based on the policy file.
+#'
+#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param policy_item An item from policy file
+#'
+#' @return A data frame
+#'
+#' 
+#' @export
+
 get_category_grade <- function(grades_mat, policy_item){
   #get all keys except category and assignments (which are not functions)
   keys <- names(policy_item)[-which(names(policy_item) %in% c("category", "assignments"))]
