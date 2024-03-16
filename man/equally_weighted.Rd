@@ -2,56 +2,22 @@
 % Please edit documentation in R/calculate-grades.R
 \name{equally_weighted}
 \alias{equally_weighted}
-\alias{weighted_by_points}
-\alias{max_score}
-\alias{min_score}
-\alias{none}
-\title{Aggregate assignment scores}
+\title{Aggregation Functions}
 \usage{
-equally_weighted(scores, weights, n_drops = 0, ...)
-
-weighted_by_points(scores, weights, n_drops = 0, ...)
-
-max_score(scores, weights, n_drops = 0, ...)
-
-min_score(scores, weights, n_drops = 0, ...)
-
-none(scores, weights, n_drops = 0, ...)
+equally_weighted(grades_mat, category, assignments)
 }
 \arguments{
-\item{scores}{A vector of assignment scores.}
+\item{grades_mat}{Matrix with assignments + associated cols for that category}
 
-\item{weights}{A vector of weights of the same length as \code{scores}. Weights
-that do not sum to one are ok - they get normalized.}
+\item{category}{Category name}
 
-\item{n_drops}{The number of lowest scores to drop before aggregating.}
-}
-\value{
-A single aggregated score (a vector of length 1).
+\item{assignments}{Assignment names for this category
+A collection of functions that calculate score for assignments}
 }
 \description{
-A collection of functions to aggregate assignment scores. Their s
 \itemize{
-\item \code{equally_weighted()} computes a mean with the option to drop lowest scores.
-\item \code{weighted_by_points()} computes a weighted mean using a weights vector after
-optionally dropping the lowest scores.
-\item \code{max_score()} computes the max score.
-\item \code{min_score()} computes the min score after optionally dropping lowest scores.
-\item \code{none()} if there is only 1 score, returns it, otherwise throws an error.
-Serves as a passthrough aggregation for categories with only 1 assignment.
+\item \code{equally_weighted()} takes the mean of scores
+\item \code{none()} returns a single assignment score as category score;
+if more than 1 assignment, defaults to equally weighted approach
 }
 }
-\examples{
-my_scores <- c(.7, .9, .1)
-my_weights <- c(15, 10, 10)
-
-equally_weighted(scores = my_scores, weights = my_weights, n_drops = 1)
-weighted_by_points(scores = my_scores, weights = my_weights, n_drops = 1)
-max_score(my_scores, weights = my_weights)
-min_score(my_scores,weights = my_weights, n_drops = 1)
-my_score <- c(.7)
-my_weight <- c(10)
-none(my_score, weights = my_weight)
-
-}
-\concept{{Aggregation functions}}

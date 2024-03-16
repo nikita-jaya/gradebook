@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' # Example
-#' flatten_policy(policy_demo)
+#' flatten_policy(simple_policy)
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
