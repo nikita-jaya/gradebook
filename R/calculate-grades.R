@@ -130,6 +130,8 @@ aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
 #' 
 #' @family {Score functions}
 #' A collection of functions that calculate score for assignments
+#' 
+#' @export
 raw_over_max <- function(grades_mat, assignments){
   grades_mat[,assignments] <- grades_mat[, assignments] / grades_mat[, paste0(assignments, " - Max Points")]
   return(grades_mat)
