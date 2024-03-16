@@ -38,14 +38,6 @@ reference:
   contents:
   - get_grades
   - get_category_grade
-  - score
-  - aggregation
-  - lateness
-  - drops
-  - aggregation_max_pts
-  - raw_over_max
-  - equally_weighted
-  - none
 
 - title: Demo Items
   desc: >

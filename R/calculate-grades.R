@@ -98,7 +98,6 @@ get_category_grade <- function(grades_mat, policy_item){
 #'
 #' @family {Key Functions}
 #' 
-#' @export
 score <- function(grades_mat, policy_line, category, assignments){
   get(policy_line)(grades_mat, assignments)
 }
@@ -131,7 +130,6 @@ aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
 #' @family {Score functions}
 #' A collection of functions that calculate score for assignments
 #' 
-#' @export
 raw_over_max <- function(grades_mat, assignments){
   grades_mat[,assignments] <- grades_mat[, assignments] / grades_mat[, paste0(assignments, " - Max Points")]
   return(grades_mat)
@@ -154,7 +152,6 @@ raw_over_max <- function(grades_mat, assignments){
 #' @return a matrix
 #' 
 #' @family {Aggregation functions}
-#' @export
 equally_weighted <- function(grades_mat, category, assignments){
   grades_mat[,category] <- rowMeans(grades_mat[, assignments])
   return(grades_mat)
