@@ -30,16 +30,7 @@ reference:
     These functions are to validate and process the policy file.
   contents:
   - flatten_policy
-  
-- title: Lateness Functions
-  desc: >
-    These functions are to apply any lateness policies from the policy file
-    to the processed Gradescope data.
-  contents:
-  - calculate_lateness
-  - calculate_scores_after_lateness
-  - create_lateness_table
-  - copy_element_to_children
+
 - title: Grading Functions
   desc: >
     These functions are to grade the processed Gradescope data 
