@@ -187,6 +187,7 @@ test_that("lateness function - between with backwards from and to", {
   
   expect_equal(actual, expected)
 })
+
 test_that("lateness function - after", {
   gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
                        `Lab 2 - Lateness (H:M:S)` = c(10, 30, 50, 70, 90)
@@ -198,6 +199,75 @@ test_that("lateness function - after", {
   expected <- grades_mat
   expected[, "Lab 1 - Lateness (H:M:S)"] <- c(0, 0, 1, 1, 1)
   expected[, "Lab 2 - Lateness (H:M:S)"] <- c(0, 0, 0, 1, 1)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("lateness function - add", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Lab 2 - Lateness (H:M:S)` = c(10, 30, 50, 70, 90)
+  )
+  grades_mat <- tibble::tibble(`Lab 1` = c(0.75, 0.85, 0.9, 1.0 , 1.0),
+                               `Lab 1 - Lateness (H:M:S)` = c(0, 0, 1, 1, 1),
+                               `Lab 2` = c(0.70, 0.80, 0.95, 0.95 , 1.0),
+                               `Lab 2 - Lateness (H:M:S)` = c(0, 0, 0, 1, 1)
+  )
+  grades_mat <- as.matrix(grades_mat)
+  
+  actual <- add(grades_mat, late_policy = 0.03, 
+                  original_late_mat = as.matrix(gs), 
+                  assignments = c("Lab 1", "Lab 2"))
+  expected <- grades_mat
+  expected[, "Lab 1"] <- c(0.75, 0.85, 0.93, 1.03 , 1.03)
+  expected[, "Lab 1 - Lateness (H:M:S)"] <- c(20, 40, 60, 80, 100)
+  expected[, "Lab 2"] <- c(0.70, 0.80, 0.95, 0.98, 1.03)
+  expected[, "Lab 2 - Lateness (H:M:S)"] <- c(10, 30, 50, 70, 90)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("lateness function - scale_by", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Lab 2 - Lateness (H:M:S)` = c(10, 30, 50, 70, 90)
+  )
+  grades_mat <- tibble::tibble(`Lab 1` = c(0.75, 0.85, 0.9, 1.0 , 1.0),
+                               `Lab 1 - Lateness (H:M:S)` = c(0, 0, 1, 1, 1),
+                               `Lab 2` = c(0.70, 0.80, 0.95, 0.95 , 1.0),
+                               `Lab 2 - Lateness (H:M:S)` = c(0, 0, 0, 1, 1)
+  )
+  grades_mat <- as.matrix(grades_mat)
+  
+  actual <- scale_by(grades_mat, late_policy = 0.5, 
+                original_late_mat = as.matrix(gs), 
+                assignments = c("Lab 1", "Lab 2"))
+  expected <- grades_mat
+  expected[, "Lab 1"] <- c(0.75, 0.85, 0.45, 0.5 , 0.5)
+  expected[, "Lab 1 - Lateness (H:M:S)"] <- c(20, 40, 60, 80, 100)
+  expected[, "Lab 2"] <- c(0.70, 0.80, 0.95, 0.475, 0.5)
+  expected[, "Lab 2 - Lateness (H:M:S)"] <- c(10, 30, 50, 70, 90)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("lateness function - set_to", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Lab 2 - Lateness (H:M:S)` = c(10, 30, 50, 70, 90)
+  )
+  grades_mat <- tibble::tibble(`Lab 1` = c(0.75, 0.85, 0.9, 1.0 , 1.0),
+                               `Lab 1 - Lateness (H:M:S)` = c(0, 0, 1, 1, 1),
+                               `Lab 2` = c(0.70, 0.80, 0.95, 0.95 , 1.0),
+                               `Lab 2 - Lateness (H:M:S)` = c(0, 0, 0, 1, 1)
+  )
+  grades_mat <- as.matrix(grades_mat)
+  
+  actual <- scale_by(grades_mat, late_policy = 0, 
+                     original_late_mat = as.matrix(gs), 
+                     assignments = c("Lab 1", "Lab 2"))
+  expected <- grades_mat
+  expected[, "Lab 1"] <- c(0.75, 0.85, 0, 0 , 0)
+  expected[, "Lab 1 - Lateness (H:M:S)"] <- c(20, 40, 60, 80, 100)
+  expected[, "Lab 2"] <- c(0.70, 0.80, 0.95, 0, 0)
+  expected[, "Lab 2 - Lateness (H:M:S)"] <- c(10, 30, 50, 70, 90)
   
   expect_equal(actual, expected)
 })
