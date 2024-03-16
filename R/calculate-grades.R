@@ -142,7 +142,6 @@ none <- function(grades_mat, category, assignments){
   equally_weighted(grades_mat, category, assignments)
 }
 
-
 #' @importFrom lubridate hms period_to_seconds 
 convert_to_min <- function(hms){
   save <- lubridate::hms(hms) |>

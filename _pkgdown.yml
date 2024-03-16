@@ -45,14 +45,15 @@ reference:
     These functions are to grade the processed Gradescope data 
     based on the criteria in the processed policy file
   contents:
-  - get_category_grades
-  - apply_clobber
-  - get_letter_grades
-  - get_one_grade
+  - get_grades
+  - get_category_grade
+  - score
+  - aggregation
+  - lateness
+  - drops
+  - aggregation_max_pts
+  - raw_over_max
   - equally_weighted
-  - weighted_by_points
-  - max_score
-  - min_score
   - none
 
 - title: Demo Items
