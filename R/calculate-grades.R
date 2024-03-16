@@ -161,8 +161,8 @@ add <- function(grades_mat, late_policy, original_late_mat, assignments){
 
 between <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
-  from <- convert_to_min(unlist(late_policy)[1])
-  to <- convert_to_min(unlist(late_policy)[2])
+  from <- min(convert_to_min(unlist(late_policy)))
+  to <- max(convert_to_min(unlist(late_policy)))
   grades_mat[, late_cols] <- grades_mat[, late_cols] >= from & grades_mat[, late_cols] <= to
   return (grades_mat)
 }
