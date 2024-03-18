@@ -44,8 +44,4 @@ A collection of functions to apply lateness policies.
 \item \code{set_to()} sets score to \code{late_policy} if \code{assignments} is determined as late.
 }
 }
-\seealso{
-Other {Aggregation for Max Points Functions}: 
-\code{\link{sum_max_pts}()}
-}
-\concept{{Aggregation for Max Points Functions}}
+\concept{{Lateness Functions}}

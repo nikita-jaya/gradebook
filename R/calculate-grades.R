@@ -279,7 +279,7 @@ mean_max_pts <- function(grades_mat, category, assignments){
 #' 
 #' @return A matrix
 #'
-#' @family {Aggregation for Max Points Functions}
+#' @family {Lateness Functions}
 #' 
 #' @export
 until <- function(grades_mat, late_policy, original_late_mat, assignments){

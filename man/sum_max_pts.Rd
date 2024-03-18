@@ -26,8 +26,4 @@ A collection of functions to computes max points for category.
 \item \code{mean_max_pts()} computes a mean.
 }
 }
-\seealso{
-Other {Aggregation for Max Points Functions}: 
-\code{\link{until}()}
-}
 \concept{{Aggregation for Max Points Functions}}
