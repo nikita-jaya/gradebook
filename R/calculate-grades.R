@@ -27,8 +27,8 @@ get_grades <- function(gs, policy){
   rownames(grades_mat) <- gs$SID
   #pre_allotted cols
   categories <- unlist(map(policy$categories, "category"))
-  empty <- matrix(nrow = length(gs$SID), ncol = length(categories)*2)
-  colnames(empty) <- paste0(rep(categories, each = 2), c("", " - Max Points"))
+  empty <- matrix(nrow = length(gs$SID), ncol = length(categories)*3)
+  colnames(empty) <- paste0(rep(categories, each = 3), c("", " - Max Points", " - Lateness (H:M:S)"))
   grades_mat <- cbind(grades_mat, empty)
   
   
@@ -86,6 +86,8 @@ get_category_grade <- function(grades_mat, policy_item){
 #' * `drops()` drops n lowest/highest assignment scores; note that this is NOT implemented yet.
 #' 
 #' * `aggregation_max_pts()` computes max points for category.
+#' 
+#' * `aggregation_lateness()` computes max points for category.
 #'
 #' @param grades_mat Matrix with assignments + associated cols for that category
 #' @param policy_line Policy list item for that key
@@ -127,6 +129,12 @@ drops <- function(grades_mat, policy_line, category, assignments){
 #' @rdname score
 #' @export
 aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
+  get(policy_line)(grades_mat, category, assignments)
+}
+
+#' @rdname score
+#' @export
+aggregation_lateness <- function(grades_mat, policy_line, category, assignments){
   get(policy_line)(grades_mat, category, assignments)
 }
 
@@ -243,19 +251,21 @@ none <- function(grades_mat, category, assignments){
 #' 
 #' @export
 sum_max_pts <- function(grades_mat, category, assignments){
-  grades_mat[,paste0(category, " - Max Points")] <- ifelse(length(assignments) == 1,
-                                                           grades_mat[, paste0(assignments, " - Max Points")],
-                                                           rowSums(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
-                                                           )
+  if (length(assignments) == 1){
+    grades_mat[,paste0(category, " - Max Points")] <- grades_mat[, paste0(assignments, " - Max Points")]
+  } else {
+    grades_mat[,paste0(category, " - Max Points")] <- rowSums(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
+  }
   return (grades_mat)
 }
 #' @rdname sum_max_pts
 #' @export
 mean_max_pts <- function(grades_mat, category, assignments){
-  grades_mat[,paste0(category, " - Max Points")] <- ifelse(length(assignments) == 1,
-                                                           grades_mat[, paste0(assignments, " - Max Points")],
-                                                           rowMeans(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
-                                                           )
+  if (length(assignments) == 1){
+    grades_mat[,paste0(category, " - Max Points")] <- grades_mat[, paste0(assignments, " - Max Points")]
+  } else {
+    grades_mat[,paste0(category, " - Max Points")] <- rowMeans(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
+  }
   return (grades_mat)
 }
 
@@ -336,11 +346,66 @@ after <- function(grades_mat, late_policy, original_late_mat, assignments){
 #' @export
 set_to <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
-  grades_mat[, assignments] <- ifelse(grades_mat[, late_cols] == 1, unlist(late_policy), grades_mat[, assignments])
+  grades_mat[, assignments] <- ifelse(grades_mat[, late_cols] == 1, 
+                                      unlist(late_policy), 
+                                      grades_mat[, assignments])
   grades_mat[, late_cols] <- original_late_mat
   return (grades_mat)
 }
 
+#' Aggregation for Lateness Functions
+#'
+#' @description
+#' 
+#' A collection of functions to computes lateness for category.
+#'
+#' * `mean_lateness()` computes a sum.
+#' 
+#' * `sum_lateness()` computes a mean.
+#' 
+#' * `max_lateness()` computes a max.
+#'
+#'
+#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param category Category name
+#' @param assignments Assignment names for this category
+#' 
+#' @return A matrix
+#'
+#' @family {Aggregation for Lateness Functions}
+#' 
+#' @export
+mean_lateness <- function(grades_mat, category, assignments){
+    if (length(assignments) == 1){
+    grades_mat[,paste0(category, " - Lateness (H:M:S)")] <- grades_mat[, paste0(assignments, " - Lateness (H:M:S)")]
+  } else {
+    grades_mat[,paste0(category, " - Lateness (H:M:S)")] <- rowMeans(grades_mat[, paste0(assignments, " - Lateness (H:M:S)")], na.rm = TRUE)
+  }
+  return (grades_mat)
+}
+
+#' @rdname mean_lateness
+#' @export
+sum_lateness <- function(grades_mat, category, assignments){
+  if (length(assignments) == 1){
+    grades_mat[,paste0(category, " - Lateness (H:M:S)")] <- grades_mat[, paste0(assignments, " - Lateness (H:M:S)")]
+  } else {
+    grades_mat[,paste0(category, " - Lateness (H:M:S)")] <- rowSums(grades_mat[, paste0(assignments, " - Lateness (H:M:S)")], na.rm = TRUE)
+  }
+  return (grades_mat)
+}
+
+#' @rdname mean_lateness
+#' @export
+max_lateness <- function(grades_mat, category, assignments){
+  if (length(assignments) == 1){
+    grades_mat[,paste0(category, " - Lateness (H:M:S)")] <- grades_mat[, paste0(assignments, " - Lateness (H:M:S)")]
+  } else {
+    grades_mat[,paste0(category, " - Lateness (H:M:S)")] <- apply(grades_mat[, paste0(assignments, " - Lateness (H:M:S)")],
+                                                                  1,function(x) max(x,na.rm=T))
+  }
+  return (grades_mat)
+}
 
 
 #' @importFrom lubridate hms period_to_seconds 

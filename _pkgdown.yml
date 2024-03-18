@@ -44,6 +44,7 @@ reference:
   - lateness
   - drops
   - aggregation_max_pts
+  - aggregation_lateness
   - raw_over_max
   - equally_weighted
   - weighted_by_points
@@ -58,6 +59,9 @@ reference:
   - add
   - scale_by
   - set_to
+  - mean_lateness
+  - sum_lateness
+  - max_lateness
   
 
 - title: Demo Items

@@ -333,3 +333,91 @@ test_that("lateness function - set_to", {
   
   expect_equal(actual, expected)
 })
+
+test_that("aggregation for lateness function - sum_lateness", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Lab 2 - Lateness (H:M:S)` = c(10, 30, 50, 70, 90),
+                       `Labs - Lateness (H:M:S)` = NA
+  )
+  grades_mat <- as.matrix(gs)
+  
+  actual <- sum_lateness(grades_mat, category = "Labs", 
+                     assignments = c("Lab 1", "Lab 2"))
+  expected <- grades_mat
+  expected[, "Labs - Lateness (H:M:S)"] <- c(30, 70, 110, 150, 190)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("aggregation for lateness function - sum_lateness with one assignment", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Labs - Lateness (H:M:S)` = NA
+  )
+  grades_mat <- as.matrix(gs)
+  
+  actual <- sum_lateness(grades_mat, category = "Labs", 
+                         assignments = c("Lab 1"))
+  expected <- grades_mat
+  expected[, "Labs - Lateness (H:M:S)"] <- c(20, 40, 60, 80, 100)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("aggregation for lateness function - mean_lateness", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Lab 2 - Lateness (H:M:S)` = c(10, 30, 50, 70, 90),
+                       `Labs - Lateness (H:M:S)` = NA
+  )
+  grades_mat <- as.matrix(gs)
+  
+  actual <- mean_lateness(grades_mat, category = "Labs", 
+                         assignments = c("Lab 1", "Lab 2"))
+  expected <- grades_mat
+  expected[, "Labs - Lateness (H:M:S)"] <- c(15, 35, 55, 75, 95)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("aggregation for lateness function - mean_lateness with one assignment", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Labs - Lateness (H:M:S)` = NA
+  )
+  grades_mat <- as.matrix(gs)
+  
+  actual <- mean_lateness(grades_mat, category = "Labs", 
+                          assignments = c("Lab 1"))
+  expected <- grades_mat
+  expected[, "Labs - Lateness (H:M:S)"] <- c(20, 40, 60, 80, 100)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("aggregation for lateness function - max_lateness", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Lab 2 - Lateness (H:M:S)` = c(10, 30, 50, 70, 90),
+                       `Labs - Lateness (H:M:S)` = NA
+  )
+  grades_mat <- as.matrix(gs)
+  
+  actual <- max_lateness(grades_mat, category = "Labs", 
+                          assignments = c("Lab 1", "Lab 2"))
+  expected <- grades_mat
+  expected[, "Labs - Lateness (H:M:S)"] <- c(20, 40, 60, 80, 100)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("aggregation for lateness function - max_lateness with one assignment", {
+  gs <- tibble::tibble(`Lab 1 - Lateness (H:M:S)` = c(20, 40, 60, 80, 100),
+                       `Labs - Lateness (H:M:S)` = NA
+  )
+  grades_mat <- as.matrix(gs)
+  
+  actual <- max_lateness(grades_mat, category = "Labs", 
+                          assignments = c("Lab 1"))
+  expected <- grades_mat
+  expected[, "Labs - Lateness (H:M:S)"] <- c(20, 40, 60, 80, 100)
+  
+  expect_equal(actual, expected)
+})
+

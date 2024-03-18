@@ -6,6 +6,7 @@
 \alias{lateness}
 \alias{drops}
 \alias{aggregation_max_pts}
+\alias{aggregation_lateness}
 \title{Key Functions}
 \usage{
 score(grades_mat, policy_line, category, assignments)
@@ -17,6 +18,8 @@ lateness(grades_mat, policy_line, category, assignments)
 drops(grades_mat, policy_line, category, assignments)
 
 aggregation_max_pts(grades_mat, policy_line, category, assignments)
+
+aggregation_lateness(grades_mat, policy_line, category, assignments)
 }
 \arguments{
 \item{grades_mat}{Matrix with assignments + associated cols for that category}
@@ -38,6 +41,7 @@ A collection of functions to refer to correct classification of grading function
 \item \code{lateness()} applies any relevant lateness penalty.
 \item \code{drops()} drops n lowest/highest assignment scores; note that this is NOT implemented yet.
 \item \code{aggregation_max_pts()} computes max points for category.
+\item \code{aggregation_lateness()} computes max points for category.
 }
 }
 \concept{{Key Functions}}
