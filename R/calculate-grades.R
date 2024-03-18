@@ -71,16 +71,45 @@ get_category_grade <- function(grades_mat, policy_item){
 }
 
 
-## KEY FUNCTIONS
+#' Key Functions
+#'
+#' @description
+#' 
+#' A collection of functions to refer to correct classification of grading functions using policy file keys.
+#'
+#' * `score()` computes the percentage score and saves back into raw points col
+#' 
+#' * `aggregation()` computes score for category
+#'
+#' * `lateness()` applies any relevant lateness penalty.
+#' 
+#' * `drops()` drops n lowest/highest assignment scores; note that this is NOT implemented yet.
+#' 
+#' * `aggregation_max_pts()` computes max points for category.
+#'
+#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param policy_line Policy list item for that key
+#' @param category Category name
+#' @param assignments Assignment names for this category
+#' 
+#' @return A matrix
+#'
+#' @family {Key Functions}
+#' 
+#' @export
 
 score <- function(grades_mat, policy_line, category, assignments){
   get(policy_line)(grades_mat, assignments)
 }
 
+#' @rdname score
+#' @export
 aggregation <- function(grades_mat, policy_line, category, assignments){
   get(policy_line)(grades_mat,category, assignments)
 }
 
+#' @rdname score
+#' @export
 lateness <- function(grades_mat, policy_line, category, assignments){
   original_late_mat <- grades_mat[, paste0(assignments, " - Lateness (H:M:S)")]
   for (late_policy in policy_line){
@@ -88,10 +117,16 @@ lateness <- function(grades_mat, policy_line, category, assignments){
   }
   return (grades_mat)
 }
+
+#' @rdname score
+#' @export
 drops <- function(grades_mat, policy_line, category, assignments){
   # TBD
+  return (grades_mat)
 }
 
+#' @rdname score
+#' @export
 aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
   #TBD
 }
