@@ -60,10 +60,11 @@ get_grades <- function(gs, policy){
 
 get_category_grade <- function(grades_mat, policy_item){
   #get all keys except category and assignments (which are not functions)
-  keys <- names(policy_item)[-which(names(policy_item) %in% c("category", "assignments"))]
+  keys <- names(policy_item)[-which(names(policy_item) %in% c("category", "assignments", "weights"))]
   #all assignments + their associated cols for this category
   for (key in keys){
-    grades_mat <- get(key)(grades_mat, policy_item[[key]], policy_item$category, policy_item$assignments)
+    grades_mat <- get(key)(grades_mat, policy_item[[key]], policy_item$category, 
+                           policy_item$assignments, policy_item$weights)
   }
   
   ## insert code to re-add new/editted columns from grades_mat into grades_mat
@@ -93,25 +94,26 @@ get_category_grade <- function(grades_mat, policy_item){
 #' @param policy_line Policy list item for that key
 #' @param category Category name
 #' @param assignments Assignment names for this category
+#' @param weights Weights for `weighted_mean`
 #' 
 #' @return A matrix
 #'
 #' @family {Key Functions}
 #' 
 #' @export
-score <- function(grades_mat, policy_line, category, assignments){
+score <- function(grades_mat, policy_line, category, assignments, weights = c()){
   get(policy_line)(grades_mat, assignments)
 }
 
 #' @rdname score
 #' @export
-aggregation <- function(grades_mat, policy_line, category, assignments){
-  get(policy_line)(grades_mat,category, assignments)
+aggregation <- function(grades_mat, policy_line, category, assignments, weights = c()){
+  get(policy_line)(grades_mat,category, assignments, weights)
 }
 
 #' @rdname score
 #' @export
-lateness <- function(grades_mat, policy_line, category, assignments){
+lateness <- function(grades_mat, policy_line, category, assignments, weights = c()){
   original_late_mat <- grades_mat[, paste0(assignments, " - Lateness (H:M:S)")]
   for (late_policy in policy_line){
    grades_mat <- get(names(late_policy))(grades_mat, late_policy, original_late_mat, assignments)
@@ -121,20 +123,20 @@ lateness <- function(grades_mat, policy_line, category, assignments){
 
 #' @rdname score
 #' @export
-drops <- function(grades_mat, policy_line, category, assignments){
+drops <- function(grades_mat, policy_line, category, assignments, weights = c()){
   # TBD
   return (grades_mat)
 }
 
 #' @rdname score
 #' @export
-aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
+aggregation_max_pts <- function(grades_mat, policy_line, category, assignments, weights = c()){
   get(policy_line)(grades_mat, category, assignments)
 }
 
 #' @rdname score
 #' @export
-aggregation_lateness <- function(grades_mat, policy_line, category, assignments){
+aggregation_lateness <- function(grades_mat, policy_line, category, assignments, weights = c()){
   get(policy_line)(grades_mat, category, assignments)
 }
 
@@ -179,20 +181,21 @@ raw_over_max <- function(grades_mat, assignments){
 #' @param grades_mat Matrix with assignments + associated cols for that category
 #' @param category Category name
 #' @param assignments Assignment names for this category
+#' @param weights Weights for `weighted_mean`, default to NULL with other aggregation method
 #' 
 #' @return A matrix
 #'
 #' @family {Aggregation Functions}
 #' 
 #' @export
-equally_weighted <- function(grades_mat, category, assignments){
+equally_weighted <- function(grades_mat, category, assignments, weights = c()){
   grades_mat[,category] <- rowMeans(grades_mat[, assignments], na.rm = TRUE)
   return(grades_mat)
 }
 
 #' @rdname equally_weighted
 #' @export
-weighted_by_points <- function(grades_mat, category, assignments){
+weighted_by_points <- function(grades_mat, category, assignments, weights = c()){
   max_cols <- paste0(assignments, " - Max Points")
   grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols])
   return(grades_mat)
@@ -200,7 +203,7 @@ weighted_by_points <- function(grades_mat, category, assignments){
 
 #' @rdname equally_weighted
 #' @export
-max_score <- function(grades_mat, category, assignments){
+max_score <- function(grades_mat, category, assignments, weights = c()){
   if (length(assignments) == 1){
     grades_mat <- none(grades_mat, category, assignments)
     return (grades_mat)
@@ -211,7 +214,7 @@ max_score <- function(grades_mat, category, assignments){
 
 #' @rdname equally_weighted
 #' @export
-min_score <- function(grades_mat, category, assignments){
+min_score <- function(grades_mat, category, assignments, weights = c()){
   if (length(assignments) == 1){
     grades_mat <- none(grades_mat, category, assignments)
     return (grades_mat)
@@ -222,7 +225,18 @@ min_score <- function(grades_mat, category, assignments){
 
 #' @rdname equally_weighted
 #' @export
-none <- function(grades_mat, category, assignments){
+weighted_mean <- function(grades_mat, category, assignments, weights){
+  if (length(assignments) != length(weights)){
+    grades_mat <- equally_weighted(grades_mat, category, assignments)
+    return (grades_mat)
+  }
+  grades_mat[, category] <- rowSums(t(t(grades_mat[, assignments]) * weights))/ sum(weights)
+  return (grades_mat)
+}
+
+#' @rdname equally_weighted
+#' @export
+none <- function(grades_mat, category, assignments, weights = c()){
   if (length(assignments) == 1){
     grades_mat[,category] <- grades_mat[, assignments]
     return (grades_mat)

@@ -9,17 +9,29 @@
 \alias{aggregation_lateness}
 \title{Key Functions}
 \usage{
-score(grades_mat, policy_line, category, assignments)
+score(grades_mat, policy_line, category, assignments, weights = c())
 
-aggregation(grades_mat, policy_line, category, assignments)
+aggregation(grades_mat, policy_line, category, assignments, weights = c())
 
-lateness(grades_mat, policy_line, category, assignments)
+lateness(grades_mat, policy_line, category, assignments, weights = c())
 
-drops(grades_mat, policy_line, category, assignments)
+drops(grades_mat, policy_line, category, assignments, weights = c())
 
-aggregation_max_pts(grades_mat, policy_line, category, assignments)
+aggregation_max_pts(
+  grades_mat,
+  policy_line,
+  category,
+  assignments,
+  weights = c()
+)
 
-aggregation_lateness(grades_mat, policy_line, category, assignments)
+aggregation_lateness(
+  grades_mat,
+  policy_line,
+  category,
+  assignments,
+  weights = c()
+)
 }
 \arguments{
 \item{grades_mat}{Matrix with assignments + associated cols for that category}
@@ -29,6 +41,8 @@ aggregation_lateness(grades_mat, policy_line, category, assignments)
 \item{category}{Category name}
 
 \item{assignments}{Assignment names for this category}
+
+\item{weights}{Weights for \code{weighted_mean}}
 }
 \value{
 A matrix

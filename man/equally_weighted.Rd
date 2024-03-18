@@ -5,18 +5,21 @@
 \alias{weighted_by_points}
 \alias{max_score}
 \alias{min_score}
+\alias{weighted_mean}
 \alias{none}
 \title{Aggregation Functions}
 \usage{
-equally_weighted(grades_mat, category, assignments)
+equally_weighted(grades_mat, category, assignments, weights = c())
 
-weighted_by_points(grades_mat, category, assignments)
+weighted_by_points(grades_mat, category, assignments, weights = c())
 
-max_score(grades_mat, category, assignments)
+max_score(grades_mat, category, assignments, weights = c())
 
-min_score(grades_mat, category, assignments)
+min_score(grades_mat, category, assignments, weights = c())
 
-none(grades_mat, category, assignments)
+weighted_mean(grades_mat, category, assignments, weights)
+
+none(grades_mat, category, assignments, weights = c())
 }
 \arguments{
 \item{grades_mat}{Matrix with assignments + associated cols for that category}
@@ -24,6 +27,8 @@ none(grades_mat, category, assignments)
 \item{category}{Category name}
 
 \item{assignments}{Assignment names for this category}
+
+\item{weights}{Weights for \code{weighted_mean}, default to NULL with other aggregation method}
 }
 \value{
 A matrix
