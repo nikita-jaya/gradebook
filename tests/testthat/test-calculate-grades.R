@@ -159,6 +159,21 @@ test_that("aggregation for max pts - sum_max_pts", {
   
 })
 
+test_that("aggregation for max pts - sum_max_pts with only one assignment", {
+  gs <- tibble::tibble(`Lab 1 - Max Points` = rep(5,5),
+                       `Labs - Max Points`= NA
+  )
+  grades_mat <- as.matrix(gs)
+  
+  actual <- sum_max_pts(grades_mat, category = "Labs", 
+                        assignments = c("Lab 1"))
+  expected <- grades_mat
+  expected[, "Labs - Max Points"] <- rep(5, 5)
+  
+  expect_equal(actual, expected)
+  
+})
+
 test_that("aggregation for max pts - mean_max_pts", {
   gs <- tibble::tibble(`Lab 1 - Max Points` = rep(5,5),
                        `Lab 2 - Max Points` = rep(6,5),
@@ -170,6 +185,21 @@ test_that("aggregation for max pts - mean_max_pts", {
                         assignments = c("Lab 1", "Lab 2"))
   expected <- grades_mat
   expected[, "Labs - Max Points"] <- rep(5.5, 5)
+  
+  expect_equal(actual, expected)
+  
+})
+
+test_that("aggregation for max pts - mean_max_pts with one assignment", {
+  gs <- tibble::tibble(`Lab 1 - Max Points` = rep(5,5),
+                       `Labs - Max Points`= NA
+  )
+  grades_mat <- as.matrix(gs)
+  
+  actual <- mean_max_pts(grades_mat, category = "Labs", 
+                         assignments = c("Lab 1"))
+  expected <- grades_mat
+  expected[, "Labs - Max Points"] <- rep(5, 5)
   
   expect_equal(actual, expected)
   

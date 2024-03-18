@@ -243,13 +243,19 @@ none <- function(grades_mat, category, assignments){
 #' 
 #' @export
 sum_max_pts <- function(grades_mat, category, assignments){
-  grades_mat[,paste0(category, " - Max Points")] <- rowSums(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
+  grades_mat[,paste0(category, " - Max Points")] <- ifelse(length(assignments) == 1,
+                                                           grades_mat[, paste0(assignments, " - Max Points")],
+                                                           rowSums(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
+                                                           )
   return (grades_mat)
 }
 #' @rdname sum_max_pts
 #' @export
 mean_max_pts <- function(grades_mat, category, assignments){
-  grades_mat[,paste0(category, " - Max Points")] <- rowMeans(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
+  grades_mat[,paste0(category, " - Max Points")] <- ifelse(length(assignments) == 1,
+                                                           grades_mat[, paste0(assignments, " - Max Points")],
+                                                           rowMeans(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
+                                                           )
   return (grades_mat)
 }
 
