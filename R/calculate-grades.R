@@ -127,7 +127,7 @@ drops <- function(grades_mat, policy_line, category, assignments){
 #' @rdname score
 #' @export
 aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
-  #TBD
+  get(policy_line)(grades_mat, category, assignments)
 }
 
 
