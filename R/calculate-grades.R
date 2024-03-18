@@ -97,7 +97,6 @@ get_category_grade <- function(grades_mat, policy_item){
 #' @family {Key Functions}
 #' 
 #' @export
-
 score <- function(grades_mat, policy_line, category, assignments){
   get(policy_line)(grades_mat, assignments)
 }
@@ -132,26 +131,67 @@ aggregation_max_pts <- function(grades_mat, policy_line, category, assignments){
 }
 
 
-## SCORE FUNCTIONS
-
+#' Score Functions
+#'
+#' @description
+#' 
+#' A collection of functions to calculate the percentage score and save back into raw points column.
+#'
+#' * `raw_over_max()` computes score by dividing raw points by max points.
+#'
+#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param assignments Assignment names for this category
+#' 
+#' @return A matrix
+#'
+#' @family {Score Functions}
+#' 
+#' @export
 raw_over_max <- function(grades_mat, assignments){
   grades_mat[,assignments] <- grades_mat[, assignments] / grades_mat[, paste0(assignments, " - Max Points")]
   return(grades_mat)
 }
 
-## AGGREGATION FUNCTIONS
-
+#' Aggregation Functions
+#'
+#' @description
+#' 
+#' A collection of functions to compute scores for categories.
+#'
+#' * `equally_weighted()` computes a mean.
+#' 
+#' * `weighted_by_points()` computes a weighted mean using a weights vector.
+#'
+#' * `max_score()` computes the max score.
+#' 
+#' * `min_score()` computes the min score after optionally dropping lowest scores.
+#' 
+#' * `none()` if there is only 1 score, returns it, otherwise defaults to `equally_weighted` 
+#'
+#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param category Category name
+#' @param assignments Assignment names for this category
+#' 
+#' @return A matrix
+#'
+#' @family {Aggregation Functions}
+#' 
+#' @export
 equally_weighted <- function(grades_mat, category, assignments){
   grades_mat[,category] <- rowMeans(grades_mat[, assignments], na.rm = TRUE)
   return(grades_mat)
 }
 
+#' @rdname equally_weighted
+#' @export
 weighted_by_points <- function(grades_mat, category, assignments){
   max_cols <- paste0(assignments, " - Max Points")
   grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols])
   return(grades_mat)
 }
 
+#' @rdname equally_weighted
+#' @export
 max_score <- function(grades_mat, category, assignments){
   if (length(assignments) == 1){
     grades_mat <- none(grades_mat, category, assignments)
@@ -161,6 +201,8 @@ max_score <- function(grades_mat, category, assignments){
   return(grades_mat)
 }
 
+#' @rdname equally_weighted
+#' @export
 min_score <- function(grades_mat, category, assignments){
   if (length(assignments) == 1){
     grades_mat <- none(grades_mat, category, assignments)
@@ -170,6 +212,8 @@ min_score <- function(grades_mat, category, assignments){
   return(grades_mat)
 }
 
+#' @rdname equally_weighted
+#' @export
 none <- function(grades_mat, category, assignments){
   if (length(assignments) == 1){
     grades_mat[,category] <- grades_mat[, assignments]
@@ -178,25 +222,74 @@ none <- function(grades_mat, category, assignments){
   equally_weighted(grades_mat, category, assignments)
 }
 
-## AGGREGATION FOR MAX POINTS FUNCTIONS
+#' Aggregation for Max Points Functions
+#'
+#' @description
+#' 
+#' A collection of functions to computes max points for category.
+#'
+#' * `sum_max_pts()` computes a sum.
+#' 
+#' * `mean_max_pts()` computes a mean.
+#'
+#'
+#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param category Category name
+#' @param assignments Assignment names for this category
+#' 
+#' @return A matrix
+#'
+#' @family {Aggregation for Max Points Functions}
+#' 
+#' @export
 sum_max_pts <- function(grades_mat, category, assignments){
   grades_mat[,paste0(category, " - Max Points")] <- rowSums(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
   return (grades_mat)
 }
-
+#' @rdname sum_max_pts
+#' @export
 mean_max_pts <- function(grades_mat, category, assignments){
   grades_mat[,paste0(category, " - Max Points")] <- rowMeans(grades_mat[, paste0(assignments, " - Max Points")], na.rm = TRUE)
   return (grades_mat)
 }
 
-## LATENESS FUNCTIONS
-
+#' Lateness Functions
+#'
+#' @description
+#' 
+#' A collection of functions to apply lateness policies.
+#'
+#' * `until()` determines if lateness for `assignments` is less than or equal to `late_policy`.
+#' 
+#' * `add()` adds `late_policy` to score if `assignments` is determined as late.
+#' 
+#' * `between()` determines if lateness for `assignments` is between `late_policy`.
+#' 
+#' * `scale_by()` scales score by `late_policy` if `assignments` is determined as late.
+#' 
+#' * `after()` determines if lateness for `assignments` is more than or equal to `late_policy`.
+#' 
+#' * `set_to()` sets score to `late_policy` if `assignments` is determined as late.
+#'
+#'
+#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param late_policy Relevant threshold/scalar for lateness policy
+#' @param original_late_mat Matrix that saves original lateness values
+#' @param assignments Assignment names for this category
+#' 
+#' @return A matrix
+#'
+#' @family {Aggregation for Max Points Functions}
+#' 
+#' @export
 until <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
   grades_mat[, late_cols] <- grades_mat[, late_cols] <= convert_to_min(late_policy)
   return (grades_mat)
 }
 
+#' @rdname until
+#' @export
 add <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
   grades_mat[, assignments] <- grades_mat[, assignments] + (grades_mat[, late_cols]*unlist(late_policy))
@@ -204,6 +297,8 @@ add <- function(grades_mat, late_policy, original_late_mat, assignments){
   return (grades_mat)
 }
 
+#' @rdname until
+#' @export
 between <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
   from <- min(convert_to_min(unlist(late_policy)))
@@ -212,6 +307,8 @@ between <- function(grades_mat, late_policy, original_late_mat, assignments){
   return (grades_mat)
 }
 
+#' @rdname until
+#' @export
 scale_by <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
   grades_mat[, assignments] <- ifelse(grades_mat[, late_cols] == 1, 
@@ -221,12 +318,16 @@ scale_by <- function(grades_mat, late_policy, original_late_mat, assignments){
   return (grades_mat)
 }
 
+#' @rdname until
+#' @export
 after <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
   grades_mat[, late_cols] <- grades_mat[, late_cols] >= convert_to_min(late_policy)
   return (grades_mat)
 }
 
+#' @rdname until
+#' @export
 set_to <- function(grades_mat, late_policy, original_late_mat, assignments){
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
   grades_mat[, assignments] <- ifelse(grades_mat[, late_cols] == 1, unlist(late_policy), grades_mat[, assignments])
