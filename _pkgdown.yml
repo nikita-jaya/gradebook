@@ -42,7 +42,7 @@ reference:
   - score
   - aggregation
   - lateness
-  - drops
+  - drop_n_lowest
   - aggregation_max_pts
   - aggregation_lateness
   - raw_over_max

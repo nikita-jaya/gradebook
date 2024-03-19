@@ -11,6 +11,81 @@ test_that("score function - raw_over_max", {
   expect_equal(actual, expected)
 })
 
+test_that("drop_n_lowest function - n < num of assignments", {
+  gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9),
+                       `Lab 2` = c(0.9, 0.4, 0.6, 0.7, 0.9),
+                       `Lab 3` = c(0.2, 0.5, 0.9, 0.95, 0.9),
+                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9)
+  )
+  grades_mat <- data.matrix(gs)
+  
+  actual <- drop_n_lowest(grades_mat, policy_line = 2, category = "Labs", 
+                          assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4"))
+  expected <- tibble::tibble(`Lab 1` = c(NA, NA, NA, 0.8, NA),
+                             `Lab 2` = c(0.9, NA, NA, NA, NA),
+                             `Lab 3` = c(NA, 0.5, 0.9, 0.95, 0.9),
+                             `Lab 4` = c(0.2, 0.4, 1, NA, 0.9)
+  )
+  
+  expected <- data.matrix(expected)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("drop_n_lowest function - n == num of assignments", {
+  gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9),
+                       `Lab 2` = c(0.9, 0.4, 0.6, 0.7, 0.9),
+                       `Lab 3` = c(0.2, 0.5, 0.9, 0.95, 0.9),
+                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9)
+  )
+  grades_mat <- data.matrix(gs)
+  
+  actual <- drop_n_lowest(grades_mat, policy_line = 4, category = "Labs", 
+                          assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4"))
+  expected <- tibble::tibble(`Lab 1` = c(NA, NA, NA, NA, NA),
+                             `Lab 2` = c(0.9, NA, NA, NA, NA),
+                             `Lab 3` = c(NA, 0.5, NA, 0.95, NA),
+                             `Lab 4` = c(NA, NA, 1, NA, 0.9)
+  )
+  
+  expected <- data.matrix(expected)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("drop_n_lowest function - n > num of assignments", {
+  gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9),
+                       `Lab 2` = c(0.9, 0.4, 0.6, 0.7, 0.9),
+                       `Lab 3` = c(0.2, 0.5, 0.9, 0.95, 0.9),
+                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9)
+  )
+  grades_mat <- data.matrix(gs)
+  
+  actual <- drop_n_lowest(grades_mat, policy_line = 6, category = "Labs", 
+                          assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4"))
+  expected <- tibble::tibble(`Lab 1` = c(NA, NA, NA, NA, NA),
+                             `Lab 2` = c(0.9, NA, NA, NA, NA),
+                             `Lab 3` = c(NA, 0.5, NA, 0.95, NA),
+                             `Lab 4` = c(NA, NA, 1, NA, 0.9)
+  )
+  
+  expected <- data.matrix(expected)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("drop_n_lowest function - one assignment", {
+  gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9)
+  )
+  grades_mat <- data.matrix(gs)
+  
+  actual <- drop_n_lowest(grades_mat, policy_line = 4, category = "Labs", 
+                          assignments = c("Lab 1"))
+  expected <- grades_mat
+  
+  expect_equal(actual, expected)
+})
+
 
 test_that("aggregation function - equally_weighted", {
   gs <- tibble::tibble(`Lab 1` = (1:5)/5,

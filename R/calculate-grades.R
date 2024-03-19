@@ -84,7 +84,7 @@ get_category_grade <- function(grades_mat, policy_item){
 #'
 #' * `lateness()` applies any relevant lateness penalty.
 #' 
-#' * `drops()` drops n lowest/highest assignment scores; note that this is NOT implemented yet.
+#' * `drop_n_lowest()` drops n lowest assignment scores; if n >= num of assignments, return top assignment
 #' 
 #' * `aggregation_max_pts()` computes max points for category.
 #' 
@@ -123,8 +123,17 @@ lateness <- function(grades_mat, policy_line, category, assignments, weights = c
 
 #' @rdname score
 #' @export
-drops <- function(grades_mat, policy_line, category, assignments, weights = c()){
-  # TBD
+drop_n_lowest <- function(grades_mat, policy_line, category, assignments, weights = c()){
+  n <- policy_line
+  grades_mat[, assignments] <- t(apply(t(grades_mat[, assignments]), 2, function(assign){
+    if (length(assignments) == 1) return (assign)
+    lowest_indices <- order(assign)[1:n]
+    if (n >= length(assignments)) {
+      lowest_indices <- order(assign)[1:(length(assignments)-1)]
+    }
+    assign[lowest_indices] <- NA
+    return(assign)
+  }))
   return (grades_mat)
 }
 
@@ -230,7 +239,7 @@ weighted_mean <- function(grades_mat, category, assignments, weights){
     grades_mat <- equally_weighted(grades_mat, category, assignments)
     return (grades_mat)
   }
-  grades_mat[, category] <- rowSums(t(t(grades_mat[, assignments]) * weights))/ sum(weights)
+  grades_mat[, category] <- rowSums(t(t(grades_mat[, assignments]) * weights), na.rm = TRUE)/ sum(weights)
   return (grades_mat)
 }
 

@@ -4,7 +4,7 @@
 \alias{score}
 \alias{aggregation}
 \alias{lateness}
-\alias{drops}
+\alias{drop_n_lowest}
 \alias{aggregation_max_pts}
 \alias{aggregation_lateness}
 \title{Key Functions}
@@ -15,7 +15,7 @@ aggregation(grades_mat, policy_line, category, assignments, weights = c())
 
 lateness(grades_mat, policy_line, category, assignments, weights = c())
 
-drops(grades_mat, policy_line, category, assignments, weights = c())
+drop_n_lowest(grades_mat, policy_line, category, assignments, weights = c())
 
 aggregation_max_pts(
   grades_mat,
@@ -53,7 +53,7 @@ A collection of functions to refer to correct classification of grading function
 \item \code{score()} computes the percentage score and saves back into raw points col
 \item \code{aggregation()} computes score for category
 \item \code{lateness()} applies any relevant lateness penalty.
-\item \code{drops()} drops n lowest/highest assignment scores; note that this is NOT implemented yet.
+\item \code{drop_n_lowest()} drops n lowest assignment scores; if n >= num of assignments, return top assignment
 \item \code{aggregation_max_pts()} computes max points for category.
 \item \code{aggregation_lateness()} computes max points for category.
 }
