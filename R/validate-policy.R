@@ -1,3 +1,15 @@
+#' Validate Policy File
+#' 
+#' Flattens and validates policy file
+#'  @param policy YAML policy file
+#'  @param gs Gradescope data
+#'  @export
+validate_policy <- function(policy, gs){
+  policy <- flatten_policy(policy)
+  
+  return (policy)
+}
+
 #' Reshape policy file from nested to flat
 #' 
 #' First propagates `lateness` to all child categories then cycles through the
