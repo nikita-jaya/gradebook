@@ -92,7 +92,6 @@ test_that("validate policy - drop last category", {
       aggregation = "equally_weighted",
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness",
-      weight = 0.50,
       assignments = list(
         list(
           category = "Lab 1",
@@ -118,7 +117,6 @@ test_that("validate policy - drop last category", {
       aggregation = "weighted_by_points",
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness",
-      weight = 0.50,
       assignments = c("Quiz 1")
     )
   )
@@ -173,7 +171,6 @@ test_that("validate policy - drop two assignments, not whole category", {
       aggregation = "equally_weighted",
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness",
-      weight = 0.50,
       assignments = list(
         list(
           category = "Lab 1",
@@ -199,7 +196,6 @@ test_that("validate policy - drop two assignments, not whole category", {
       aggregation = "weighted_by_points",
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness",
-      weight = 0.50,
       assignments = c("Quiz 1")
     )
   )
@@ -245,7 +241,6 @@ test_that("validate policy - add defaults",{
     list(
       category = "Labs",
       aggregation = "equally_weighted",
-      weight = 0.50,
       assignments = list(
         list(
           category = "Lab 1",
@@ -262,7 +257,6 @@ test_that("validate policy - add defaults",{
     list(
       category = "Quizzes",
       aggregation = "weighted_by_points",
-      weight = 0.50,
       assignments = c("Quiz 1", "Quiz 2", "Quiz 3")
     )
   )
@@ -330,7 +324,6 @@ test_that("validate policy - add defaults",{
       score = "raw_over_max",
       category = "Labs",
       aggregation = "equally_weighted",
-      weight = 0.5,
       assignments = c("Lab 1", "Lab 2"),
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness"
@@ -339,7 +332,6 @@ test_that("validate policy - add defaults",{
       score = "raw_over_max",
       category = "Quizzes",
       aggregation = "weighted_by_points",
-      weight = 0.5,
       assignments = "Quiz 1",
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness"
