@@ -6,7 +6,16 @@
 #'  @export
 validate_policy <- function(policy, gs){
   policy <- flatten_policy(policy)
-  
+  # defaults
+  assignments <- get_assignments(gs)
+  policy$categories <- map(policy$categories, function(cat){
+    if (sum(cat$assignments %in%assignments) != length(cat$assignments)){
+      return (NULL)
+    }
+    return (cat)
+  }) |>
+    discard(is.null)
+  # drop categories with unavailable assignments
   return (policy)
 }
 
