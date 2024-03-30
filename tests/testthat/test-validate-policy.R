@@ -1,3 +1,209 @@
+test_that("validate policy - correct format", {
+  categories <- list(
+    list(
+      category = "Labs",
+      aggregation = "equally_weighted",
+      weight = 0.50,
+      assignments = list(
+        list(
+          category = "Lab 1",
+          aggregation = "equally_weighted",
+          assignments = c("Lab 1.1", "Lab 1.2")
+        ),
+        list(
+          category = "Lab 2",
+          aggregation = "equally_weighted",
+          assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+        )
+      )
+    ),
+    list(
+      category = "Quizzes",
+      aggregation = "weighted_by_points",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories)
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(1, 0, 0.9, 0.5),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                  "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(1, 0, 0.9, 0.5),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                  "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(0, 0, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                  "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.2` = c(1, 0, 0.9, 0.5),
+    `Lab 2.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                  "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.3` = c(0, 0, 0.9, 0.5),
+    `Lab 2.3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                  "1/21/2023 9:50:00 AM"),
+    `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Quiz 1` = c(0.9, 0, 0.4, 0),
+    `Quiz 1 - Max Points` = c(1, 1, 1, 1),
+    `Quiz 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                      "1/22/2023 10:00:00 AM", "0"),
+    `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  
+  actual <- validate_policy(policy, gs)
+  expected <- flatten_policy(policy)
+  expect_equal(actual, expected)
+  
+})
+
+test_that("validate policy - drop last category", {
+  categories <- list(
+    list(
+      category = "Labs",
+      aggregation = "equally_weighted",
+      weight = 0.50,
+      assignments = list(
+        list(
+          category = "Lab 1",
+          aggregation = "equally_weighted",
+          assignments = c("Lab 1.1", "Lab 1.2")
+        ),
+        list(
+          category = "Lab 2",
+          aggregation = "equally_weighted",
+          assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+        )
+      )
+    ),
+    list(
+      category = "Quizzes",
+      aggregation = "weighted_by_points",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories)
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(1, 0, 0.9, 0.5),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                    "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(1, 0, 0.9, 0.5),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(0, 0, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.2` = c(1, 0, 0.9, 0.5),
+    `Lab 2.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.3` = c(0, 0, 0.9, 0.5),
+    `Lab 2.3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00")
+  )
+  
+  actual <- validate_policy(policy, gs)
+  expected <- flatten_policy(policy)
+  expected$categories <- expected$categories[1:3]
+  expect_equal(actual, expected)
+  
+})
+
+test_that("validate policy - drop two assignments, not whole category", {
+  categories <- list(
+    list(
+      category = "Labs",
+      aggregation = "equally_weighted",
+      weight = 0.50,
+      assignments = list(
+        list(
+          category = "Lab 1",
+          aggregation = "equally_weighted",
+          assignments = c("Lab 1.1", "Lab 1.2")
+        ),
+        list(
+          category = "Lab 2",
+          aggregation = "equally_weighted",
+          assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+        )
+      )
+    ),
+    list(
+      category = "Quizzes",
+      aggregation = "weighted_by_points",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories)
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(1, 0, 0.9, 0.5),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                    "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(1, 0, 0.9, 0.5),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(0, 0, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Quiz 1` = c(0.9, 0, 0.4, 0),
+    `Quiz 1 - Max Points` = c(1, 1, 1, 1),
+    `Quiz 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                   "1/22/2023 10:00:00 AM", "0"),
+    `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  
+  actual <- validate_policy(policy, gs)
+  expected <- flatten_policy(policy)
+  expected[["categories"]][[2]][["assignments"]] <- c("Lab 2.1")
+  expect_equal(actual, expected)
+  
+})
+
 test_that("flatten policy - works correctly", {
   categories <- list(
     list(

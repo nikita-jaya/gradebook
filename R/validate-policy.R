@@ -7,9 +7,11 @@
 validate_policy <- function(policy, gs){
   policy <- flatten_policy(policy)
   # defaults
-  assignments <- get_assignments(gs)
+  categories <- map(policy$categories, "category") |> unlist()
+  assignments <- c(get_assignments(gs), categories)
   policy$categories <- map(policy$categories, function(cat){
-    if (sum(cat$assignments %in%assignments) != length(cat$assignments)){
+    cat$assignments <- cat$assignments[cat$assignments %in% assignments]
+    if (length(cat$assignments) == 0){
       return (NULL)
     }
     return (cat)
