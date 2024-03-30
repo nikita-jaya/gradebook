@@ -27,9 +27,9 @@ validate_policy <- function(policy, gs){
   
   # add default values if missing
   policy$categories <- map(policy$categories, function(cat){
-    if (!("score" %in% names(cat))){
-      cat <- append(list(score = "raw_over_max"), cat) #add score to top if not available
-    }
+    # if (!("score" %in% names(cat))){
+    #   cat <- append(list(score = "raw_over_max"), cat) #add score to top if not available
+    # }
     cat <- merge(cat, default_cat) #add any other necessary defaults
   })
   

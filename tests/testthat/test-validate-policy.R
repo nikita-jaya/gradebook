@@ -240,15 +240,18 @@ test_that("validate policy - add defaults",{
   categories <- list(
     list(
       category = "Labs",
+      score = "raw_over_max",
       aggregation = "equally_weighted",
       assignments = list(
         list(
           category = "Lab 1",
+          score = "raw_over_max",
           aggregation = "equally_weighted",
           assignments = c("Lab 1.1", "Lab 1.2")
         ),
         list(
           category = "Lab 2",
+          score = "raw_over_max",
           aggregation = "equally_weighted",
           assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
         )
@@ -256,6 +259,7 @@ test_that("validate policy - add defaults",{
     ),
     list(
       category = "Quizzes",
+      score = "raw_over_max",
       aggregation = "weighted_by_points",
       assignments = c("Quiz 1", "Quiz 2", "Quiz 3")
     )
@@ -305,32 +309,32 @@ test_that("validate policy - add defaults",{
   actual <- validate_policy(policy, gs)
   expected_cat <- list(
     list(
-      score = "raw_over_max",
       category = "Lab 1",
+      score = "raw_over_max",
       aggregation = "equally_weighted",
       assignments = c("Lab 1.1", "Lab 1.2"),
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness"
     ),
     list(
-      score = "raw_over_max",
       category = "Lab 2",
+      score = "raw_over_max",
       aggregation = "equally_weighted",
       assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3"),
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness"
     ),
     list(
-      score = "raw_over_max",
       category = "Labs",
+      score = "raw_over_max",
       aggregation = "equally_weighted",
       assignments = c("Lab 1", "Lab 2"),
       aggregation_max_pts = "sum_max_pts",
       aggregation_lateness = "max_lateness"
     ),
     list(
-      score = "raw_over_max",
       category = "Quizzes",
+      score = "raw_over_max",
       aggregation = "weighted_by_points",
       assignments = "Quiz 1",
       aggregation_max_pts = "sum_max_pts",
