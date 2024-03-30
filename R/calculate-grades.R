@@ -23,6 +23,7 @@ get_grades <- function(gs, policy){
     mutate_at(vars(ends_with(" - Lateness (H:M:S)")), convert_to_min) |> 
     #convert to matrix
     data.matrix()
+  grades_mat[is.na(grades_mat)] <- 0
   #rownames are SID of student
   rownames(grades_mat) <- gs$SID
   #pre_allotted cols
