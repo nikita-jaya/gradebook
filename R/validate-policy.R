@@ -7,7 +7,7 @@
 #'  @export
 validate_policy <- function(policy, gs){
   policy <- flatten_policy(policy)
-  # defaults
+  # drop categories with unavailable assignments
   categories <- map(policy$categories, "category") |> unlist()
   assignments <- c(get_assignments(gs), categories)
   policy$categories <- map(policy$categories, function(cat){
@@ -18,7 +18,27 @@ validate_policy <- function(policy, gs){
     return (cat)
   }) |>
     discard(is.null)
-  # drop categories with unavailable assignments
+  
+  default_cat <- list(
+    aggregation = "equally_weighted",
+    aggregation_max_pts = "sum_max_pts",
+    aggregation_lateness = "max_lateness"
+  )
+  
+  # add default values if missing
+  policy$categories <- map(policy$categories, function(cat){
+    if (!("score" %in% names(cat))){
+      cat <- append(list(score = "raw_over_max"), cat) #add score to top if not available
+    }
+    cat <- merge(cat, default_cat) #add any other necessary defaults
+  })
+  
+  default_cat <- list(
+    score = "raw_over_max",
+    aggregation = "equally_weighted",
+    aggregation_max_pts = "sum_max_pts",
+    aggregation_lateness = "max_lateness"
+  )
   return (policy)
 }
 
