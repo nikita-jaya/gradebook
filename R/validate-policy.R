@@ -3,6 +3,7 @@
 #' Flattens and validates policy file
 #'  @param policy YAML policy file
 #'  @param gs Gradescope data
+#'  @importFrom purrr map discard
 #'  @export
 validate_policy <- function(policy, gs){
   policy <- flatten_policy(policy)
