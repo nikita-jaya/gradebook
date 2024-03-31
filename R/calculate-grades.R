@@ -107,7 +107,7 @@ score <- function(grades_mat, policy_line, category, assignments, weights = c())
 #' @rdname score
 #' @export
 aggregation <- function(grades_mat, policy_line, category, assignments, weights = c()){
-  get(policy_line)(grades_mat,category, assignments, weights)
+  get(policy_line)(grades_mat, category, assignments, weights)
 }
 
 #' @rdname score
