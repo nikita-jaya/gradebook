@@ -1,7 +1,7 @@
 #' Calculate Grades
 #' This function calculates all grades based on the policy file.
 #'
-#' @param gs A processed data in wide format 
+#' @param gs A gradescope dataframe with students as rows and assignment information across the columns.
 #' @param policy A policy file
 #'
 #' @return A data frame
@@ -23,7 +23,8 @@ get_grades <- function(gs, policy){
     mutate_at(vars(ends_with(" - Lateness (H:M:S)")), convert_to_min) |> 
     #convert to matrix
     data.matrix()
-  grades_mat[is.na(grades_mat)] <- 0
+  raw_cols <- get_assignments(gs)
+  grades_mat[, raw_cols][is.na(grades_mat[, raw_cols])] <- 0
   #rownames are SID of student
   rownames(grades_mat) <- gs$SID
   #pre_allotted cols
@@ -40,10 +41,8 @@ get_grades <- function(gs, policy){
   }
   
   grades <- grades_mat |>
-    data.frame()
-  names(grades) <- colnames(grades_mat)
-  grades$SID <- rownames(grades_mat)
-  #add back ID cols
+    as.data.frame()
+  grades$SID <- rownames(grades_mat) #add back ID cols
   
   return (grades)
 }
@@ -68,7 +67,6 @@ get_category_grade <- function(grades_mat, policy_item){
                            policy_item$assignments, policy_item$weights)
   }
   
-  ## insert code to re-add new/editted columns from grades_mat into grades_mat
   return (grades_mat)
 }
 

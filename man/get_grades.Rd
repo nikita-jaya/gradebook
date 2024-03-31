@@ -8,7 +8,7 @@ This function calculates all grades based on the policy file.}
 get_grades(gs, policy)
 }
 \arguments{
-\item{gs}{A processed data in wide format}
+\item{gs}{A gradescope dataframe with students as rows and assignment information across the columns.}
 
 \item{policy}{A policy file}
 }
