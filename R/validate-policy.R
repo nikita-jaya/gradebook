@@ -17,7 +17,7 @@ validate_policy <- function(policy, gs){
     }
     return (cat)
   }) |>
-    discard(is.null)
+    purrr::discard(is.null)
   
   default_cat <- list(
     aggregation = "equally_weighted",
