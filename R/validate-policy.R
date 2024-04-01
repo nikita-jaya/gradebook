@@ -23,22 +23,20 @@ validate_policy <- function(policy, gs){
     aggregation = "equally_weighted",
     aggregation_max_pts = "sum_max_pts",
     aggregation_lateness = "max_lateness"
-  )
+  ) 
   
   # add default values if missing
   policy$categories <- map(policy$categories, function(cat){
-    # if (!("score" %in% names(cat))){
-    #   cat <- append(list(score = "raw_over_max"), cat) #add score to top if not available
-    # }
-    cat <- merge(cat, default_cat) #add any other necessary defaults
+    for (default_name in names(default_cat)){
+      if (!(default_name %in% names(cat))){
+        default <- list(default_cat[[default_name]])
+        names(default) <- default_name
+        cat <- append(cat, default)
+      }
+    }
+    return (cat)
   })
-  
-  default_cat <- list(
-    score = "raw_over_max",
-    aggregation = "equally_weighted",
-    aggregation_max_pts = "sum_max_pts",
-    aggregation_lateness = "max_lateness"
-  )
+
   return (policy)
 }
 
