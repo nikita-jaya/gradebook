@@ -9,7 +9,10 @@ validate_policy <- function(policy, gs){
   policy <- flatten_policy(policy)
   # drop categories with unavailable assignments
   categories <- map(policy$categories, "category") |> unlist()
+  # assignments is a vector that also includes category names
   assignments <- c(get_assignments(gs), categories)
+  # this is because some categories have only nested categories as their assignments
+  # these categories should not be dropped
   policy$categories <- map(policy$categories, function(cat){
     cat$assignments <- cat$assignments[cat$assignments %in% assignments]
     if (length(cat$assignments) == 0){
