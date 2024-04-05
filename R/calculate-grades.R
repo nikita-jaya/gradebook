@@ -197,15 +197,23 @@ raw_over_max <- function(grades_mat, assignments){
 #' 
 #' @export
 equally_weighted <- function(grades_mat, category, assignments, weights = c()){
-  grades_mat[,category] <- rowMeans(grades_mat[, assignments], na.rm = TRUE)
+  if (length(assignments) == 1){
+    grades_mat <- none(grades_mat, category, assignments)
+  } else {
+    grades_mat[,category] <- rowMeans(grades_mat[, assignments], na.rm = TRUE)
+  }
   return(grades_mat)
 }
 
 #' @rdname equally_weighted
 #' @export
 weighted_by_points <- function(grades_mat, category, assignments, weights = c()){
-  max_cols <- paste0(assignments, " - Max Points")
-  grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols])
+  if (length(assignments) == 1){
+    grades_mat <- none(grades_mat, category, assignments)
+  } else {
+    max_cols <- paste0(assignments, " - Max Points")
+    grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols])
+  }
   return(grades_mat)
 }
 
