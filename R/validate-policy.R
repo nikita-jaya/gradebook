@@ -1,10 +1,10 @@
 #' Validate Policy File
 #' 
 #' Flattens and validates policy file
-#'  @param policy YAML policy file
-#'  @param gs Gradescope data
-#'  @importFrom purrr map discard
-#'  @export
+#' @param policy YAML policy file
+#' @param gs Gradescope data
+#' @importFrom purrr map discard
+#' @export
 validate_policy <- function(policy, gs){
   policy <- flatten_policy(policy)
   prev_length <- 0
@@ -13,7 +13,7 @@ validate_policy <- function(policy, gs){
   while (prev_length != current_length){
     prev_length <- length(policy$categories)
     categories <- map(policy$categories, "category") |> unlist()
-    assignments <- c(get_assignments(temp_gs), categories)
+    assignments <- c(get_assignments(gs), categories)
     policy$categories <- map(policy$categories, function(cat){
       # drop categories with unavailable assignments/nested categories
       cat$assignments <- cat$assignments[cat$assignments %in% assignments]

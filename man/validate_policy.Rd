@@ -6,10 +6,11 @@
 \usage{
 validate_policy(policy, gs)
 }
+\arguments{
+\item{policy}{YAML policy file}
+
+\item{gs}{Gradescope data}
+}
 \description{
 Flattens and validates policy file
-@param policy YAML policy file
-@param gs Gradescope data
-@importFrom purrr map discard
-@export
 }
