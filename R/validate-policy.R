@@ -7,20 +7,29 @@
 #'  @export
 validate_policy <- function(policy, gs){
   policy <- flatten_policy(policy)
-  # drop categories with unavailable assignments
-  categories <- map(policy$categories, "category") |> unlist()
-  # assignments is a vector that also includes category names
-  assignments <- c(get_assignments(gs), categories)
-  # this is because some categories have only nested categories as their assignments
-  # these categories should not be dropped
-  policy$categories <- map(policy$categories, function(cat){
-    cat$assignments <- cat$assignments[cat$assignments %in% assignments]
-    if (length(cat$assignments) == 0){
-      return (NULL)
-    }
-    return (cat)
-  }) |>
-    purrr::discard(is.null)
+  prev_length <- 0
+  current_length <- length(policy$categories)
+  #keep dropping until no more drops necessary
+  while (prev_length != current_length){
+    prev_length <- length(policy$categories)
+    categories <- map(policy$categories, "category") |> unlist()
+    assignments <- c(get_assignments(temp_gs), categories)
+    policy$categories <- map(policy$categories, function(cat){
+      # drop categories with unavailable assignments/nested categories
+      cat$assignments <- cat$assignments[cat$assignments %in% assignments]
+      if (length(cat$assignments) == 0){
+        #if category has no assignments, dropp
+        return (NULL)
+      }
+      return (cat)
+    }) |>
+      purrr::discard(is.null)
+    current_length <- length(policy$categories)
+  }
+  
+  if (length(policy$categories) == 0){
+    return(NULL)
+  }
   
   default_cat <- list(
     aggregation = "equally_weighted",
