@@ -39,6 +39,7 @@ validate_policy <- function(policy, gs){
   
   # add default values if missing
   policy$categories <- map(policy$categories, function(cat){
+    #merge default_cat to category
     for (default_name in names(default_cat)){
       if (!(default_name %in% names(cat))){
         default <- list(default_cat[[default_name]])
@@ -46,6 +47,18 @@ validate_policy <- function(policy, gs){
         cat <- append(cat, default)
       }
     }
+    #if min_score/max_score aggregation
+    if (cat[["aggregation"]] %in% c("min_score", "max_score")){
+      #default for max pts aggregation is "mean_max_pts"
+      cat[["aggregation_max_pts"]] = "mean_max_pts"
+    }
+    #if all assignments are in gs (i.e. there are no nested categories)
+    if (sum(cat[["assignments"]] %in% get_assignments(gs)) != 0){
+      #default sccore is raw_over_max
+      cat <- append(list(score = "raw_over_max"),
+                    default)
+    }
+    
     return (cat)
   })
 
