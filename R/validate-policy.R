@@ -1,26 +1,47 @@
 #' Validate Policy File
 #' 
 #' Flattens and validates policy file
-#'  @param policy YAML policy file
-#'  @param gs Gradescope data
-#'  @importFrom purrr map discard
-#'  @export
+#' @param policy YAML policy file
+#' @param gs Gradescope data
+#' @importFrom purrr map discard walk
+#' @export
 validate_policy <- function(policy, gs){
   policy <- flatten_policy(policy)
-  # drop categories with unavailable assignments
-  categories <- map(policy$categories, "category") |> unlist()
-  # assignments is a vector that also includes category names
-  assignments <- c(get_assignments(gs), categories)
-  # this is because some categories have only nested categories as their assignments
-  # these categories should not be dropped
-  policy$categories <- map(policy$categories, function(cat){
-    cat$assignments <- cat$assignments[cat$assignments %in% assignments]
-    if (length(cat$assignments) == 0){
-      return (NULL)
+  
+  purrr::walk(policy$categories, function(cat){
+    if (!("category" %in% names(cat) & "assignments" %in% names(cat))){
+      stop(paste0("Not all categories have a category and assignment argument"))
     }
-    return (cat)
-  }) |>
-    purrr::discard(is.null)
+  }) |> unlist()
+  
+  prev_length <- 0
+  current_length <- length(policy$categories)
+  #keep dropping until no more drops necessary
+  while (prev_length != current_length){
+    prev_length <- length(policy$categories)
+    categories <- map(policy$categories, "category") |> unlist()
+    assignments <- c(get_assignments(gs), categories)
+    policy$categories <- map(policy$categories, function(cat){
+      if (cat$aggregation == "weighted_mean"){
+        #drop the respective weight(s) if category not found
+        cat$weights <- cat$weights[cat$assignments %in% assignments]
+      }
+      # drop categories with unavailable assignments/nested categories
+      cat$assignments <- cat$assignments[cat$assignments %in% assignments]
+      if (length(cat$assignments) == 0){
+        #if category has no assignments, drop
+        return (NULL)
+      }
+      return (cat)
+    }) |>
+      purrr::discard(is.null)
+    current_length <- length(policy$categories)
+  }
+  
+  if (length(policy$categories) == 0){
+    message("None of the assignments are available in gs")
+    return(NULL)
+  }
   
   default_cat <- list(
     aggregation = "equally_weighted",
@@ -30,6 +51,15 @@ validate_policy <- function(policy, gs){
   
   # add default values if missing
   policy$categories <- map(policy$categories, function(cat){
+    #if min_score/max_score aggregation
+    if ("aggregation" %in% names(cat) & cat[["aggregation"]] %in% c("min_score", "max_score")){
+      #default for max pts aggregation is "mean_max_pts"
+      default_cat[["aggregation_max_pts"]] = "mean_max_pts"
+    } else {
+      default_cat[["aggregation_max_pts"]] = "sum_max_pts"
+    }
+    
+    #merge default_cat to category
     for (default_name in names(default_cat)){
       if (!(default_name %in% names(cat))){
         default <- list(default_cat[[default_name]])
@@ -37,6 +67,16 @@ validate_policy <- function(policy, gs){
         cat <- append(cat, default)
       }
     }
+    #if all assignments are in gs (i.e. there are no nested categories)
+    if (!("score" %in% names(cat)) & sum(cat[["assignments"]] %in% get_assignments(gs)) != 0){
+      #default score is raw_over_max
+      score <- list(
+        category = cat[["category"]],
+        score = "raw_over_max")
+      cat[["category"]] <- NULL #to make sure "category" is still first item
+      cat <- append(score, cat)
+    }
+    
     return (cat)
   })
 
