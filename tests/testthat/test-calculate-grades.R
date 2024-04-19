@@ -13,18 +13,26 @@ test_that("score function - raw_over_max", {
 
 test_that("drop_n_lowest function - n < num of assignments", {
   gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9),
+                       `Lab 1 - Max Points` = rep(5, 5),
                        `Lab 2` = c(0.9, 0.4, 0.6, 0.7, 0.9),
+                       `Lab 2 - Max Points` = rep(10, 5),
                        `Lab 3` = c(0.2, 0.5, 0.9, 0.95, 0.9),
-                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9)
+                       `Lab 3 - Max Points` = rep(15, 5),
+                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9),
+                       `Lab 4 - Max Points` = rep(20, 5)
   )
   grades_mat <- data.matrix(gs)
   
   actual <- drop_n_lowest(grades_mat, policy_line = 2, category = "Labs", 
                           assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4"))
   expected <- tibble::tibble(`Lab 1` = c(NA, NA, NA, 0.8, NA),
+                             `Lab 1 - Max Points` = c(NA, NA, NA, 5, NA),
                              `Lab 2` = c(0.9, NA, NA, NA, NA),
+                             `Lab 2 - Max Points` = c(10, NA, NA, NA, NA),
                              `Lab 3` = c(NA, 0.5, 0.9, 0.95, 0.9),
-                             `Lab 4` = c(0.2, 0.4, 1, NA, 0.9)
+                             `Lab 3 - Max Points` = c(NA, 15, 15, 15, 15),
+                             `Lab 4` = c(0.2, 0.4, 1, NA, 0.9),
+                             `Lab 4 - Max Points` = c(20, 20, 20, NA, 20),
   )
   
   expected <- data.matrix(expected)
@@ -34,18 +42,26 @@ test_that("drop_n_lowest function - n < num of assignments", {
 
 test_that("drop_n_lowest function - n == num of assignments", {
   gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9),
+                       `Lab 1 - Max Points` = rep(5, 5),
                        `Lab 2` = c(0.9, 0.4, 0.6, 0.7, 0.9),
+                       `Lab 2 - Max Points` = rep(10, 5),
                        `Lab 3` = c(0.2, 0.5, 0.9, 0.95, 0.9),
-                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9)
+                       `Lab 3 - Max Points` = rep(15, 5),
+                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9),
+                       `Lab 4 - Max Points` = rep(20, 5)
   )
   grades_mat <- data.matrix(gs)
   
   actual <- drop_n_lowest(grades_mat, policy_line = 4, category = "Labs", 
                           assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4"))
   expected <- tibble::tibble(`Lab 1` = c(NA, NA, NA, NA, NA),
+                             `Lab 1 - Max Points` = c(NA, NA, NA, NA, NA),
                              `Lab 2` = c(0.9, NA, NA, NA, NA),
+                             `Lab 2 - Max Points` = c(10, NA, NA, NA, NA),
                              `Lab 3` = c(NA, 0.5, NA, 0.95, NA),
-                             `Lab 4` = c(NA, NA, 1, NA, 0.9)
+                             `Lab 3 - Max Points` = c(NA, 15, NA, 15, NA),
+                             `Lab 4` = c(NA, NA, 1, NA, 0.9),
+                             `Lab 4 - Max Points` = c(NA, NA, 20, NA, 20)
   )
   
   expected <- data.matrix(expected)
@@ -55,18 +71,26 @@ test_that("drop_n_lowest function - n == num of assignments", {
 
 test_that("drop_n_lowest function - n > num of assignments", {
   gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9),
+                       `Lab 1 - Max Points` = rep(5,5),
                        `Lab 2` = c(0.9, 0.4, 0.6, 0.7, 0.9),
+                       `Lab 2 - Max Points` = rep(10,5),
                        `Lab 3` = c(0.2, 0.5, 0.9, 0.95, 0.9),
-                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9)
+                       `Lab 3 - Max Points` = rep(15,5),
+                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9),
+                       `Lab 4 - Max Points` = rep(20,5)
   )
   grades_mat <- data.matrix(gs)
   
   actual <- drop_n_lowest(grades_mat, policy_line = 6, category = "Labs", 
                           assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4"))
   expected <- tibble::tibble(`Lab 1` = c(NA, NA, NA, NA, NA),
+                             `Lab 1 - Max Points` = c(NA, NA, NA, NA, NA),
                              `Lab 2` = c(0.9, NA, NA, NA, NA),
+                             `Lab 2 - Max Points` = c(10, NA, NA, NA, NA),
                              `Lab 3` = c(NA, 0.5, NA, 0.95, NA),
-                             `Lab 4` = c(NA, NA, 1, NA, 0.9)
+                             `Lab 3 - Max Points` = c(NA, 15, NA, 15, NA),
+                             `Lab 4` = c(NA, NA, 1, NA, 0.9),
+                             `Lab 4 - Max Points` = c(NA, NA, 20, NA, 20)
   )
   
   expected <- data.matrix(expected)
@@ -75,12 +99,32 @@ test_that("drop_n_lowest function - n > num of assignments", {
 })
 
 test_that("drop_n_lowest function - one assignment", {
-  gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9)
+  gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9),
+                       `Lab 1 - Max Points` = rep(10,5)
   )
   grades_mat <- data.matrix(gs)
   
   actual <- drop_n_lowest(grades_mat, policy_line = 4, category = "Labs", 
                           assignments = c("Lab 1"))
+  expected <- grades_mat
+  
+  expect_equal(actual, expected)
+})
+
+test_that("drop_n_lowest function - zero drops", {
+  gs <- tibble::tibble(`Lab 1` = c(0.2, 0.4, 0.6, 0.8, 0.9),
+                       `Lab 1 - Max Points` = rep(5,5),
+                       `Lab 2` = c(0.9, 0.4, 0.6, 0.7, 0.9),
+                       `Lab 2 - Max Points` = rep(10,5),
+                       `Lab 3` = c(0.2, 0.5, 0.9, 0.95, 0.9),
+                       `Lab 3 - Max Points` = rep(15,5),
+                       `Lab 4` = c(0.2, 0.4, 1, 0.7, 0.9),
+                       `Lab 4 - Max Points` = rep(20,5)
+  )
+  grades_mat <- data.matrix(gs)
+  
+  actual <- drop_n_lowest(grades_mat, policy_line = 0, category = "Labs", 
+                          assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4"))
   expected <- grades_mat
   
   expect_equal(actual, expected)
