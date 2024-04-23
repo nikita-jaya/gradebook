@@ -123,16 +123,24 @@ lateness <- function(grades_mat, policy_line, category, assignments, weights = c
 #' @rdname score
 #' @export
 drop_n_lowest <- function(grades_mat, policy_line, category, assignments, weights = c()){
-  n <- policy_line
+  n <- policy_line #number of drops
+  if (n == 0){ #if no drops
+    return (grades_mat) #no change
+  }
   grades_mat[, assignments] <- t(apply(t(grades_mat[, assignments]), 2, function(assign){
-    if (length(assignments) == 1) return (assign)
-    lowest_indices <- order(assign)[1:n]
-    if (n >= length(assignments)) {
-      lowest_indices <- order(assign)[1:(length(assignments)-1)]
+    if (length(assignments) == 1) return (assign) #if only one assignment, no drops
+    lowest_indices <- order(assign)[1:n] #indices of n lowest assignments
+    if (n >= length(assignments)) { #if more drops than assignments
+      lowest_indices <- order(assign)[1:(length(assignments)-1)] #drop all but one
     }
-    assign[lowest_indices] <- NA
+    assign[lowest_indices] <- NA #drop designated scores
     return(assign)
   }))
+  
+  grades_mat[, paste0(assignments, " - Max Points")] <- ifelse(is.na(grades_mat[, assignments]),
+                                                               NA,
+                                                               grades_mat[, paste0(assignments, " - Max Points")])
+  
   return (grades_mat)
 }
 

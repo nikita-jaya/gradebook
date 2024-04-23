@@ -23,6 +23,10 @@ validate_policy <- function(policy, gs, quiet = FALSE){
     categories <- map(policy$categories, "category") |> unlist()
     assignments <- c(get_assignments(gs), categories)
     policy$categories <- map(policy$categories, function(cat){
+      if (cat$aggregation == "weighted_mean"){
+        #drop the respective weight(s) if category not found
+        cat$weights <- cat$weights[cat$assignments %in% assignments]
+      }
       # drop categories with unavailable assignments/nested categories
       cat$assignments <- cat$assignments[cat$assignments %in% assignments]
       if (length(cat$assignments) == 0){
