@@ -3,9 +3,10 @@
 #' Flattens and validates policy file
 #' @param policy YAML policy file
 #' @param gs Gradescope data
+#' @param quiet if FALSE, throws error if no assignments found in gs
 #' @importFrom purrr map discard
 #' @export
-validate_policy <- function(policy, gs){
+validate_policy <- function(policy, gs, quiet = FALSE){
   policy <- flatten_policy(policy)
   prev_length <- 0
   current_length <- length(policy$categories)
@@ -28,7 +29,10 @@ validate_policy <- function(policy, gs){
   }
   
   if (length(policy$categories) == 0){
-    return(NULL)
+    if (quiet){
+      return (NULL)
+    } 
+    stop("None of the assignments in policy file are found in gs.")
   }
   
   default_cat <- list(

@@ -412,8 +412,7 @@ test_that("validate policy - no assignments in gs", {
   
   policy <- list(categories = categories)
   gs <- data.frame()
-  actual <- validate_policy(policy, gs)
-  expect_null(actual)
+  expect_error(validate_policy(policy, gs))
   
 })
 
