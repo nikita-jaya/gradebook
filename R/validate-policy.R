@@ -1,26 +1,39 @@
 #' Validate Policy File
 #' 
 #' Flattens and validates policy file
-#'  @param policy YAML policy file
-#'  @param gs Gradescope data
-#'  @importFrom purrr map discard
-#'  @export
-validate_policy <- function(policy, gs){
+#' @param policy YAML policy file
+#' @param gs Gradescope data
+#' @param quiet if FALSE, throws error if no assignments found in gs
+#' @importFrom purrr map discard
+#' @export
+validate_policy <- function(policy, gs, quiet = FALSE){
   policy <- flatten_policy(policy)
-  # drop categories with unavailable assignments
-  categories <- map(policy$categories, "category") |> unlist()
-  # assignments is a vector that also includes category names
-  assignments <- c(get_assignments(gs), categories)
-  # this is because some categories have only nested categories as their assignments
-  # these categories should not be dropped
-  policy$categories <- map(policy$categories, function(cat){
-    cat$assignments <- cat$assignments[cat$assignments %in% assignments]
-    if (length(cat$assignments) == 0){
+  prev_length <- 0
+  current_length <- length(policy$categories)
+  #keep dropping until no more drops necessary
+  while (prev_length != current_length){
+    prev_length <- length(policy$categories)
+    categories <- map(policy$categories, "category") |> unlist()
+    assignments <- c(get_assignments(gs), categories)
+    policy$categories <- map(policy$categories, function(cat){
+      # drop categories with unavailable assignments/nested categories
+      cat$assignments <- cat$assignments[cat$assignments %in% assignments]
+      if (length(cat$assignments) == 0){
+        #if category has no assignments, drop
+        return (NULL)
+      }
+      return (cat)
+    }) |>
+      purrr::discard(is.null)
+    current_length <- length(policy$categories)
+  }
+  
+  if (length(policy$categories) == 0){
+    if (quiet){
       return (NULL)
-    }
-    return (cat)
-  }) |>
-    purrr::discard(is.null)
+    } 
+    stop("None of the assignments in policy file are found in gs.")
+  }
   
   default_cat <- list(
     aggregation = "equally_weighted",
