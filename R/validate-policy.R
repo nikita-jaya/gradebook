@@ -18,7 +18,7 @@ validate_policy <- function(policy, gs){
       # drop categories with unavailable assignments/nested categories
       cat$assignments <- cat$assignments[cat$assignments %in% assignments]
       if (length(cat$assignments) == 0){
-        #if category has no assignments, dropp
+        #if category has no assignments, drop
         return (NULL)
       }
       return (cat)
