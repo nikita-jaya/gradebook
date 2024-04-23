@@ -8,6 +8,13 @@
 #' @export
 validate_policy <- function(policy, gs, quiet = FALSE){
   policy <- flatten_policy(policy)
+  
+  purrr::walk(policy$categories, function(cat){
+    if (!("category" %in% names(cat) & "assignments" %in% names(cat))){
+      stop(paste0("Not all categories have a category and assignment argument"))
+    }
+  })
+  
   prev_length <- 0
   current_length <- length(policy$categories)
   #keep dropping until no more drops necessary
@@ -43,6 +50,15 @@ validate_policy <- function(policy, gs, quiet = FALSE){
   
   # add default values if missing
   policy$categories <- map(policy$categories, function(cat){
+    #if min_score/max_score aggregation
+    if ("aggregation" %in% names(cat) & cat[["aggregation"]] %in% c("min_score", "max_score")){
+      #default for max pts aggregation is "mean_max_pts"
+      default_cat[["aggregation_max_pts"]] = "mean_max_pts"
+    } else {
+      default_cat[["aggregation_max_pts"]] = "sum_max_pts"
+    }
+    
+    #merge default_cat to category
     for (default_name in names(default_cat)){
       if (!(default_name %in% names(cat))){
         default <- list(default_cat[[default_name]])
@@ -50,6 +66,16 @@ validate_policy <- function(policy, gs, quiet = FALSE){
         cat <- append(cat, default)
       }
     }
+    #if all assignments are in gs (i.e. there are no nested categories)
+    if (!("score" %in% names(cat)) & sum(cat[["assignments"]] %in% get_assignments(gs)) != 0){
+      #default score is raw_over_max
+      score <- list(
+        category = cat[["category"]],
+        score = "raw_over_max")
+      cat[["category"]] <- NULL #to make sure "category" is still first item
+      cat <- append(score, cat)
+    }
+    
     return (cat)
   })
 
