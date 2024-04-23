@@ -13,7 +13,7 @@ validate_policy <- function(policy, gs, quiet = FALSE){
     if (!("category" %in% names(cat) & "assignments" %in% names(cat))){
       stop(paste0("Not all categories have a category and assignment argument"))
     }
-  }) |> unlist()
+  })
   
   prev_length <- 0
   current_length <- length(policy$categories)
