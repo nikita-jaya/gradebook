@@ -1,3 +1,91 @@
+#' Validate Policy File
+#' 
+#' Flattens and validates policy file
+#' @param policy YAML policy file
+#' @param gs Gradescope data
+#' @param quiet if FALSE, throws error if no assignments found in gs
+#' @importFrom purrr map discard
+#' @export
+validate_policy <- function(policy, gs, quiet = FALSE){
+  policy <- flatten_policy(policy)
+  
+  purrr::walk(policy$categories, function(cat){
+    if (!("category" %in% names(cat) & "assignments" %in% names(cat))){
+      stop(paste0("Not all categories have a category and assignment argument"))
+    }
+  })
+  
+  prev_length <- 0
+  current_length <- length(policy$categories)
+  #keep dropping until no more drops necessary
+  while (prev_length != current_length){
+    prev_length <- length(policy$categories)
+    categories <- map(policy$categories, "category") |> unlist()
+    assignments <- c(get_assignments(gs), categories)
+    policy$categories <- map(policy$categories, function(cat){
+      if (cat$aggregation == "weighted_mean"){
+        #drop the respective weight(s) if category not found
+        cat$weights <- cat$weights[cat$assignments %in% assignments]
+      }
+      # drop categories with unavailable assignments/nested categories
+      cat$assignments <- cat$assignments[cat$assignments %in% assignments]
+      if (length(cat$assignments) == 0){
+        #if category has no assignments, drop
+        return (NULL)
+      }
+      return (cat)
+    }) |>
+      purrr::discard(is.null)
+    current_length <- length(policy$categories)
+  }
+  
+  if (length(policy$categories) == 0){
+    if (quiet){
+      return (NULL)
+    } 
+    stop("None of the assignments in policy file are found in gs.")
+  }
+  
+  default_cat <- list(
+    aggregation = "equally_weighted",
+    aggregation_max_pts = "sum_max_pts",
+    aggregation_lateness = "max_lateness"
+  ) 
+  
+  # add default values if missing
+  policy$categories <- map(policy$categories, function(cat){
+    #if min_score/max_score aggregation
+    if ("aggregation" %in% names(cat) & cat[["aggregation"]] %in% c("min_score", "max_score")){
+      #default for max pts aggregation is "mean_max_pts"
+      default_cat[["aggregation_max_pts"]] = "mean_max_pts"
+    } else {
+      default_cat[["aggregation_max_pts"]] = "sum_max_pts"
+    }
+    
+    #merge default_cat to category
+    for (default_name in names(default_cat)){
+      if (!(default_name %in% names(cat))){
+        default <- list(default_cat[[default_name]])
+        names(default) <- default_name
+        cat <- append(cat, default)
+      }
+    }
+    #if all assignments are in gs (i.e. there are no nested categories)
+    if (!("score" %in% names(cat)) & sum(cat[["assignments"]] %in% get_assignments(gs)) != 0){
+      #default score is raw_over_max
+      score <- list(
+        category = cat[["category"]],
+        score = "raw_over_max")
+      cat[["category"]] <- NULL #to make sure "category" is still first item
+      cat <- append(score, cat)
+    }
+    
+    return (cat)
+  })
+
+  return (policy)
+}
+
 #' Reshape policy file from nested to flat
 #' 
 #' First propagates `lateness` to all child categories then cycles through the
@@ -11,12 +99,11 @@
 #'
 #' @examples
 #' # Example
-#' flatten_policy(policy_demo)
+#' flatten_policy(simple_policy)
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
     policy$categories <- policy$categories |>
-        purrr::map(\(x) copy_element_to_children(x, key = "lateness")) |>
         purrr::map(extract_nested) |> 
         purrr::list_flatten()
     
@@ -45,44 +132,4 @@ extract_nested <- function(category) {
   
   # Return the flattened nested categories followed by the current category
   c(nested_categories_flattened, list(category))
-}
-
-
-#' Copy list element to child assignment categories
-#' 
-#' A recursive function to copy an element of a policy file to
-#' all children categories that lack that element. If a child category has that
-#' element, that existing child element will not get overwritten by the parent element.
-#' 
-#' Can be used to propagate a field like `lateness` to all child categories of 
-#' a given category.
-#'
-#' @param category A list from a policy file corresponding to a category like "Labs".
-#' Must contain an element called `assignments`.
-#' @param key A character string of the name of the element that you wish to copy.
-#'
-#' @return A list of the same structure as the input category, but with specified
-#' element copied to all child categories that lack an element of that name.
-copy_element_to_children <- function(category, key) {
-    
-    # if the category has no children, just return the category
-    if (is.vector(category$assignments, mode = "character")) {
-        return(category)
-    }
-    
-    # for every child assignment...
-    for (child in seq_along(category$assignments)) {
-        
-        # if the key isn't found in the child list, copy it there
-        if (!(key %in% names(category$assignments[[child]]))) {
-            category$assignments[[child]][[key]] <- category[[key]]
-        }
-        
-        # if the child assignment has a child, call the function again
-        if (is.list(category$assignments[[child]]$assignments)) {
-            category$assignments[[child]] <- copy_element_to_children(category$assignments[[child]], key)
-        }
-    }
-    
-    return(category)
 }
