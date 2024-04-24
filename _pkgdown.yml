@@ -30,6 +30,7 @@ reference:
     These functions are to validate and process the policy file.
   contents:
   - flatten_policy
+  - validate_policy
 
 - title: Grading Functions
   desc: >
