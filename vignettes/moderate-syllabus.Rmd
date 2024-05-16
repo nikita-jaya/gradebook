@@ -1,8 +1,8 @@
 ---
-title: "complex_syllabus"
+title: "moderate_syllabus"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{complex_syllabus}
+  %\VignetteIndexEntry{moderate-syllabus}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -2,7 +2,7 @@
 title: "Case Study: A Simple Syllabus"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{simple-syllabus}
+  %\VignetteIndexEntry{policy-files}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
