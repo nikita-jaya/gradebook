@@ -1,5 +1,5 @@
 ---
-title: "Case Study: A Simple Syllabus"
+title: "Building a Policy File"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{policy-files}

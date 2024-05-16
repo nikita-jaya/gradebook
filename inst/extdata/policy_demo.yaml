@@ -28,3 +28,14 @@ categories:
     aggregation: none
     assignments:
       - "Final"
+  - category: Overall Grade
+    weights:
+    - 0.30
+    - 0.10
+    - 0.30
+    - 0.30
+    assignments:
+    - Labs
+    - Discussion
+    - Midterm
+    - Final
