@@ -33,6 +33,7 @@ Here is what the policy file looks like:
 ```
 
 ```{r, include = FALSE}
+library(gradebook)
 yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
 # to be replaced with gradebook::read_policy()
 ```
@@ -40,11 +41,11 @@ yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradeb
 ## Gradescope Assigments File
 Here is what the gradescope assignments file looks like:
 
-
-```{r}
-#here goes the gs
+<div style="height: 300px; overflow: auto;">
+```{r, echo=FALSE}
+knitr::kable(simple_syllabus_data)
 ```
-
+</div>
 
 ## Workflow
 
@@ -57,6 +58,13 @@ The **Homework** category is compiled of two assignments: *"Homework 1"* and *"H
 ### Grade Calculations
 
 ```{r}
-# here go the grading functions
+policy <- yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
+policy <- validate_policy(policy, gs = simple_syllabus_data)
+grades <- get_grades(policy = policy, gs = simple_syllabus_data)
 ```
 
+<div style="height: 300px; overflow: auto;">
+```{r, echo=FALSE}
+knitr::kable(grades)
+```
+</div>
