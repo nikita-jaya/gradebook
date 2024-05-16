@@ -3,18 +3,15 @@ coursewide:
 
 categories:
   - category: Midterm
-    weight: 0.20
     aggregation: none
     assignments:
       - "Midterm - assignment"
   - category: Homework
-    weight: 0.40
     aggregation: equally_weighted
     assignments:
       - "Homework 1"
       - "Homework 2"
   - category: Final
-    weight: 0.40
     aggregation: none
     assignments:
       - "Final - assignment"
