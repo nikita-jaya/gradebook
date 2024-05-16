@@ -12,6 +12,7 @@ A list of three nested lists
 \item{description}{any relevant course description, purely for the user}
 \item{CATEGORIES}{second nested list where syllabus is broken down into categories with their respective grading criteria}
 \item{category}{category name}
+\item{aggregation}{how assignment scores are aggregated to calculate category score}
 \item{assignments}{list of assignment names that falls into this category}
 ...
 }
