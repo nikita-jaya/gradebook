@@ -14,13 +14,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-Now, we will walk through a simple syllabus and its Gradebook implementation. Start with what this syllabus would look like on a class website.
+Now, we will walk through a simple syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
 
 ## Syllabus
 
-The entirety of a student's grade is determined by their grades on two midterms and the final exam. Their grade will be computed as follows:
+The final student's grade is computed from *1) midterm, 2) homework assignments and the final exam*. Their grade will be computed as follows:
 
 -   Homework 20%
+    - Homework 1, Homework 2 (and they are aggregated equally)
 -   Midterm 40%
 -   Final Exam 40%
 
@@ -31,12 +32,31 @@ Here is what the policy file looks like:
 
 ```
 
-```{r}
+```{r, include = FALSE}
 yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
 # to be replaced with gradebook::read_policy()
+```
+
+## Gradescope Assigments File
+Here is what the gradescope assignments file looks like:
+
+
+```{r}
+#here goes the gs
 ```
 
 
 ## Workflow
 
-This grade is calculated using three categories, with the weights as shown above; this is represented by `Overall Grade` with an aggregation of `weighted_mean`. The Midterm and Final Exam categories contain only a single assignment, as shown in the `simple_gs` file. The Homework category is compiled of two assignments: "Homework 1" and "Homework 2" in the `simple_gs`.
+**Overall grade** is calculated using the three categories, with the weights as shown above; This is represented by `Overall Grade` with an aggregation of `weighted_mean`.
+
+The **Midterm** and **Final Exam** categories contain only a single assignment, as shown in the `simple_syllabus_data` file, which is usually downloaded from gradescope.
+
+The **Homework** category is compiled of two assignments: *"Homework 1"* and *"Homework 2"* in the `simple_syllabus_data`.
+
+### Grade Calculations
+
+```{r}
+# here go the grading functions
+```
+
