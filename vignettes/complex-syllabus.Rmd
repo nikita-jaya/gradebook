@@ -1,5 +1,5 @@
 ---
-title: "complex_syllabus"
+title: "Case Study: A Complex Syllabus"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{complex-syllabus}
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-Now, we will walk through a moderately complex syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
+Now, we will walk through a complex syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
 
 ## Syllabus
 
