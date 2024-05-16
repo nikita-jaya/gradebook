@@ -1,8 +1,8 @@
 ---
-title: "Writing Policy Files"
+title: "Case Study: A Simple Syllabus"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{policy-files}
+  %\VignetteIndexEntry{simple-syllabus}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

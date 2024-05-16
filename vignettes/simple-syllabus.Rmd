@@ -2,7 +2,7 @@
 title: "Case Study: A Simple Syllabus"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{simple_syllabus}
+  %\VignetteIndexEntry{simple-syllabus}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(yaml)
 ```
 
 Now, we will walk through a simple syllabus and its Gradebook implementation. Start with what this syllabus would look like on a class website.
@@ -28,7 +29,14 @@ The entirety of a student's grade is determined by their grades on two midterms 
 Here is what the policy file looks like:
 ```yaml
 `r xfun::file_string(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))`
+
 ```
+
+```{r}
+yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
+# to be replaced with gradebook::read_policy()
+```
+
 
 ## Workflow
 
