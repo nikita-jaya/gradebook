@@ -1,5 +1,5 @@
 ---
-title: "Case Study: Simple Syllabus"
+title: "Case Study: A Simple Syllabus"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{simple_syllabus}
@@ -14,24 +14,22 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(gradebook)
-```
-
 Now, we will walk through a simple syllabus and its Gradebook implementation. Start with what this syllabus would look like on a class website.
 
 ## Syllabus
-The entirety of a student's grade is determined by their grades on two midterms and the final exam.
-Their grade will be computed as follows:
 
- - Midterm One 20%
- - Midterm Two 25%
- - Final Exam 55%
- 
- ## Policy File
- **insert YAML here**
- 
- ## Workflow
- This grade is calculated using three assignments, each weighted as above, so the `aggregation` is `weighted_mean`. The scores for each assignment is calculated by dividing their raw score by their max points.
- 
- 
+The entirety of a student's grade is determined by their grades on two midterms and the final exam. Their grade will be computed as follows:
+
+-   Homework 20%
+-   Midterm 40%
+-   Final Exam 40%
+
+## Policy File 
+Here is what the policy file looks like:
+```yaml
+`r xfun::file_string(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))`
+```
+
+## Workflow
+
+This grade is calculated using three categories, with the weights as shown above; this is represented by `Overall Grade` with an aggregation of `weighted_mean`. The Midterm and Final Exam categories contain only a single assignment, as shown in the `simple_gs` file. The Homework category is compiled of two assignments: "Homework 1" and "Homework 2" in the `simple_gs`.
