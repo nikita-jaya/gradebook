@@ -13,7 +13,59 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+Now, we will walk through a simple syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
 
-```{r setup}
-library(gradebook)
+## Syllabus
+
+The final student's grade is computed from *1) midterm, 2) homework assignments and the final exam*. Their grade will be computed as follows:
+
+-   Homework 20%
+    - Homework 1, Homework 2 (and they are aggregated equally)
+-   Midterm 40%
+-   Final Exam 40%
+
+## Policy File 
+Here is what the policy file looks like:
+```yaml
+`r xfun::file_string(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))`
+
 ```
+
+```{r, include = FALSE}
+library(gradebook)
+yaml::read_yaml(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
+# to be replaced with gradebook::read_policy()
+```
+
+## Gradescope Assigments File
+Here is what the gradescope assignments file looks like:
+
+<div style="height: 300px; overflow: auto;">
+```{r, echo=FALSE}
+knitr::kable(moderate_syllabus_data)
+```
+</div>
+
+## Workflow
+
+
+### Grade Calculations
+First, read in your YAML policy file.
+
+```{r}
+policy <- yaml::read_yaml(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
+```
+`validate_policy()` checks the formatting of the policy file.
+```{r}
+policy <- validate_policy(policy, gs = moderate_syllabus_data)
+```
+Finally, `get_grades()` grades your assignments based on your policy file.
+```{r}
+grades <- get_grades(policy = policy, gs = moderate_syllabus_data)
+```
+The output of the grades looks like:
+<div style="height: 300px; overflow: auto;">
+```{r, echo=FALSE}
+knitr::kable(grades)
+```
+</div>
