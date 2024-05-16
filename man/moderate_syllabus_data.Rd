@@ -3,7 +3,7 @@
 \docType{data}
 \name{moderate_syllabus_data}
 \alias{moderate_syllabus_data}
-\title{Mmoderate Syllabus Data}
+\title{Moderate Syllabus Data}
 \format{
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 5 rows and 32 columns.
 }

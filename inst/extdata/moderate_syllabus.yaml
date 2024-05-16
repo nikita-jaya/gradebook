@@ -4,6 +4,7 @@ coursewide:
 
 categories:
   - category: Homework
+    drop_n_lowest: 2
     lateness:
     - between:
         from: '00:00:01'
@@ -21,7 +22,6 @@ categories:
       - "Homework 5"
   - category: Midterm
     weights: 0.20
-    drop_n_lowest: 2
     aggregation: none
     assignments:
       - "Midterm Exam"

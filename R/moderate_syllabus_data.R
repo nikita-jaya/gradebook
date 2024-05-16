@@ -1,4 +1,4 @@
-#' Mmoderate Syllabus Data
+#' Moderate Syllabus Data
 #'
 #' Sample grades data for a moderately complex syllabus, shown in "Case Study: A Moderate Syllabus" data
 #' 
