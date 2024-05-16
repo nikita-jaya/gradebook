@@ -13,16 +13,9 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-Now, we will walk through a simple syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
+Now, we will walk through a moderately complex syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
 
 ## Syllabus
-
-The final student's grade is computed from *1) midterm, 2) homework assignments and the final exam*. Their grade will be computed as follows:
-
--   Homework 20%
-    - Homework 1, Homework 2 (and they are aggregated equally)
--   Midterm 40%
--   Final Exam 40%
 
 ## Policy File 
 Here is what the policy file looks like:
