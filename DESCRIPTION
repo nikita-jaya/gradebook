@@ -1,6 +1,6 @@
 Package: gradebook
 Title: Calculate course grades based on assignment scores from Gradescope and a description of the course grading policy
-Version: 0.0.0.9000
+Version: 0.4.0
 Authors@R: c(person(
                     given = "Nikita", 
                     family = "Jayaprakash", 
