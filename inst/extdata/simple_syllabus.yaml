@@ -2,15 +2,15 @@ coursewide:
   course: Stat 101 Simple Syllabus
 
 categories:
-  - category: Midterm
-    aggregation: none
-    assignments:
-      - "Midterm Exam"
   - category: Homework
     aggregation: equally_weighted
     assignments:
       - "Homework 1"
       - "Homework 2"
+  - category: Midterm
+    aggregation: none
+    assignments:
+      - "Midterm Exam"
   - category: Final
     aggregation: none
     assignments:
