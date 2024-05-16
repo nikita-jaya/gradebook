@@ -18,7 +18,3 @@ First propagates \code{lateness} to all child categories then cycles through the
 top-level categories of a policy file and unnests all subcategories to create
 a single level list of all categories and subcategories.
 }
-\examples{
-# Example
-flatten_policy(simple_policy)
-}

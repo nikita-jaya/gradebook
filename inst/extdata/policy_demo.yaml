@@ -1,6 +1,6 @@
 coursewide:
-  course: Stat 101
-
+  course_name: Stat 101
+  description: syllabus for gs_demo
 categories:
   - category: Labs
     weight: 0.30
