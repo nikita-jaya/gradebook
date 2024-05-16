@@ -97,6 +97,9 @@ validate_policy <- function(policy, gs, quiet = FALSE){
 #' @return A single level list of all categories and subcategories ordered where 
 #' all leaves will precede the parent category in the list order.
 #'
+#' @examples
+#' flatten_policy(policy_demo)
+#' 
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
