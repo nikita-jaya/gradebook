@@ -5,7 +5,7 @@ categories:
   - category: Midterm
     aggregation: none
     assignments:
-      - "Midterm - assignment"
+      - "Midterm Exam"
   - category: Homework
     aggregation: equally_weighted
     assignments:
@@ -14,7 +14,7 @@ categories:
   - category: Final
     aggregation: none
     assignments:
-      - "Final - assignment"
+      - "Final Exam"
   - category: Overall Grade
     aggregation: weighted_mean
     weights: 
