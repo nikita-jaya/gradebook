@@ -18,7 +18,7 @@ Now, we will walk through a simple syllabus and its Gradebook implementation wit
 
 ## Syllabus
 
-The final student's grade is computed from *1) midterm, 2) homework assignments and the final exam*. Their grade will be computed as follows:
+The final student's grade is computed from *1) midterm, 2) homework assignments, and 3) the final exam*. Their grade will be computed as follows:
 
 -   Homework 20%
     -   Homework 1, Homework 2 (and they are aggregated equally)
