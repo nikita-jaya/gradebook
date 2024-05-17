@@ -13,15 +13,33 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
 Now, we will walk through a complex syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
 
 ## Syllabus
 
-## Policy File 
-Here is what the policy file looks like:
-```yaml
-`r xfun::file_string(system.file("extdata", "complex_syllabus.yaml", package = "gradebook"))`
+The final student's grade is computed from *1) labs, 2) midterm exam and 3) final exam*. Their grade will be computed as follows:
 
+-   Labs 20%
+    -   compiled of "Lab 1", "Lab 2" and "Lab 3", which are aggregated equally
+    -   each "Lab \#" is compiled of two parts, which are weighted by their point value: "Lab #.1" & "Lab #.2"
+-   Midterm 40%
+-   Final Exam 40%
+
+Each student's lowest lab score is dropped.
+
+Also, all components of the lab individually experience a lateness penalty:
+
+-   if the lab is turned in late, but within 24 hours of the deadline, there is a 10% deduction.
+
+-   if the lab is turned in more than 24 hours late, there is a 30% deduction.
+
+## Policy File
+
+Here is what the policy file looks like:
+
+``` yaml
+`r xfun::file_string(system.file("extdata", "complex_syllabus.yaml", package = "gradebook"))`
 ```
 
 ```{r, include = FALSE}
@@ -31,34 +49,41 @@ yaml::read_yaml(system.file("extdata", "complex_syllabus.yaml", package = "grade
 ```
 
 ## Gradescope Assigments File
+
 Here is what the gradescope assignments file looks like:
 
-<div style="height: 300px; overflow: auto;">
+::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
 knitr::kable(complex_syllabus_data)
 ```
-</div>
+:::
 
 ## Workflow
 
-
 ### Grade Calculations
+
 First, read in your YAML policy file.
 
 ```{r}
 policy <- yaml::read_yaml(system.file("extdata", "complex_syllabus.yaml", package = "gradebook"))
 ```
+
 `validate_policy()` checks the formatting of the policy file.
+
 ```{r}
 policy <- validate_policy(policy, gs = complex_syllabus_data)
 ```
+
 Finally, `get_grades()` grades your assignments based on your policy file.
+
 ```{r}
 grades <- get_grades(policy = policy, gs = complex_syllabus_data)
 ```
+
 The output of the grades looks like:
-<div style="height: 300px; overflow: auto;">
+
+::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
 knitr::kable(grades)
 ```
-</div>
+:::
