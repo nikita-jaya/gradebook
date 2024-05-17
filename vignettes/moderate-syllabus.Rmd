@@ -38,7 +38,6 @@ Here is what the policy file looks like:
 ```{r, include = FALSE}
 library(gradebook)
 yaml::read_yaml(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
-# to be replaced with gradebook::read_policy()
 ```
 
 ## Gradescope Assigments File
