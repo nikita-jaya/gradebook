@@ -87,6 +87,6 @@ knitr::kable(grades)
 
 Disclaimers:
 
--   The `weights` of a cateogy with aggregation `weighted_mean` should be corresponding order with the `assignments.`
+-   The `weights` of a category with aggregation `weighted_mean` should be corresponding order with the `assignments.`
 
--   Categories cannot have the same name as any assignments.
+-   Categories cannot have the same name as any other assignment name.
