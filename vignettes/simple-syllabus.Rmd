@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Now, we will walk through a simple syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
+Now, we will walk through a simple syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website:
 
 ## Syllabus
 
@@ -41,7 +41,7 @@ yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradeb
 
 ## Gradescope Assigments File
 
-Here is what the gradescope assignments file looks like:
+Here is what the Gradescope assignments file looks like:
 
 ::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
@@ -85,7 +85,7 @@ knitr::kable(grades)
 ```
 :::
 
-Disclaimers:
+### Disclaimers:
 
 -   The `weights` of a category with aggregation `weighted_mean` should be corresponding order with the `assignments.`
 
