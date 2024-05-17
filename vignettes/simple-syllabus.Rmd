@@ -21,15 +21,16 @@ Now, we will walk through a simple syllabus and its Gradebook implementation wit
 The final student's grade is computed from *1) midterm, 2) homework assignments and the final exam*. Their grade will be computed as follows:
 
 -   Homework 20%
-    - Homework 1, Homework 2 (and they are aggregated equally)
+    -   Homework 1, Homework 2 (and they are aggregated equally)
 -   Midterm 40%
 -   Final Exam 40%
 
-## Policy File 
-Here is what the policy file looks like:
-```yaml
-`r xfun::file_string(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))`
+## Policy File
 
+Here is what the policy file looks like:
+
+``` yaml
+`r xfun::file_string(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))`
 ```
 
 ```{r, include = FALSE}
@@ -39,13 +40,14 @@ yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradeb
 ```
 
 ## Gradescope Assigments File
+
 Here is what the gradescope assignments file looks like:
 
-<div style="height: 300px; overflow: auto;">
+::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
 knitr::kable(simple_syllabus_data)
 ```
-</div>
+:::
 
 ## Workflow
 
@@ -56,22 +58,35 @@ The **Midterm** and **Final Exam** categories contain only a single assignment, 
 The **Homework** category is compiled of two assignments: *"Homework 1"* and *"Homework 2"* in the `simple_syllabus_data`.
 
 ### Grade Calculations
+
 First, read in your YAML policy file.
 
 ```{r}
 policy <- yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
 ```
+
 `validate_policy()` checks the formatting of the policy file.
+
 ```{r}
 policy <- validate_policy(policy, gs = simple_syllabus_data)
 ```
+
 Finally, `get_grades()` grades your assignments based on your policy file.
+
 ```{r}
 grades <- get_grades(policy = policy, gs = simple_syllabus_data)
 ```
+
 The output of the grades looks like:
-<div style="height: 300px; overflow: auto;">
+
+::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
 knitr::kable(grades)
 ```
-</div>
+:::
+
+Disclaimers:
+
+-   The `weights` of a cateogy with aggregation `weighted_mean` should be corresponding order with the `assignments.`
+
+-   Categories cannot have the same name as any assignments.
