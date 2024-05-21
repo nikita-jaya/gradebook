@@ -72,6 +72,7 @@ reference:
   - policy_demo
   - simple_syllabus_data
   - moderate_syllabus_data
+  - complex_syllabus_data
 
 development:
   mode: auto
