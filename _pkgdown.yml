@@ -12,12 +12,9 @@ reference:
     These functions are to validate and process the Gradescope data.
 - subtitle: Validate Gradescope Data
   contents:
-  - read_gs
-  - check_data_format
   - get_id_cols
   - get_assignments
-  - drop_ungraded_assignments
-  
+
 - subtitle: Process Gradescope Data
   contents:
   - process_gs
