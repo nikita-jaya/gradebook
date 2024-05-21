@@ -14,13 +14,6 @@ reference:
   contents:
   - get_id_cols
   - get_assignments
-
-- subtitle: Process Gradescope Data
-  contents:
-  - process_gs
-  - process_id
-  - get_duplicate_ids
-  - pivot_gs
   
 - title: Policy File Functions
   desc: >
