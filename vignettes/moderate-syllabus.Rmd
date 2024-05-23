@@ -24,6 +24,9 @@ The final student's grade is computed from *1) homework assignments, 2) midterm 
     - Homework 1, Homework 2, Homework 3, Homework 4, Homework 5
     - All assignments are aggregated equally
     - The lowest 2 assignments are dropped
+    - All components of the lab individually experience a lateness penalty:
+      - 10% reduction of the score, if assignment is submitted late but within 24 hours of the deadline
+      - 30% reduction of the score, if assignment is submitted after 24 hours of the deadline
 -   Midterm 40%
 -   Final Exam 40%
 
@@ -58,19 +61,15 @@ The **Midterm** and **Final Exam** categories contain only a single assignment, 
 The **Homework** category is compiled of five assignments: *"Homework 1"*, *"Homework 2"*, *"Homework 3"*, *"Homework 4"*, *"Homework 5"* in the `moderate_syllabus_data`.
 
 ### Grade Calculations
-First, read in your YAML policy file.
 
 ```{r}
 policy <- yaml::read_yaml(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
+
+validated_policy <- validate_policy(policy, gs = moderate_syllabus_data)
+
+grades <- get_grades(policy = validated_policy, gs = moderate_syllabus_data)
 ```
-`validate_policy()` checks the formatting of the policy file.
-```{r}
-policy <- validate_policy(policy, gs = moderate_syllabus_data)
-```
-Finally, `get_grades()` grades your assignments based on your policy file.
-```{r}
-grades <- get_grades(policy = policy, gs = moderate_syllabus_data)
-```
+First, read in your YAML policy file. `validate_policy()` checks the formatting of the policy file. Finally, `get_grades()` grades your assignments based on your policy file.
 
 The output of the grades looks like:
 

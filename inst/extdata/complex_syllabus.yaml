@@ -19,7 +19,7 @@ categories:
       aggregation: weighted_by_points
       assignments:
       - "Lab 1.1"
-      - "Lab 2.1"
+      - "Lab 1.2"
     - category: Lab 2
       lateness:
       - between:
@@ -30,8 +30,8 @@ categories:
       - scale_by: 0.7
       aggregation: weighted_by_points
       assignments:
-      - "Lab 1.1"
       - "Lab 2.1"
+      - "Lab 2.2"
     - category: Lab 3
       lateness:
       - between:
@@ -43,7 +43,7 @@ categories:
       aggregation: weighted_by_points
       assignments:
       - "Lab 3.1"
-      - "Lab 3.1"
+      - "Lab 3.2"
   - category: Midterm
     weights: 0.20
     aggregation: none

@@ -4,7 +4,6 @@ coursewide:
 
 categories:
   - category: Homework
-    drop_n_lowest: 2
     lateness:
     - between:
         from: '00:00:01'
@@ -12,6 +11,7 @@ categories:
     - scale_by: 0.9
     - after: '24:00:01'
     - scale_by: 0.7
+    drop_n_lowest: 2
     weights: 0.40
     aggregation: equally_weighted
     assignments:
