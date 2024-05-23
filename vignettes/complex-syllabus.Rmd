@@ -23,7 +23,8 @@ The final student's grade is computed from *1) labs, 2) midterm exam and 3) fina
 -   Labs 20%
     - Lab 1, Lab 2, and Lab 3
     - They are aggregated equally
-    - Each "Lab \#" is compiled of two parts, which are weighted by their point value: "Lab #.1" & "Lab #.2"
+    - Each "Lab \#" is compiled of two parts, which are weighted by their respective point value: "Lab #.1" & "Lab #.2"
+      - For example: if Lab 1.1 is worth 15 points and Lab 1.2 is worth 5 points, then Lab 1.1 accounts for 75% of Lab 1 score. 
     - The lowest 1 assignment is dropped
     - All components of the lab individually experience a lateness penalty:
       - 10% reduction of the score, if assignment is submitted late but within 24 hours of the deadline
