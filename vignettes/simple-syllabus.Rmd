@@ -44,6 +44,7 @@ Here is what the Gradescope assignments file looks like:
 
 ::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
+simple_syllabus_data <- readr::read_csv(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
 knitr::kable(simple_syllabus_data)
 ```
 :::
@@ -58,7 +59,9 @@ The **Homework** category is compiled of two assignments: *"Homework 1"* and *"H
 
 ### Grade Calculations
 
-```{r}
+```{r, message=FALSE}
+simple_syllabus_data <- readr::read_csv(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
+
 policy <- yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
 
 validated_policy <- validate_policy(policy, gs = simple_syllabus_data)
