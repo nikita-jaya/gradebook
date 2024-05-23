@@ -70,8 +70,6 @@ reference:
   contents:
   - gs_demo
   - policy_demo
-  - moderate_syllabus_data
-  - complex_syllabus_data
 
 development:
   mode: auto

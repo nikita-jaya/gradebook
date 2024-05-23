@@ -52,6 +52,7 @@ Here is what the gradescope assignments file looks like:
 
 ::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
+complex_syllabus_data <- readr::read_csv(system.file("extdata", "complex_syllabus_data.csv", package = "gradebook"))
 knitr::kable(complex_syllabus_data)
 ```
 :::
@@ -68,7 +69,9 @@ The **Labs** category is compiled of **3 nested categories**: *"Lab 1"*, *"Lab 2
 ### Grade Calculations
 
 
-```{r}
+```{r, message = FALSE}
+complex_syllabus_data <- readr::read_csv(system.file("extdata", "complex_syllabus_data.csv", package = "gradebook"))
+
 policy <- yaml::read_yaml(system.file("extdata", "complex_syllabus.yaml", package = "gradebook"))
 
 validated_policy <- validate_policy(policy, gs = complex_syllabus_data)
