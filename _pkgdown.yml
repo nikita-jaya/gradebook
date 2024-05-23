@@ -62,7 +62,6 @@ reference:
   - mean_lateness
   - sum_lateness
   - max_lateness
-  
 
 - title: Demo Items
   desc: >
@@ -70,6 +69,19 @@ reference:
   contents:
   - gs_demo
   - policy_demo
+
+articles:
+- title: Getting started
+  navbar: ~
+  contents:
+  - policy-files
+
+- title: Case Studies
+  navbar: Case Studies
+  contents:
+  - simple-syllabus
+  - moderate-syllabus
+  - complex-syllabus
 
 development:
   mode: auto

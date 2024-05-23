@@ -1,5 +1,5 @@
 ---
-title: "Case Study: A Complex Syllabus"
+title: "Case Study: Complex Syllabus"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{complex-syllabus}
