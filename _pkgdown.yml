@@ -59,7 +59,7 @@ reference:
     These items are used to demonstrate the functionality of this package.
   contents:
   - gs_demo
-  - simple_policy
+  - policy_demo
 
 development:
   mode: auto
