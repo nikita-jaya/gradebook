@@ -251,8 +251,7 @@ min_score <- function(grades_mat, category, assignments, weights = c()){
 #' @export
 weighted_mean <- function(grades_mat, category, assignments, weights){
   if (length(assignments) != length(weights)){
-    grades_mat <- equally_weighted(grades_mat, category, assignments)
-    return (grades_mat)
+    stop("Number of weights does not match number of assignments.")
   }
   grades_mat[, category] <- rowSums(t(t(grades_mat[, assignments]) * weights), na.rm = TRUE)/ sum(weights)
   return (grades_mat)
