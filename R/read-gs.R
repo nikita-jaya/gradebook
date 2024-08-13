@@ -14,7 +14,7 @@
 #' @export
 read_gs <- function(path, drop_ungraded = TRUE, verbose = FALSE){
   # read in csv
-  gs <- read_csv(path) |>
+  gs <- read_csv(path, trim_ws = FALSE) |>
     #check format
     check_data_format()
   
