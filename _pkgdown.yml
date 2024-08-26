@@ -65,10 +65,6 @@ articles:
   navbar: ~
   contents:
   - policy-files
-
-- title: Case Studies
-  navbar: Case Studies
-  contents:
   - simple-syllabus
   - moderate-syllabus
   - complex-syllabus
