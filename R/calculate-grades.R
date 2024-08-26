@@ -6,7 +6,7 @@
 #'
 #' @return A data frame
 #'
-#' @importFrom dplyr select relocate left_join
+#' @importFrom dplyr select relocate left_join mutate_at vars mutate
 #' 
 #' @export
 
