@@ -42,7 +42,10 @@ get_grades <- function(gs, policy){
   
   grades <- grades_mat |>
     as.data.frame()
-  grades$SID <- rownames(grades_mat) #add back ID cols
+  grades$SID <- as.numeric(rownames(grades_mat)) #add back SID
+  grades <- gs |>
+    select(get_id_cols(gs)) |>
+    dplyr::left_join(grades, by = "SID") #add back original ID cols
   
   idcols <- gs |>
     mutate(SID = as.character(SID)) |>
