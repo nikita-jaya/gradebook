@@ -6,7 +6,7 @@
 #'
 #' @return A data frame
 #'
-#' @importFrom dplyr select left_join
+#' @importFrom dplyr select relocate left_join mutate_at vars mutate
 #' 
 #' @export
 
@@ -46,6 +46,14 @@ get_grades <- function(gs, policy){
   grades <- gs |>
     select(get_id_cols(gs)) |>
     dplyr::left_join(grades, by = "SID") #add back original ID cols
+  
+  idcols <- gs |>
+    mutate(SID = as.character(SID)) |>
+    select(get_id_cols(gs))
+  
+  grades <- grades |>
+    left_join(idcols, by = "SID") |>
+    dplyr::relocate(get_id_cols(gs))
   
   return (grades)
 }
