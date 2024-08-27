@@ -20,14 +20,15 @@ Policy files are stored as [.yaml](https://www.cloudbees.com/blog/yaml-tutorial-
 
 Note that category names cannot be the same as any assignment names.
 
-``` yaml
-`r xfun::file_string(system.file("extdata", "simple_policy.yaml", package = "gradebook"))`
+```yaml
+`r xfun::file_string(system.file("extdata", "policy_demo.yaml", package = "gradebook"))`
+
 ```
 
 Once you have written your policy file, you can read it into R as a list.
 
 ```{r}
-yaml::read_yaml(system.file("extdata", "simple_policy.yaml", package = "gradebook"))
+yaml::read_yaml(system.file("extdata", "policy_demo.yaml", package = "gradebook"))
 # to be replaced with gradebook::read_policy()
 ```
 
@@ -36,9 +37,11 @@ yaml::read_yaml(system.file("extdata", "simple_policy.yaml", package = "gradeboo
 There are a series of recognized keys with corresponding values. Each key represents a certain type of calculation in your syllabus, and the value determines the specifics of this calculation.
 
 ### Category
+
 Every single category must have the `category` key. This is the name of the subcategory and must be unique from all other category names and all assignment names as well.
 
 ### Assignments
+
 The `assignments` key determines which assignments or subcategories are used to determine the category score. The values for this key must match assignments in the Gradescope data or subcategories determined in the same policy file. This can be left blank, but this means that this category score will not be factored into any of the grade calculations and will be ignored.
 
 ### Score
@@ -48,7 +51,6 @@ The `score` key determines how the percentage of an assignment score is calculat
 -   `raw_over_max`: the percentage of an assignment score is the point-value of the assignment divided by the maximum points of the assignment.
 
     -   Note: if `score` is not explicitly determined, this is the *default*.
-
 
 ### Aggregation
 
@@ -64,12 +66,11 @@ The `aggregation` key determines how the various assignment scores are aggregate
 
 -   `min_score`: the category score is the minimum of the assignment scores.
 
--   `weighted_mean`: the category score is the weighted average of the assignment scores with the weights being explicitly determined using the `weight` key in the nested categories. 
+-   `weighted_mean`: the category score is the weighted average of the assignment scores with the weights being explicitly determined using the `weight` key in the nested categories.
 
     -   Note: this is often reserved for the final overall-grade calculation.
 
 -   `none`: this is reserved for when a category is comprised of only one assignment; hence no aggregation is necessary because the category score is simply the assignment score.
-
 
 ### Lateness
 
@@ -82,7 +83,6 @@ Threshold functions determine the valid lateness period for which the penalty is
 -   `after`: this marks the lateness-period after and including the specified value.
 
 -   `between`: this marks the lateness-period between and including the two specified values.
-
 
 Here are the possible penalty functions:
 
