@@ -10,7 +10,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  # Disable check for title
+  options(rmarkdown.html_vignette.check_title = FALSE)
 )
 ```
 
