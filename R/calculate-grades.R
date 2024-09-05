@@ -6,7 +6,7 @@
 #'
 #' @return A data frame
 #'
-#' @importFrom dplyr select
+#' @importFrom dplyr select relocate left_join mutate_at vars mutate
 #' 
 #' @export
 
@@ -42,7 +42,14 @@ get_grades <- function(gs, policy){
   
   grades <- grades_mat |>
     as.data.frame()
-  grades$SID <- rownames(grades_mat) #add back ID cols
+  grades$SID <- as.numeric(rownames(grades_mat)) #add back SID
+
+  idcols <- gs |>
+    select(get_id_cols(gs))
+  
+  grades <- grades |>
+    left_join(idcols, by = "SID") |>
+    dplyr::relocate(get_id_cols(gs))
   
   return (grades)
 }
@@ -251,8 +258,7 @@ min_score <- function(grades_mat, category, assignments, weights = c()){
 #' @export
 weighted_mean <- function(grades_mat, category, assignments, weights){
   if (length(assignments) != length(weights)){
-    grades_mat <- equally_weighted(grades_mat, category, assignments)
-    return (grades_mat)
+    stop("Number of weights does not match number of assignments.")
   }
   grades_mat[, category] <- rowSums(t(t(grades_mat[, assignments]) * weights), na.rm = TRUE)/ sum(weights)
   return (grades_mat)

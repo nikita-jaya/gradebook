@@ -217,12 +217,8 @@ test_that("aggregation function - weighted_mean if wrong number of weights", {
   )
   grades_mat <- as.matrix(gs)
   
-  actual <- weighted_mean(grades_mat, category = "Overall_Grade", 
-                          assignments = c("Labs", "Final_Exam"), weights = c(0.3, 0.5, 0.2))
-  expected <- grades_mat
-  expected[, "Overall_Grade"] <- c(0.65, 0.7, 0.25, 0.85)
-  
-  expect_equal(actual, expected)
+  expect_error(weighted_mean(grades_mat, category = "Overall_Grade", 
+                             assignments = c("Labs", "Final_Exam"), weights = c(0.3, 0.5, 0.2)))
 })
 
 test_that("aggregation function - max_score", {

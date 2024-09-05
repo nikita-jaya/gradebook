@@ -14,7 +14,7 @@
 #' @export
 read_gs <- function(path, drop_ungraded = TRUE, verbose = FALSE){
   # read in csv
-  gs <- read_csv(path) |>
+  gs <- read_csv(path, trim_ws = FALSE) |>
     #check format
     check_data_format()
   
@@ -148,44 +148,4 @@ get_assignments <- function(gs, verbose = FALSE){
   }
   
   return (assignment_names)
-}
-
-#' Drop Ungraded Assignments
-#'
-#' This functions drops any assignments that have no grades for any students and replaced -Inf values
-#'
-#' @param gs A Gradescope data frame
-#' @param verbose whether or not to print message with the graded and ungraded assignments
-#' @importFrom dplyr filter select
-#' @importFrom purrr keep
-#' @importFrom cli cli_alert_info cli_div cli_text cli_end
-#' @return same dataframe without graded assignments
-#' @export
-
-drop_ungraded_assignments <- function(gs, verbose = FALSE) {
-  
-  assignments <- get_assignments(gs)
-  #These are the dropped assignments with all NAs for raw-score
-  dropped <- gs |> keep(~all(is.na(.x))) |> names()
-  dropped <- dropped[dropped %in% assignments]
-  
-  alert <- function() {
-    cli::cli_div(theme = list(span.emph = list(color = "orange")))
-    cli::cli_text("{.emph Important Message}")
-    cli::cli_end()
-    if (length(dropped) != 0) {
-      cli::cli_alert_info("These are your ungraded assignments: {dropped}")
-    } else {
-      cli::cli_alert_info("These are no ungraded assignments")
-    }
-  }
-  if (verbose){
-    alert()
-  }
-  gs |> select(-contains(dropped))
-}
-
-#' @importFrom lubridate period_to_seconds hms
-convert_to_min <- function(hms) {
-  lubridate::period_to_seconds(lubridate::hms(hms))/60
 }
