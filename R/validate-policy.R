@@ -81,6 +81,11 @@ validate_policy <- function(policy, gs, quiet = FALSE){
       cat <- append(score, cat)
     }
     
+    #normalize weights for any that got dropped
+    if (cat$aggregation == "weighted_mean"){
+      cat$weights <- cat$weights / sum(cat$weights)
+    }
+    
     return (cat)
   })
   
