@@ -9,9 +9,9 @@
 validate_policy <- function(policy, gs, quiet = FALSE){
   policy <- flatten_policy(policy)
   
-  purrr::walk(policy, function(cat){
+  purrr::walk(policy$categories, function(cat){
     if (!("category" %in% names(cat) & "assignments" %in% names(cat))){
-      stop(paste0("Not all categories have a category and assignment argument"))
+      stop(paste0("Not all categories have a category and assignments argument"))
     }
   })
   
@@ -104,9 +104,8 @@ validate_policy <- function(policy, gs, quiet = FALSE){
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
-  policy$categories <- policy$categories |>
-    extract_nested() |> 
-    purrr::list_flatten()
+  policy$categories <- policy$categories[[1]] |>
+    extract_nested() 
   
   return(policy)
 }
