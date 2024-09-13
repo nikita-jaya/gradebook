@@ -121,21 +121,7 @@ extract_nested <- function(category) {
   # If there's no more nesting, return the category as a list
   if (!("assignments" %in% names(category) && is.list(category$assignments)
   )) {
-    # remove the weight from the individual category it is in for cleanliness
-    category$weight <- NULL
-    return(list(category))
-  }
-  #ZT: if the category uses weighted mean aggregation, then extract the weights from the lower categories
-  #in this case, we are also ensured that each assignment is a category & thus a list in R
-  
-  if ( category$aggregation == "weighted_mean"){
-    
-    category$weights <- purrr::map_dbl(category$assignments, 
-                                       function(x){
-                                         x$weight
-                                       })
-    #normalize weights
-    category$weights <- category$weights / sum(category$weights)
+     return(list(category))
   }
   
   
