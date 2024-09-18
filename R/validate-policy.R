@@ -109,8 +109,9 @@ validate_policy <- function(policy, gs, quiet = FALSE){
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
-  policy$categories <- policy$categories[[1]] |>
-    extract_nested() 
+  policy$categories <- policy$categories |>
+    purrr::map(extract_nested) |> 
+    purrr::list_flatten()
   
   return(policy)
 }
@@ -121,7 +122,7 @@ extract_nested <- function(category) {
   # If there's no more nesting, return the category as a list
   if (!("assignments" %in% names(category) && is.list(category$assignments)
   )) {
-     return(list(category))
+    return(list(category))
   }
   
   
