@@ -10,8 +10,6 @@ process_policy(policy, verbose = FALSE)
 \item{policy}{YAML policy file}
 
 \item{verbose}{if FALSE, throws error if no assignments found in gs}
-
-\item{gs}{Gradescope data}
 }
 \description{
 Flattens and validates policy file
