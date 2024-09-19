@@ -57,14 +57,7 @@ extract_weights <- function(category){
     }
     
     
-    if (length(category$weights) != length(category$assignments)){
-      warning(paste0("Some sub categories of category ", category$category, 
-                     " are missing a weight value"))
-      category$weights <- c(category$weights, 
-                            rep.int(0, 
-                                    length(category$assignments) - length(category$weights)
-                            ))
-    }
+  
   } 
   
   category$assignments <- purrr::map(category$assignments, extract_weights)
