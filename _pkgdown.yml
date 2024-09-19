@@ -9,10 +9,10 @@ template:
 reference:
 - title: Gradescope Data Functions
   desc: >
-    These functions are to validate and process the Gradescope data.
-- subtitle: Validate Gradescope Data
+    These functions are to read in and process the Gradescope data.
   contents:
   - read_gs
+  - process_gs
   - check_data_format
   - get_id_cols
   - get_assignments
@@ -21,8 +21,9 @@ reference:
   desc: >
     These functions are to validate and process the policy file.
   contents:
-  - flatten_policy
+  - read_policy
   - validate_policy
+  - flatten_policy
 
 - title: Grading Functions
   desc: >

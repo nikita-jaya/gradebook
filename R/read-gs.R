@@ -2,26 +2,20 @@
 #'
 #' This functions reads the Gradescope .csv, checks for correct format,
 #'  converts NA values to zeros and computes scores for each assignment.
-#'  This function can also drop ungraded assignments
+#'  
 #'
 #' @param path Path to Gradescope CSV
-#' @param drop_ungraded whether or not to drop ungraded assignments
 #' @param verbose whether or not to print messages
 #'
 #' @return dataframe
 #' @importFrom readr read_csv
 #' @importFrom dplyr mutate across cur_column mutate_at vars all_of ends_with
 #' @export
-read_gs <- function(path, drop_ungraded = TRUE, verbose = FALSE){
+read_gs <- function(path, verbose = FALSE){
   # read in csv
   gs <- read_csv(path, trim_ws = FALSE) |>
     #check format
     check_data_format()
-  
-  if (drop_ungraded) {
-    gs <- gs |>
-      drop_ungraded_assignments()
-  }
   
   raw_cols <- get_assignments(gs)
   
