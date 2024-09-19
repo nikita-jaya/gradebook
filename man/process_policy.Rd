@@ -4,14 +4,14 @@
 \alias{process_policy}
 \title{Validate Policy File}
 \usage{
-process_policy(policy, gs, quiet = FALSE)
+process_policy(policy, verbose = FALSE)
 }
 \arguments{
 \item{policy}{YAML policy file}
 
-\item{gs}{Gradescope data}
+\item{verbose}{if FALSE, throws error if no assignments found in gs}
 
-\item{quiet}{if FALSE, throws error if no assignments found in gs}
+\item{gs}{Gradescope data}
 }
 \description{
 Flattens and validates policy file

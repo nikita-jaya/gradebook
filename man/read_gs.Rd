@@ -15,6 +15,5 @@ read_gs(path, verbose = FALSE)
 dataframe
 }
 \description{
-This functions reads the Gradescope .csv, checks for correct format,
-and converts NA values to zeros.
+This functions reads the Gradescope .csv, checks for correct format.
 }

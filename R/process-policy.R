@@ -2,19 +2,32 @@
 #' 
 #' Flattens and validates policy file
 #' @param policy YAML policy file
-#' @param gs Gradescope data
-#' @param quiet if FALSE, throws error if no assignments found in gs
+#' @param verbose if FALSE, throws error if no assignments found in gs
 #' @importFrom purrr map discard
 #' @export
-process_policy <- function(policy, gs, quiet = FALSE){
-  policy <- flatten_policy(policy)
+process_policy <- function(policy, verbose = FALSE){
+  policy <- policy |>
+    # insert extract_weights here!
+    flatten_policy()
   
-  purrr::walk(policy$categories, function(cat){
-    if (!("category" %in% names(cat) & "assignments" %in% names(cat))){
-      stop(paste0("Not all categories have a category and assignments argument"))
-    }
-  })
-  
+  return (policy)
+}
+
+#' Reconcile policy file with Gradescope data
+#' 
+#' This function drops any assignments present in the policy file that are not in the Gradescope data.
+#'
+#' @param policy A valid policy file stored as a list.
+#' @param gs Gradescope data
+#' @param verbose if FALSE, throws error if no assignments found in gs
+#' @return A policy list
+#'
+#' @importFrom purrr map list_flatten
+#' @export
+reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
+  #set_default uses gs to determine if there is a "score" key for categories made up of gs assignments
+  policy <- policy |>
+    set_defaults(gs, verbose = verbose)
   prev_length <- 0
   current_length <- length(policy$categories)
   #keep dropping until no more drops necessary
@@ -41,12 +54,16 @@ process_policy <- function(policy, gs, quiet = FALSE){
   }
   
   if (length(policy$categories) == 0){
-    if (quiet){
+    if (verbose){
       return (NULL)
     } 
     stop("None of the assignments in policy file are found in gs.")
   }
   
+  policy
+}
+
+set_defaults <- function(policy, gs, verbose = FALSE){
   default_cat <- list(
     aggregation = "equally_weighted",
     aggregation_max_pts = "sum_max_pts",
@@ -81,14 +98,8 @@ process_policy <- function(policy, gs, quiet = FALSE){
       cat <- append(score, cat)
     }
     
-    #normalize weights for any that got dropped
-    if (cat$aggregation == "weighted_mean"){
-      cat$weights <- cat$weights / sum(cat$weights)
-    }
-    
     return (cat)
   })
-  
   return (policy)
 }
 

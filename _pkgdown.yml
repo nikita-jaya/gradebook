@@ -23,6 +23,7 @@ reference:
   contents:
   - read_policy
   - process_policy
+  - reconcile_policy_with_gs
   - flatten_policy
 
 - title: Grading Functions
@@ -31,6 +32,7 @@ reference:
     based on the criteria in the processed policy file
   contents:
   - get_grades
+  - calculate_grades
   - get_category_grade
   - score
   - aggregation

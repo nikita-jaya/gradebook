@@ -12,11 +12,18 @@
 #' @export
 read_policy <- function(path, verbose = FALSE){
   # read in yaml
-  policy <- yaml::read_yaml(path)
-  
+  policy <- yaml::read_yaml(path) |>
+    check_keys(verbose = verbose)
   policy
 }
 
 check_keys <- function(policy, verbose = FALSE){
-  policy #needs to be written
+  #needs to be written
+  flat_policy <- flatten_policy(policy)
+  purrr::walk(policy$categories, function(cat){
+    if (!("category" %in% names(cat) & "assignments" %in% names(cat))){
+      stop(paste0("Not all categories have a category and assignments argument"))
+    }
+  })
+  policy
 }
