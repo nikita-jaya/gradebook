@@ -11,7 +11,7 @@ validate_policy <- function(policy, gs, quiet = FALSE){
   
   purrr::walk(policy$categories, function(cat){
     if (!("category" %in% names(cat) & "assignments" %in% names(cat))){
-      stop(paste0("Not all categories have a category and assignment argument"))
+      stop(paste0("Not all categories have a category and assignments argument"))
     }
   })
   
@@ -37,6 +37,7 @@ validate_policy <- function(policy, gs, quiet = FALSE){
     }) |>
       purrr::discard(is.null)
     current_length <- length(policy$categories)
+    
   }
   
   if (length(policy$categories) == 0){
@@ -80,9 +81,14 @@ validate_policy <- function(policy, gs, quiet = FALSE){
       cat <- append(score, cat)
     }
     
+    #normalize weights for any that got dropped
+    if (cat$aggregation == "weighted_mean"){
+      cat$weights <- cat$weights / sum(cat$weights)
+    }
+    
     return (cat)
   })
-
+  
   return (policy)
 }
 
@@ -98,16 +104,16 @@ validate_policy <- function(policy, gs, quiet = FALSE){
 #' all leaves will precede the parent category in the list order.
 #'
 #' @examples
+#' # Example
 #' flatten_policy(policy_demo)
-#' 
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
-    policy$categories <- policy$categories |>
-        purrr::map(extract_nested) |> 
-        purrr::list_flatten()
-    
-    return(policy)
+  policy$categories <- policy$categories |>
+    purrr::map(extract_nested) |> 
+    purrr::list_flatten()
+  
+  return(policy)
 }
 
 #' @importFrom purrr map list_flatten
@@ -132,4 +138,38 @@ extract_nested <- function(category) {
   
   # Return the flattened nested categories followed by the current category
   c(nested_categories_flattened, list(category))
+}
+
+
+find_weights <- function(policy){
+  # This function will return a policy file where the weights have been extracted from 
+  # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
+  # otherwise identical to the input. 
+  policy$categories[[1]] <- extract_weights(policy$categories[[1]])
+  return(policy)
+}
+#'
+#'@importFrom purrr map map_dbl
+extract_weights <- function(category){
+  # If there's no more nesting, return the category as a list
+  if (!("assignments" %in% names(category) && is.list(category$assignments)
+  )) {
+    # remove the weight from the individual category it is in for cleanliness
+    #category$weight <- NULL
+    return(category)
+  }
+  if ( category$aggregation == "weighted_mean"){
+    
+    category$weights <- purrr::map_dbl(category$assignments, 
+                                       function(x){
+                                         x$weight
+                                       })
+    #normalize weights
+    category$weights <- category$weights / sum(category$weights)
+  }
+  
+  category$assignments <- purrr::map(category$assignments, extract_weights)
+  
+  return(category)
+  
 }

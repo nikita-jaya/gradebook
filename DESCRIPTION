@@ -15,7 +15,13 @@ Authors@R: c(person(
                     given = "Andrew",
                     family = "Bray",
                     email = "andrewbray@berkeley.edu",
-                    role = "aut") 
+                    role = "aut"),
+            person(
+                    given = "Zachary",
+                    family = "Turner",
+                    email = "zachturner@berkeley.edu",
+                    role = "aut"
+            )
                     )
 Description: A system to make course grade calculations easy, fast, 
     and most importantly, correct. Course grades are produced from a data frame
