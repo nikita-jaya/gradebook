@@ -8,9 +8,62 @@
 process_policy <- function(policy, verbose = FALSE){
   policy <- policy |>
     # insert extract_weights here!
+    find_weights() |>
     flatten_policy()
   
   return (policy)
+}
+#' @importFrom purrr map
+find_weights <- function(policy){
+  # This function will return a policy file where the weights have been extracted from 
+  # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
+  # otherwise identical to the input. 
+  policy$categories <- policy$categories |>
+    purrr::map(extract_weights)
+  return(policy)
+}
+#'
+#'@importFrom purrr map map_dbl
+extract_weights <- function(category){
+  # If there's no more nesting, return the category as a list
+  if (!("assignments" %in% names(category) && is.list(category$assignments)
+  )) {
+    # remove the weight from the individual category it is in for cleanliness
+    #category$weight <- NULL
+    return(category)
+  }
+  
+  #potential problems encoded as warnings in order to allow execution to continue for app
+  if ( category$aggregation == "weighted_mean"){
+    
+    category$weights <- purrr::map_dbl(category$assignments, 
+                                       function(x){
+                                         weight <- x$weight
+                                         if (is.null(weight) ){
+                                           weight = 0
+                                           warning(paste0(
+                                             "Category ", x$category,
+                                             " is missing a weight"
+                                           ))
+                                         }
+                                         return(weight)
+                                       })
+    #normalize weights
+    #policy under such conditions can be a subject of discussion
+    if (sum(category$weights) == 0){
+      category$weights <- rep.int(1/length(category$weights), length(category$weights))
+    } else {
+      category$weights <- category$weights / sum(category$weights)
+    }
+    
+    
+  
+  } 
+  
+  category$assignments <- purrr::map(category$assignments, extract_weights)
+  
+  return(category)
+  
 }
 
 #' Reconcile policy file with Gradescope data
@@ -41,7 +94,9 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
       #   cat$weights <- cat$weights[cat$assignments %in% assignments]
       # }
       # drop categories with unavailable assignments/nested categories
-      cat$assignments <- cat$assignments[cat$assignments %in% assignments]
+      remaining_assignments <- cat$assignments %in% assignments
+      cat$assignments <- cat$assignments[remaining_assignments]
+      cat$weights <- cat$weights[remaining_assignments]
       if (length(cat$assignments) == 0){
         #if category has no assignments, drop
         return (NULL)
