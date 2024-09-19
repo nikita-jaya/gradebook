@@ -14,6 +14,11 @@
 process_gs <- function(gs, drop_ungraded = TRUE, verbose = FALSE){
   if (drop_ungraded) {
     gs <- gs |>
-      drop_ungraded_assignments()
+      drop_ungraded_assignments(verbose = verbose)
   }
+  gs
+}
+
+drop_ungraded_assignments <- function(gs, verbose = verbose){
+  gs #needs to be written
 }

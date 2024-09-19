@@ -72,11 +72,11 @@ The **Labs** category is compiled of **3 nested categories**: *"Lab 1"*, *"Lab 2
 
 
 ```{r, message = FALSE}
-complex_syllabus_data <- readr::read_csv(system.file("extdata", "complex_syllabus_data.csv", package = "gradebook"))
+complex_syllabus_data <- read_gs(system.file("extdata", "complex_syllabus_data.csv", package = "gradebook"))
 
-policy <- yaml::read_yaml(system.file("extdata", "complex_syllabus.yaml", package = "gradebook"))
+policy <- read_policy(system.file("extdata", "complex_syllabus.yaml", package = "gradebook"))
 
-validated_policy <- validate_policy(policy, gs = complex_syllabus_data)
+validated_policy <- process_policy(policy, gs = complex_syllabus_data)
 
 grades <- get_grades(policy = validated_policy, gs = complex_syllabus_data)
 ```

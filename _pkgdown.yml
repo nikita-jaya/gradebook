@@ -22,7 +22,7 @@ reference:
     These functions are to validate and process the policy file.
   contents:
   - read_policy
-  - validate_policy
+  - process_policy
   - flatten_policy
 
 - title: Grading Functions

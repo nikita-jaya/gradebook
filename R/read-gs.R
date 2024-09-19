@@ -1,7 +1,7 @@
 #' Read Gradescope .csv
 #'
 #' This functions reads the Gradescope .csv, checks for correct format,
-#'  converts NA values to zeros and computes scores for each assignment.
+#'  and converts NA values to zeros.
 #'  
 #'
 #' @param path Path to Gradescope CSV

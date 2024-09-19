@@ -1,4 +1,4 @@
-test_that("validate policy - correct format", {
+test_that("process policy - correct format", {
   categories <- list(
     list(
       category = "Labs",
@@ -78,13 +78,13 @@ test_that("validate policy - correct format", {
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected <- flatten_policy(policy)
   expect_equal(actual, expected)
   
 })
 
-test_that("validate policy - drop last category", {
+test_that("process policy - drop last category", {
   categories <- list(
     list(
       category = "Labs",
@@ -156,14 +156,14 @@ test_that("validate policy - drop last category", {
     `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected <- flatten_policy(policy)
   expected$categories <- expected$categories[1:3]
   expect_equal(actual, expected)
   
 })
 
-test_that("validate policy - drop two assignments, not whole category", {
+test_that("process policy - drop two assignments, not whole category", {
   categories <- list(
     list(
       category = "Labs",
@@ -229,14 +229,14 @@ test_that("validate policy - drop two assignments, not whole category", {
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected <- flatten_policy(policy)
   expected[["categories"]][[2]][["assignments"]] <- c("Lab 2.1")
   expect_equal(actual, expected)
   
 })
 
-test_that("validate policy - drop one nested category", {
+test_that("process policy - drop one nested category", {
   categories <- list(
     list(
       category = "Labs",
@@ -296,7 +296,7 @@ test_that("validate policy - drop one nested category", {
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected <- flatten_policy(policy)
   expected$categories[[2]] <- NULL
   expected[["categories"]][[2]][["assignments"]] <- c("Lab 1")
@@ -304,7 +304,7 @@ test_that("validate policy - drop one nested category", {
   
 })
 
-test_that("validate policy - two dropped cats with weighted_mean", {
+test_that("process policy - two dropped cats with weighted_mean", {
   categories <- list(
     list(
       category = "Labs",
@@ -373,7 +373,7 @@ test_that("validate policy - two dropped cats with weighted_mean", {
     `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected <- flatten_policy(policy)
   expected$categories[[4]] <- NULL
   expected[["categories"]][[2]][["assignments"]] <- c("Lab 2.1")
@@ -384,7 +384,7 @@ test_that("validate policy - two dropped cats with weighted_mean", {
 })
 
 
-test_that("validate policy - one dropped cats with weighted_mean", {
+test_that("process policy - one dropped cats with weighted_mean", {
   categories <- list(
     list(
       category = "Labs",
@@ -459,7 +459,7 @@ test_that("validate policy - one dropped cats with weighted_mean", {
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected <- flatten_policy(policy)
   expected[["categories"]][[2]][["assignments"]] <- c("Lab 2.1")
   expected[["categories"]][[5]][["weights"]] <- c(.625, .375) #c(.5, .3) if not normalized
@@ -468,7 +468,7 @@ test_that("validate policy - one dropped cats with weighted_mean", {
   
 })
 
-test_that("validate policy - drop two nested categories", {
+test_that("process policy - drop two nested categories", {
   categories <- list(
     list(
       category = "Labs",
@@ -518,7 +518,7 @@ test_that("validate policy - drop two nested categories", {
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected <- list(
     categories = list(
       list(
@@ -535,7 +535,7 @@ test_that("validate policy - drop two nested categories", {
   expect_equal(actual, expected)
 })
 
-test_that("validate policy - no assignments in gs", {
+test_that("process policy - no assignments in gs", {
   categories <- list(
     list(
       category = "Labs",
@@ -576,11 +576,11 @@ test_that("validate policy - no assignments in gs", {
   
   policy <- list(categories = categories)
   gs <- data.frame()
-  expect_error(validate_policy(policy, gs))
+  expect_error(process_policy(policy, gs))
   
 })
 
-test_that("validate policy - add defaults with equally_weighted/weighted_by_points",{
+test_that("process policy - add defaults with equally_weighted/weighted_by_points",{
   categories <- list(
     list(
       category = "Labs",
@@ -650,7 +650,7 @@ test_that("validate policy - add defaults with equally_weighted/weighted_by_poin
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected_cat <- list(
     list(
       category = "Lab 1",
@@ -689,7 +689,7 @@ test_that("validate policy - add defaults with equally_weighted/weighted_by_poin
   expect_equal(actual$categories, expected_cat)
 })
 
-test_that("validate policy - add defaults with min_score and max_score",{
+test_that("process policy - add defaults with min_score and max_score",{
   categories <- list(
     list(
       category = "Labs",
@@ -758,7 +758,7 @@ test_that("validate policy - add defaults with min_score and max_score",{
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected_cat <- list(
     list(
       category = "Lab 1",
@@ -796,7 +796,7 @@ test_that("validate policy - add defaults with min_score and max_score",{
   expect_equal(actual$categories, expected_cat)
 })
 
-test_that("validate policy - add score key to categories with gs assignments",{
+test_that("process policy - add score key to categories with gs assignments",{
   categories <- list(
     list(
       category = "Labs",
@@ -862,7 +862,7 @@ test_that("validate policy - add score key to categories with gs assignments",{
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  actual <- validate_policy(policy, gs)
+  actual <- process_policy(policy, gs)
   expected_cat <- list(
     list(
       category = "Lab 1",
@@ -900,7 +900,7 @@ test_that("validate policy - add score key to categories with gs assignments",{
   expect_equal(actual$categories, expected_cat)
 })
 
-test_that("validate policy - missing category argument",{
+test_that("process policy - missing category argument",{
   categories <- list(
     list(
       category = "Labs",
@@ -965,10 +965,10 @@ test_that("validate policy - missing category argument",{
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  expect_error(validate_policy(policy, gs))
+  expect_error(process_policy(policy, gs))
 })
 
-test_that("validate policy - missing category argument",{
+test_that("process policy - missing category argument",{
   categories <- list(
     list(
       category = "Labs",
@@ -1033,7 +1033,7 @@ test_that("validate policy - missing category argument",{
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
   
-  expect_error(validate_policy(policy, gs))
+  expect_error(process_policy(policy, gs))
 })
 
 test_that("flatten policy - works correctly", {

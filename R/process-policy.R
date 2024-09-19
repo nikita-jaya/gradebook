@@ -6,7 +6,7 @@
 #' @param quiet if FALSE, throws error if no assignments found in gs
 #' @importFrom purrr map discard
 #' @export
-validate_policy <- function(policy, gs, quiet = FALSE){
+process_policy <- function(policy, gs, quiet = FALSE){
   policy <- flatten_policy(policy)
   
   purrr::walk(policy$categories, function(cat){

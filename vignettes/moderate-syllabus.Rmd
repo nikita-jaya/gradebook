@@ -64,11 +64,11 @@ The **Homework** category is compiled of five assignments: *"Homework 1"*, *"Hom
 ### Grade Calculations
 
 ```{r, message = FALSE}
-moderate_syllabus_data <- readr::read_csv(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
+moderate_syllabus_data <- read_gs(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
 
-policy <- yaml::read_yaml(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
+policy <- read_policy(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
 
-validated_policy <- validate_policy(policy, gs = moderate_syllabus_data)
+validated_policy <- process_policy(policy, gs = moderate_syllabus_data)
 
 grades <- get_grades(policy = validated_policy, gs = moderate_syllabus_data)
 ```
