@@ -8,9 +8,43 @@
 process_policy <- function(policy, verbose = FALSE){
   policy <- policy |>
     # insert extract_weights here!
+    find_weights() |>
     flatten_policy()
   
   return (policy)
+}
+
+find_weights <- function(policy){
+  # This function will return a policy file where the weights have been extracted from 
+  # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
+  # otherwise identical to the input. 
+  policy$categories[[1]] <- extract_weights(policy$categories[[1]])
+  return(policy)
+}
+#'
+#'@importFrom purrr map map_dbl
+extract_weights <- function(category){
+  # If there's no more nesting, return the category as a list
+  if (!("assignments" %in% names(category) && is.list(category$assignments)
+  )) {
+    # remove the weight from the individual category it is in for cleanliness
+    #category$weight <- NULL
+    return(category)
+  }
+  if ( category$aggregation == "weighted_mean"){
+    
+    category$weights <- purrr::map_dbl(category$assignments, 
+                                       function(x){
+                                         x$weight
+                                       })
+    #normalize weights
+    category$weights <- category$weights / sum(category$weights)
+  }
+  
+  category$assignments <- purrr::map(category$assignments, extract_weights)
+  
+  return(category)
+  
 }
 
 #' Reconcile policy file with Gradescope data
