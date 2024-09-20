@@ -35,7 +35,7 @@ Here is what the policy file looks like:
 
 ```{r, include = FALSE}
 library(gradebook)
-yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
+read_policy(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
 ```
 
 ## Gradescope Assigments File
@@ -44,7 +44,7 @@ Here is what the Gradescope assignments file looks like:
 
 ::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
-simple_syllabus_data <- readr::read_csv(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
+simple_syllabus_data <- read_gs(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
 knitr::kable(simple_syllabus_data)
 ```
 :::
@@ -60,13 +60,11 @@ The **Homework** category is compiled of two assignments: *"Homework 1"* and *"H
 ### Grade Calculations
 
 ```{r, message=FALSE}
-simple_syllabus_data <- readr::read_csv(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
+simple_syllabus_data <- read_gs(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
 
-policy <- yaml::read_yaml(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
+policy <- read_policy(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"))
 
-validated_policy <- validate_policy(policy, gs = simple_syllabus_data)
-
-grades <- get_grades(policy = validated_policy, gs = simple_syllabus_data)
+grades <- get_grades(gs = simple_syllabus_data, policy = policy)
 ```
 
 First, read in your YAML policy file. `validate_policy()` checks the formatting of the policy file. Finally, `get_grades()` grades your assignments based on your policy file.

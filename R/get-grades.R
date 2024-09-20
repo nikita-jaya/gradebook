@@ -1,20 +1,38 @@
-#' Calculate Grades
-#' This function calculates all grades based on the policy file.
+#' Get Grades
+#' This function processes the Gradescope data and the policy file, and then calculates all grades based on the policy file.
 #'
 #' @param gs A gradescope dataframe with students as rows and assignment information across the columns.
 #' @param policy A policy file
+#' @param verbose if FALSE, throws error if no assignments found in gs
 #'
 #' @return A data frame
 #'
 #' @importFrom dplyr select relocate left_join mutate_at vars mutate
 #' 
 #' @export
+get_grades <- function(gs, policy, verbose = FALSE){
+  
+  gs <- gs |>
+    process_gs()
+  
+  policy <- policy |>
+    process_policy(verbose = verbose) |>
+    reconcile_policy_with_gs(gs = gs, verbose = verbose)
+  
+  calculate_grades(gs, policy)
+  
+}
 
-get_grades <- function(gs, policy){
-  
-  # flatten policy file
-  policy <- flatten_policy(policy)
-  
+#' Calculate Grades
+#' This function calculates all grades based on the policy file.
+#'
+#' @param gs A gradescope dataframe with students as rows and assignment information across the columns.
+#' @param policy A  policy file
+#'
+#' @return A data frame
+#'
+#' @export
+calculate_grades <- function(gs, policy){
   # convert gs into a matrix with only assignment info
   grades_mat <- gs |>
     #only assignment info
@@ -43,7 +61,7 @@ get_grades <- function(gs, policy){
   grades <- grades_mat |>
     as.data.frame()
   grades$SID <- as.numeric(rownames(grades_mat)) #add back SID
-
+  
   idcols <- gs |>
     select(get_id_cols(gs))
   
@@ -55,7 +73,7 @@ get_grades <- function(gs, policy){
 }
 
 #' Calculate Single Category Grade
-#' This function calculates all grades based on the policy file.
+#' This function calculates the grade of a single category based on the policy file.
 #'
 #' @param grades_mat Matrix with assignments + associated cols for that category
 #' @param policy_item An item from policy file
@@ -64,7 +82,6 @@ get_grades <- function(gs, policy){
 #'
 #' 
 #' @export
-
 get_category_grade <- function(grades_mat, policy_item){
   #get all keys except category and assignments (which are not functions)
   keys <- names(policy_item)[-which(names(policy_item) %in% c("category", "assignments", "weights"))]

@@ -1,40 +1,20 @@
 #' Read Gradescope .csv
 #'
-#' This functions reads the Gradescope .csv, checks for correct format,
-#'  converts NA values to zeros and computes scores for each assignment.
-#'  This function can also drop ungraded assignments
+#' This functions reads the Gradescope .csv, checks for correct format.
+#'  
 #'
 #' @param path Path to Gradescope CSV
-#' @param drop_ungraded whether or not to drop ungraded assignments
 #' @param verbose whether or not to print messages
 #'
 #' @return dataframe
 #' @importFrom readr read_csv
 #' @importFrom dplyr mutate across cur_column mutate_at vars all_of ends_with
 #' @export
-read_gs <- function(path, drop_ungraded = TRUE, verbose = FALSE){
+read_gs <- function(path, verbose = FALSE){
   # read in csv
   gs <- read_csv(path, trim_ws = FALSE) |>
     #check format
     check_data_format()
-  
-  if (drop_ungraded) {
-    gs <- gs |>
-      drop_ungraded_assignments()
-  }
-  
-  raw_cols <- get_assignments(gs)
-  
-  gs |>
-    # convert all NA raw-point values into zeros
-    mutate_at(vars(all_of(raw_cols )), ~replace(., is.na(.), 0)) |>
-    # replace raw pts with score
-    mutate(across(raw_cols,
-                  ~ . / get(paste0(cur_column(), " - Max Points")))) |>
-    mutate(across( c(raw_cols, ends_with("Max Points")) , as.numeric ),
-           across( ends_with("Lateness (H:M:S)") , convert_to_min ),
-           across( ends_with("Submission Time") , as.character )
-           )
 }
 
 #' Check Formatting of Gradescope Data
