@@ -32,8 +32,14 @@ check_keys <- function(policy, verbose = FALSE){
     valid_keys <- c("category","score", "aggregation", "lateness", 
                     "drop_n_lowest","weight", "weights", "aggregation_max_pts", 
                     "aggregation_lateness", "assignments")
+    if ("weights" %in% names(cat)){
+      warning(paste0("The weights argument in Category ", cat$category, " may be overwritten.",
+                     " THIS COULD RESULT IN UNINTENDED GRADES!"))
+    }
     if (sum(names(cat) %in% valid_keys) != length(names(cat))){
-      stop(paste0("Category ", cat$category, " has an incorrect key."))
+      stop(paste0("Category ", cat$category, " has incorrect key(s) ",
+                  paste(names(cat)[-(names(cat) %in% valid_keys)], 
+                        collapse = ", ")))
     }
   })
   
