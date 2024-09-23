@@ -30,7 +30,7 @@ check_keys <- function(policy, verbose = FALSE){
   #check that all keys are defined in package
   purrr::walk(policy$categories, function(cat){
     valid_keys <- c("category","score", "aggregation", "lateness", 
-                    "drop_n_lowest","weight", "weights", "aggregation_max_pts", 
+                    "drop_n_lowest","weight", "aggregation_max_pts", 
                     "aggregation_lateness", "assignments")
     if (sum(names(cat) %in% valid_keys) != length(names(cat))){
       stop(paste0("Category ", cat$category, " has an incorrect key."))
