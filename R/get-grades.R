@@ -244,7 +244,7 @@ weighted_by_points <- function(grades_mat, category, assignments, weights = c())
     grades_mat <- none(grades_mat, category, assignments)
   } else {
     max_cols <- paste0(assignments, " - Max Points")
-    grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols])
+    grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols], na.rm = TRUE)
   }
   return(grades_mat)
 }
