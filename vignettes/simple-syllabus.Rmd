@@ -77,7 +77,7 @@ knitr::kable(grades)
 ```
 :::
 
-### Syllabus as a Grading Script
+## Syllabus as a Grading Script
 Here is the coded version of the same syllabus.
 ```{r}
 script_grades <- simple_syllabus_data |>
