@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
 
-name: pkgdown
+name: Build WASM version
 
 jobs:
   repo:
