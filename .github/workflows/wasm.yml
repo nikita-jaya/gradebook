@@ -1,17 +1,17 @@
+# Workflow derived from https://github.com/r-wasm/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
-  workflow_dispatch:
+  release:
+    # Must republish release to update assets
+    types: [ published ]
 
-name: Build WASM version
+name: Build and deploy wasm R package image
 
 jobs:
-  repo:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build wasm packages
-      uses: r-wasm/actions/build-rwasm@v2
-      with:
-        packages: |
-          gradebook
-
-    # Use repository files in `./_site` directory to create a GitHub Pages site.
+  release-file-system-image:
+    uses: r-wasm/actions/.github/workflows/release-file-system-image.yml@v2
+    permissions:
+      # For publishing artifact files to the release
+      contents: write
+      # To download GitHub Packages within action
+      repository-projects: read
