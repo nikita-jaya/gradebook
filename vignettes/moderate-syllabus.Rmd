@@ -86,7 +86,7 @@ Here is the coded version of the same syllabus.
 # function to implement lateness policy
 lateness_penalty <- function(score_vec, lateness_vec){
   lateness <- lubridate::period_to_seconds(lubridate::hms(lateness_vec))/60
-  case_when(
+  dplyr::case_when(
     lateness == 0 ~ score_vec,
     lateness <= 1440 ~ 0.9*score_vec,
     .default = 0.7*score_vec
