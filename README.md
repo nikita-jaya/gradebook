@@ -4,9 +4,24 @@ An R package to make course grade calculations easy, fast, and most importantly,
 
 ### Statement of Need
 
+------------------------------------------------------------------------
+
 ### Installation Instructions
 
+------------------------------------------------------------------------
+To install `gradebook`, make sure to
+install `devtools` first. The `pkgdown` website for this version is at
+[gradebook-dev.github.io/gradebook/](https://gradebook-dev.github.io/gradebook/).
+
+``` r
+# devtools::install_github("gradebook-dev/gradebook")
+library(gradebook)
+```
 ### Example Usage
 
+------------------------------------------------------------------------
+
 ### Community Guidelines
+
+------------------------------------------------------------------------
 
