@@ -14,7 +14,8 @@ install `devtools` first. The `pkgdown` website for this version is at
 [gradebook-dev.github.io/gradebook/](https://gradebook-dev.github.io/gradebook/).
 
 ``` r
-# devtools::install_github("gradebook-dev/gradebook")
+# install.packages("devtools")
+devtools::install_github("gradebook-dev/gradebook")
 library(gradebook)
 ```
 ### Example Usage
