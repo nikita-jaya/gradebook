@@ -9,9 +9,7 @@ An R package to make course grade calculations easy, fast, and most importantly,
 ### Installation Instructions
 
 ------------------------------------------------------------------------
-To install `gradebook`, make sure to
-install `devtools` first. The `pkgdown` website for this version is at
-[gradebook-dev.github.io/gradebook/](https://gradebook-dev.github.io/gradebook/).
+To install `gradebook`, make sure to install `devtools` first. The `pkgdown` website for this version is at [gradebook-dev.github.io/gradebook/](https://gradebook-dev.github.io/gradebook/).
 
 ``` r
 # install.packages("devtools")
