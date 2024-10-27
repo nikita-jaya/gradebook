@@ -380,13 +380,15 @@ Calculating Course Grades</h1>
 
 <div id="summary" class="section level1">
 <h1>Summary</h1>
-<p><code>gradebook</code> allows for accurate and systematic
+<p><code>Gradebook</code> allows for accurate and systematic
 computations of the final course letter grades. These computations
-require two inputs: a YAML grading policy file representing the class
-syllabus and the assignment grades from Gradescope <span class="citation">(Singh et al. 2017)</span> (or other similar learning
-management systems). The policy file converts the structure of a course
-grade – straight from the class syllabus – into a series of nested
-aggregations.</p>
+require two inputs: a specifically structured YAML grading policy file
+representing the class syllabus and the assignment grades from
+Gradescope <span class="citation">(Singh et al. 2017)</span> (or other
+similar learning management systems). The YAML policy file in
+conjunction with the Gradescope comma-separated value (CSV) break down
+wide range of complex syllabi into the series of nested methodical
+aggregation steps.</p>
 </div>
 <div id="statement-of-need" class="section level1">
 <h1>Statement of Need</h1>
@@ -396,21 +398,26 @@ deceptively intricate, especially with larger STEM classes that use
 various complexities to accommodate a diverse student body. While most
 classes use slight variations of the same policies, many LMS cannot
 sustain these complex computations. In response, courses will turn to
-hard-coded scripts.These scripts quickly accumulate hundreds of lines of
-code, and there is no method to assess accuracy of the final
+hard-coded scripts. These scripts quickly accumulate hundreds of lines
+of code, and there is no method to assess accuracy of the final
 computation.</p>
-<p><code>gradebook</code> is an R package that maintains the structure
-and complexity of a course grade while guaranteeing accuracy. Through
-the principles of software development, …, [insert reference about
-software practices, testing, etc.]. Because of this, course grades can
-be computed accurately and quickly: the accuracy allows course
-instructors to have reliable grade computations, and the speed allows
-them to compute grades throughout the semester in order to monitor
-student progress. The structure of the package – and the open-source
-nature of it – allows for courses to contribute functionality that is
-unique to their course. This R package also functions as the backend of
-the NemoGB Shiny app, which lets the user create their grading policy
-file in a straightforward way [reference for gradebook-app github].</p>
+<p><code>Gradebook</code> is an R package that maintains the structure
+and complexity of a course grade while guaranteeing accuracy through
+comprehensive unit-testing. Applying the best practice and the
+principles of software development helps address challenges of
+consistency and precision in grading systems. The rigorous unit-testing
+in the package minimizes the chances of error and reducing the manual
+inputs, significantly lower the risks of typographic and logical errors
+in scripts … [insert reference about software practices, testing, etc.].
+Because of this, course grades can be computed accurately and quickly:
+the accuracy allows course instructors to have reliable grade
+computations, and the speed allows them to compute grades throughout the
+semester in order to monitor student progress. The structure of the
+package – and the open-source nature of it – allows for courses to
+contribute functionality that is unique to their course. This R package
+also functions as the backend of the NemoGB Shiny app <span class="citation">(Voutov*, Jayaprakash*, and Bray 2024)</span>, which
+lets the user create their grading policy file in a straightforward
+way.</p>
 </div>
 <div id="underlying-principle" class="section level1">
 <h1>Underlying Principle</h1>
@@ -475,6 +482,11 @@ Singh, Arjun, Sergey Karayev, Kevin Gutowski, and Pieter Abbeel. 2017.
 Assessment of Handwritten Work.”</span> In <em>Proceedings of the Fourth
 (2017) ACM Conference on Learning @ Scale</em>, 81–88. L@s ’17. New
 York, NY, USA: Association for Computing Machinery. <a href="https://doi.org/10.1145/3051457.3051466">https://doi.org/10.1145/3051457.3051466</a>.
+</div>
+<div id="ref-Gradebook-App" class="csl-entry">
+Voutov*, Monika, Nikita Jayaprakash*, and Andrew Bray. 2024. <span>“Nemo
+Gradebook Web App.”</span> <em>GitHub Repository</em>. <a href="https://github.com/gradebook-dev/gradebook-app.git" class="uri">https://github.com/gradebook-dev/gradebook-app.git</a>;
+GitHub.
 </div>
 </div>
 </div>
