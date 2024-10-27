@@ -32,7 +32,8 @@ journal: JOSS
 
 # Summary
 
-`gradebook` allows for accurate and systemic computations of the final course grades. These computations require two inputs: a YAML grading policy file and the assignment grades from Gradescope (or other similar learning management systems) [insert reference for Gradescope]. The policy file converts the structure of a course grade -- straight from the class syllabus -- into a series of nested aggregations.
+`Gradebook` allows for accurate and systematic computations of the final course letter grades. These computations require two inputs: a specifically structured YAML grading policy file representing the class syllabus and the assignment grades from Gradescope [@10.1145/3051457.3051466] (or other similar learning management systems). 
+The YAML policy file in conjunction with the Gradescope comma-separated value (CSV) break down wide range of complex syllabi into the series of nested methodical aggregation steps.
 
 # Statement of Need
 
@@ -68,6 +69,6 @@ Section of figures (if needed)...
 
 # Acknowledgements
 
-The authors would like to thanks lain Carmichael, Calvin Carter, and Zach Turner for helpful ideas and discussions throughout the development of this project.
+The authors would like to thank lain Carmichael, Calvin Carter, and Zach Turner for helpful ideas and discussions throughout the development of this project.
 
 # References
