@@ -29,7 +29,6 @@ Once you have written your policy file, you can read it into R as a list.
 
 ```{r}
 yaml::read_yaml(system.file("extdata", "policy_demo.yaml", package = "gradebook"))
-# to be replaced with gradebook::read_policy()
 ```
 
 ## Recognized Keys
@@ -106,4 +105,20 @@ The `drop_n_lowest` key is used to drop *n* of the lowest assignments scores. Th
 
 ## Nesting and Inheritance
 
+### Nesting
+  All assignment categories are nested within the yaml file inside its highest level category `Overall Grade`, followed by assignments' categories below. The nested structure of categories allows for structured breakdown of each category of a syllabus. For example: `Overall Grade` is at the highest level 1 nesting; Category `Labs` is level 2 nesting, `Lab 1` is level 3 nesting, etc. The nesting structure is allows for inheritance:
+  
+### Inheritance
+
+
 ## Importance of Order
+
+Order of operation is crucial in the accurate computation of the final grades. When computing grades, generally the high level ordering is the following: 
+
+-   `lateness` penalties,
+
+-   apply category drops `drop_n_lowest`,
+
+-   `aggregation`, 
+
+This is generally true for all syllabi. First, there is a penalty for lateness (i.e. penalize 25% for a 1 day lateness), then drop lowest scoring assignments if applicable, then apply aggregations of assignments beginning with the most nested category level going backwards up the levels towards `Overall Grade`.  
