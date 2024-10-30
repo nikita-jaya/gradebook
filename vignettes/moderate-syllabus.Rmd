@@ -48,8 +48,8 @@ Here is what the gradescope assignments file looks like:
 
 ::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
-simple_syllabus_data <- read_gs(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
-knitr::kable(simple_syllabus_data)
+moderate_syllabus_data <- read_gs(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
+knitr::kable(moderate_syllabus_data)
 ```
 :::
 
