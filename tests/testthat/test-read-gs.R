@@ -196,3 +196,115 @@ test_that("get id cols - no id cols", {
   expect_equal(actual, character(0))
   
 })
+
+test_that("Test Determine Grade Source - Canvas", {
+  data <- tibble::tibble(
+    Student = c("    Points Possible", "Smith, Adam", "Porch, Holden", "Student, Test"),
+    ID = c(NA, 546798, 454573, 789807),
+    `SIS User ID` = c(NA, 86949302, 56483932, NA),
+    `SIS Login ID` = c(NA, 72546, 85940, 0xef6798020)
+  )
+  
+  actual <- determine_grade_source(data)
+  expected <- "Canvas"
+  
+  expect_equal(actual, expected)
+})
+
+test_that("Test Determine Grade Source - Gradescope", {
+  data <- tibble::tibble(
+    `First Name` = c("Joe", "Harrison", "Don", "Kevin"),
+    `Last Name` = c("Oneida", "Eagle", "Torrensen", "Falcon"),
+    SID = c(98657, 12345, 76589, 44567),
+    Email = c("joe@on.com", "he@eagle.net", "don@gmail.com", "kev@berkeley.edu"),
+    `Lab 1` = c(1, 0, 0.9, 0.5),
+    `Lab 1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                  "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2` = c(1, 0, 0.9, 0.5),
+    `Lab 2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                  "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 3` = c(0, 0, 0.9, 0.5),
+    `Lab 3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                  "1/21/2023 9:50:00 AM"),
+    `Lab 3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Project 1` = c(0.9, 0, 0.4, 0),
+    `Project 1 - Max Points` = c(1, 1, 1, 1),
+    `Project 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                      "1/22/2023 10:00:00 AM", "0"),
+    `Project 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  
+  actual <- determine_grade_source(data)
+  
+  expect_equal(actual, "Gradescope")
+})
+
+test_that("Test Determine Grade Source - Nonsense", {
+  
+  data <- tibble::tibble(
+    Student = c("Bill", "Henry", "Juliette", "Barry"),
+    `Berk ID` = c(90909, 80085, 13459, 88768),
+    Homework = c(0.7, 0.1, 0.4, 0.9)
+  )
+  
+  actual <- determine_grade_source(data)
+  
+  expect_equal(actual, "Unrecognized")
+  
+})
+
+test_that("Test read_canvas_grades", {
+  data <- tibble::tibble(
+    Student = c("    Points Possible", "Smith, Adam", "Rock, John", "Porch, Stephanie", "Pai, Henry"),
+    ID = c(NA, 989786, 453657, 123786, 876345),
+    `SIS User ID` = c(NA, 456789, 768596, 567812, 888763),
+    `SIS Login ID` = c(NA, 46574, 75685, 64573, 12345),
+    Section = c(NA, "1", "1", "2", "3"),
+    `HW 1 (867568)` = c(10, 5, 6, 7, 8),
+    `HW 2 (867573)` = c(5, 1, 2, 3, 4),
+    `Midterm (867589)` = c(50, 34, 46, 12, 31),
+    `Final (345678)` = c(100, 34, 45, 65, 87),
+    `Beep Boop Category` = c(NA, 6, 7, 3, 2)
+    )
+  
+  expected <- tibble::tibble(
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    `HW 1 (867568) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 2 (867573) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `Midterm (867589) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                             as.POSIXct(NA), as.POSIXct(NA)),
+    `Final (345678) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                           as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai")
+  )
+  
+  attr(expected, "source") <- "Canvas"
+  
+  actual <- read_canvas_grades(data)
+  
+  expect_equal(actual, expected)
+})

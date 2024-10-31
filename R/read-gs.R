@@ -48,7 +48,7 @@ read_files <- function(grades_path,
   #now read in other supplied data 
  for (data_type in names(other_file_paths)){
    warning(paste0(data_type, 
-                  " is not currently supported for non-Gradescope sources."))
+                  " is not currently supported as an extra file source."))
  }
   
   # now determine how to read in data
@@ -73,7 +73,7 @@ read_files <- function(grades_path,
     if (source != auto_determine){
       warning(paste0(
         "Grade data will be processed as ", source, 
-        "data due to value of source parameter. ",
+        " data due to value of source parameter. ",
         "However, the data appears to be from source ",
         auto_determine, "."
       ))
@@ -87,7 +87,7 @@ read_files <- function(grades_path,
     if (source != auto_determine){
       warning(paste0(
         "Grade data will be processed as ", source, 
-        "data due to value of source parameter. ",
+        " data due to value of source parameter. ",
         "However, the data appears to be from source ",
         auto_determine, "."
       ))
@@ -136,7 +136,7 @@ read_canvas_grades <- function(grades){
   
   #remove unneeded cols, add max_point column, and remove rows that are not students
   grades <- grades |>
-    dplyr::select(c(assignments, "ID", "Student", 
+    dplyr::select(c(all_of(assignments), "ID", "Student", 
                     "SIS User ID", "Section")) |>
     dplyr::left_join(max_points, 
                      by = dplyr::join_by(ID == ID)) |>
@@ -153,7 +153,7 @@ read_canvas_grades <- function(grades){
   grades[late_cols] <- NA
   
   grades$`First Name` <- (stringr::str_match(grades$Student, 
-                                             ".+,(.+)"))[, 2]
+                                             ".+,\\s(.+)"))[, 2]
   
   grades$`Last Name` <- (stringr::str_match(grades$Student, 
                                             "(.+),.+"))[, 2]

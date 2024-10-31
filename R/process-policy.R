@@ -115,6 +115,15 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     stop("None of the assignments in policy file are found in gs.")
   }
   
+  #check if lateness is attempted to be used with Canvas data
+  if ((attr(gs, "source") == "Canvas") && 
+      (any(purrr::map_lgl(policy$categories, 
+                        function(x){
+                          "lateness" %in% names(x)
+                        })))){
+    stop("Canvas data does not allow for lateness calculations.")
+  }
+  
   policy
 }
 
