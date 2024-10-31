@@ -2,7 +2,8 @@
 #'
 #' This functions reads the Gradescope .csv, checks for correct format.
 #'  
-#'
+#'Now it is favored to use read_files. 
+#'This function is left for backwards-compatibility.
 #' @param path Path to Gradescope CSV
 #' @param verbose whether or not to print messages
 #'
@@ -17,9 +18,181 @@ read_gs <- function(path, verbose = FALSE){
     check_data_format()
 }
 
-#' Check Formatting of Gradescope Data
+
+#'This function will read in input data and combine in the appropriate manner.
+#'@param grades_path Is the path to the csv containing graded assignments.
+#'@param other_file_paths Is a list containing any other filepaths desired to be read in. Each name should be a designated type of file. For example, "lateness" and "roster" and the value should be the filepath.
+#'@param source Determines how to read the grade file. By default, it is auto so that Gradebook can determine what format the file is in. Alternatively, users can specify "Gradescope" or "Canvas" to force certain interpretations.
+#'@return A dataframe of grades. Later support for other files will be returned as a list as well.
+#'@importFrom readr read_csv
+#'@export
+read_files <- function(grades_path, 
+                       other_file_paths = list(), 
+                       source = "auto"){
+  #first read in all of the files
+  
+  #begininng with the grades csv
+  
+  tryCatch({
+    grades <- readr::read_csv(grades_path, trim_ws = FALSE)
+    },
+    error = function(e){
+      stop(
+      paste0("Error when attempting to read grade csv file. 
+           Check that the filepath is correct. Error: ",
+             e)
+      )
+    }
+  )
+  
+  #now read in other supplied data 
+ for (data_type in names(other_file_paths)){
+   warning(paste0(data_type, 
+                  " is not currently supported for non-Gradescope sources."))
+ }
+  
+  # now determine how to read in data
+  
+  auto_determine <- determine_grade_source(grades)
+  
+  if (source == "auto"){
+    #fill in later
+    
+    if (auto_determine == "Gradescope"){
+      attr(grades, "source") <- "Gradescope"
+      
+      return(check_data_format(grades))
+    } else if (auto_determine == "Canvas"){
+      #the read_canvas_grades does all of the lifting
+      return(read_canvas_grades(grades))
+    } else {
+      stop("Data source is unrecognized.")
+    }
+    
+  } else if (source == "Gradescope"){
+    if (source != auto_determine){
+      warning(paste0(
+        "Grade data will be processed as ", source, 
+        "data due to value of source parameter. ",
+        "However, the data appears to be from source ",
+        auto_determine, "."
+      ))
+    }
+    
+    attr(grades, "source") <- "Gradescope"
+    
+    return(check_data_format(grades))
+      
+  } else if (source == "Canvas"){
+    if (source != auto_determine){
+      warning(paste0(
+        "Grade data will be processed as ", source, 
+        "data due to value of source parameter. ",
+        "However, the data appears to be from source ",
+        auto_determine, "."
+      ))
+    }
+    #the read_canvas_grades does all of the lifting
+    return(read_canvas_grades(grades))
+    
+  } else {
+    stop(paste0(
+      "Specified source type ", source,
+      " is not currently supported."
+    ))
+  }
+  
+  
+ 
+}
+
 #'
-#' This functions checks the column names throughout the Gradescope data.
+#'Takes in a dataframe uploaded from Canvas. 
+#'Returns a dataframe in our standardized format (ie like Gradescope).
+#'
+#'
+#'@importFrom stringr str_extract str_match
+#'@importFrom dplyr filter select slice rename_with rename left_join
+#'@importFrom purrr discard
+read_canvas_grades <- function(grades){
+  #first determine which columns are assignments
+  
+  #canvas categories will not be kept
+  
+  assignments <- stringr::str_extract(names(grades),
+                                      ".+\\s*\\(\\d+\\)") |>
+                purrr::discard(is.na)
+  
+ 
+  #now reconfigure the points possible info
+  max_points <- dplyr::filter(grades, Student == "    Points Possible") |>
+    dplyr::select(all_of(assignments)) |>
+    dplyr::slice(rep.int(1, nrow(grades))) |>
+    dplyr::rename_with(function(x){
+      paste0(x, " - Max Points")
+    })
+  #add ID column to max points to facilitate matching
+  max_points$ID <- grades$ID
+  
+  #remove unneeded cols, add max_point column, and remove rows that are not students
+  grades <- grades |>
+    dplyr::select(c(assignments, "ID", "Student", 
+                    "SIS User ID", "Section")) |>
+    dplyr::left_join(max_points, 
+                     by = dplyr::join_by(ID == ID)) |>
+    dplyr::filter(!(Student %in% c("    Points Possible", "Student, Test")))
+  
+  #add columns for submission time and lateness
+  
+  sub_cols <- paste0(assignments, " - Submission Time")
+  
+  late_cols <- paste0(assignments, " - Lateness (H:M:S)")
+  
+  grades[sub_cols] <- as.POSIXct(NA)
+  
+  grades[late_cols] <- NA
+  
+  grades$`First Name` <- (stringr::str_match(grades$Student, 
+                                             ".+,(.+)"))[, 2]
+  
+  grades$`Last Name` <- (stringr::str_match(grades$Student, 
+                                            "(.+),.+"))[, 2]
+  
+  
+  grades <- grades |>
+    dplyr::select(-c("Student", "ID")) |>
+    dplyr::rename(SID = `SIS User ID`,
+                  Sections = Section)
+  
+  attr(grades, "source") <- "Canvas"
+  
+  check_data_format(grades)
+  
+}
+
+#'This function performs the auto-determination of where the grades dataframe was sourced.
+#'@param grades_df This is the input Dataframe
+#'@returns A string "Canvas", "Gradescope", or "Unrecognized" of the determination.
+#'@export
+determine_grade_source <- function(grades_df){
+  
+  columns <- names(grades_df)
+  
+ if (all(c("Student", "ID", "SIS User ID", "SIS Login ID") %in% columns)){
+   return("Canvas")
+ } else if (all(c("First Name", "Last Name", "SID", "Email") %in% columns)){
+   return("Gradescope")
+ } else {
+   return("Unrecognized")
+ }
+  
+}
+
+
+
+#' Check Formatting of Grades Data
+#'
+#' This functions checks the column names throughout the Grades data.
 #' There must be an SID column and at least one assignment.
 #' It also gives an alert for what id cols and assignments are in the data.
 #'
