@@ -67,7 +67,7 @@ policy <- read_policy(system.file("extdata", "simple_syllabus.yaml", package = "
 grades <- get_grades(gs = simple_syllabus_data, policy = policy)
 ```
 
-First, read in your YAML policy file. `validate_policy()` checks the formatting of the policy file. Finally, `get_grades()` grades your assignments based on your policy file.
+First, read in your YAML policy file. `process_policy()` checks the formatting of the policy file. Then,`reconcile_policy_with_gs()` checks for compatibility between the Gradescope file (`simple_syllabus_data`) and the policy file (`policy`). Finally, `get_grades()` grades your assignments based on your policy file.
 
 The output of the grades looks like:
 
@@ -79,6 +79,6 @@ knitr::kable(grades)
 
 ### Disclaimers:
 
--   The `weights` of a category with aggregation `weighted_mean` should be corresponding order with the `assignments.`
+-   The `weight` of a category with aggregation `weighted_mean` should be corresponding order with the `assignments.`
 
 -   Categories cannot have the same name as any other assignment name.
