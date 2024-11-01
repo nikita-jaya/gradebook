@@ -14,6 +14,7 @@ process_policy <- function(policy, verbose = FALSE){
   return (policy)
 }
 #' @importFrom purrr map
+#' @keywords internal
 find_weights <- function(policy){
   # This function will return a policy file where the weights have been extracted from 
   # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
@@ -24,6 +25,7 @@ find_weights <- function(policy){
 }
 #'
 #'@importFrom purrr map map_dbl
+#'@keywords internal
 extract_weights <- function(category){
   # If there's no more nesting, return the category as a list
   if (!("assignments" %in% names(category) && is.list(category$assignments)

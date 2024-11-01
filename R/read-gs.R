@@ -16,9 +16,15 @@ read_gs <- function(path, verbose = FALSE){
   gs <- read_csv(path, trim_ws = FALSE) |>
     #check format
     check_data_format()
+  #add source attribute
+  attr(gs, "source") <- "Gradescope"
+  
+  gs
 }
 
 
+#'Read in 1 or more files from Grading Platform
+#'
 #'This function will read in input data and combine in the appropriate manner.
 #'@param grades_path Is the path to the csv containing graded assignments.
 #'@param other_file_paths Is a list containing any other filepaths desired to be read in. Each name should be a designated type of file. For example, "lateness" and "roster" and the value should be the filepath.
@@ -106,6 +112,7 @@ read_files <- function(grades_path,
  
 }
 
+#'Convert Canvas grade dataframe into standard format
 #'
 #'Takes in a dataframe uploaded from Canvas. 
 #'Returns a dataframe in our standardized format (ie like Gradescope).
@@ -160,9 +167,16 @@ read_canvas_grades <- function(grades){
   
   
   grades <- grades |>
-    dplyr::select(-c("Student", "ID")) |>
     dplyr::rename(SID = `SIS User ID`,
-                  Sections = Section)
+                  Sections = Section) |>
+    dplyr::select(c("First Name", "Last Name", "SID", "Sections",
+                    as.vector(rbind(assignments, 
+                                    paste0(assignments, " - Max Points"), 
+                                    sub_cols,
+                                    late_cols)
+                              )
+                    )
+                  )
   
   attr(grades, "source") <- "Canvas"
   
@@ -170,6 +184,8 @@ read_canvas_grades <- function(grades){
   
 }
 
+#'Predict the source of grade dataframe.
+#'
 #'This function performs the auto-determination of where the grades dataframe was sourced.
 #'@param grades_df This is the input Dataframe
 #'@returns A string "Canvas", "Gradescope", or "Unrecognized" of the determination.

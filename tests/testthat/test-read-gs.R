@@ -276,30 +276,35 @@ test_that("Test read_canvas_grades", {
     )
   
   expected <- tibble::tibble(
-    `HW 1 (867568)` = c( 5, 6, 7, 8),
-    `HW 2 (867573)` = c( 1, 2, 3, 4),
-    `Midterm (867589)` = c(34, 46, 12, 31),
-    `Final (345678)` = c( 34, 45, 65, 87),
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
     SID = c(456789, 768596, 567812, 888763),
     Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
-    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
-    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
-    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     `HW 1 (867568) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
                                           as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
                                           as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
                                              as.POSIXct(NA), as.POSIXct(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
     `Final (345678) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
                                            as.POSIXct(NA), as.POSIXct(NA)),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
-    `Last Name` = c("Smith", "Rock", "Porch", "Pai")
+    
+    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA)
+    
   )
   
   attr(expected, "source") <- "Canvas"

@@ -2,8 +2,7 @@
 % Please edit documentation in R/read-gs.R
 \name{read_canvas_grades}
 \alias{read_canvas_grades}
-\title{Takes in a dataframe uploaded from Canvas.
-Returns a dataframe in our standardized format (ie like Gradescope).}
+\title{Convert Canvas grade dataframe into standard format}
 \usage{
 read_canvas_grades(grades)
 }

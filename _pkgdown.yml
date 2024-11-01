@@ -9,13 +9,16 @@ template:
 reference:
 - title: Gradescope Data Functions
   desc: >
-    These functions are to read in and process the Gradescope data.
+    These functions are to read in and process data from a grading platform such as Gradescope.
   contents:
   - read_gs
   - process_gs
   - check_data_format
   - get_id_cols
   - get_assignments
+  - read_files
+  - read_canvas_grades
+  - determine_grade_source
   
 - title: Policy File Functions
   desc: >
@@ -25,6 +28,7 @@ reference:
   - process_policy
   - reconcile_policy_with_gs
   - flatten_policy
+  - find_weights
 
 - title: Grading Functions
   desc: >

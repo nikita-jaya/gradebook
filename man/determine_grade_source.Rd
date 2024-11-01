@@ -2,7 +2,7 @@
 % Please edit documentation in R/read-gs.R
 \name{determine_grade_source}
 \alias{determine_grade_source}
-\title{This function performs the auto-determination of where the grades dataframe was sourced.}
+\title{Predict the source of grade dataframe.}
 \usage{
 determine_grade_source(grades_df)
 }
