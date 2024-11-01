@@ -22,8 +22,7 @@ challenges of consistency and precision in grading systems are addressed by
 applying the practices of data analysis and the principles of software development.
 The rigorous unit-testing in the package minimizes computational error and
 reduces the manual inputs, significantly lower the risks of typographic and
-logical errors in scripts ... [insert reference about software practices,
-testing, etc.]. Because of this, course grades can be computed accurately and
+logical errors in scripts. Because of this, course grades can be computed accurately and
 quickly: the accuracy allows course instructors to have reliable grade
 computations, and the speed allows them to compute grades throughout the semester
 in order to monitor student progress. The structure of the package -- and the
@@ -55,7 +54,7 @@ gs_data <- read_gs(system.file("extdata", "gs_demo.csv", package = "gradebook"))
 ```
 
 Start by building a policy file that reflects the assignments from your Gradescope file and the structure of the syllabus. 
-More information and guidance on building your policy file can be found in the [Building a Policy File vignette](https://github.com/gradebook-dev/gradebook/blob/main/vignettes/policy-files.Rmd).
+More information and guidance on building your policy file can be found in the [Building a Policy File vignette](https://gradebook-dev.github.io/gradebook/articles/policy-files.html).
 Here is an example of a policy file that uses `gs_data`:
 
 ```yaml
