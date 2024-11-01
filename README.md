@@ -29,7 +29,7 @@ computations, and the speed allows them to compute grades throughout the semeste
 in order to monitor student progress. The structure of the package -- and the
 open-source nature of it -- allows for courses to contribute functionality that
 is unique to their course. This R package also functions as the backend of the
-NemoGB Shiny app, which lets the user create their grading policy file in a
+[NemoGB Shiny app](https://github.com/gradebook-dev/gradebook-app.git), which lets the user create their grading policy file in a
 straightforward way. 
 
 ------------------------------------------------------------------------
