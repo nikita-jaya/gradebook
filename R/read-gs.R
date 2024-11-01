@@ -1,12 +1,12 @@
 #' Read Gradescope .csv
 #'
-#' This functions reads the Gradescope .csv, checks for correct format.
+#' This functions reads the Gradescope .csv and checks for correct format.
 #'  
 #'
 #' @param path Path to Gradescope CSV
-#' @param verbose whether or not to print messages
+#' @param verbose Whether or not to print messages
 #'
-#' @return dataframe
+#' @return A dataframe of Gradescope CSV, if no errors
 #' @importFrom readr read_csv
 #' @importFrom dplyr mutate across cur_column mutate_at vars all_of ends_with
 #' @export
@@ -21,10 +21,10 @@ read_gs <- function(path, verbose = FALSE){
 #'
 #' This functions checks the column names throughout the Gradescope data.
 #' There must be an SID column and at least one assignment.
-#' It also gives an alert for what id cols and assignments are in the data.
+#' It also gives an alert for what ID columnss and assignments are in the data.
 #'
 #' @param gs Gradescope data frame
-#' @param verbose whether or not to print messages
+#' @param verbose Whether or not to print messages
 #'
 #' @return Same gs dataframe if no errors.
 #' @export
@@ -50,12 +50,12 @@ check_data_format <- function(gs, verbose = FALSE){
 
 #' Get the ID Columns for Gradescope Data
 #'
-#' This function identified the id columns from gradescope data
+#' This function identifies the ID columns from Gradescope data.
 #'
 #' @param gs  Gradescope dataframe
-#' @param verbose whether or not to return an alert of assignments
+#' @param verbose Whether or not to return an alert of assignments
 #' 
-#' @return a list of id columns 
+#' @return A vector of the names of the ID columns in the dataframe
 #' @importFrom stringr str_replace_all regex
 #' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @export
@@ -92,12 +92,12 @@ get_id_cols <- function(gs, verbose = FALSE) {
 
 #' Get the Assignment Names for Gradescope Data
 #'
-#' This function identified the assignments from Gradescope data
+#' This function identifies the assignments from Gradescope data and returns the assignments' names.
 #'
-#' @param gs unprocessed Gradescope dataframe
-#' @param verbose whether or not to print assignment names
+#' @param gs Gradescope dataframe
+#' @param verbose Whether or not to print assignment names
 #' 
-#' @return vector 
+#' @return A vector of the names of the assignments in the dataframe
 #' @importFrom stringr str_replace_all regex
 #' @importFrom cli cli_alert_info cli_div cli_text cli_end
 #' @export
