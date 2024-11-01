@@ -40,18 +40,18 @@ Here is what the policy file looks like:
 
 ```{r, include = FALSE}
 library(gradebook)
-yaml::read_yaml(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
+read_policy(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
 ```
 
 ## Gradescope Assigments File
 Here is what the gradescope assignments file looks like:
 
-<div style="height: 300px; overflow: auto;">
+::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
-moderate_syllabus_data <- readr::read_csv(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
+moderate_syllabus_data <- read_gs(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
 knitr::kable(moderate_syllabus_data)
 ```
-</div>
+:::
 
 ## Workflow
 
@@ -70,7 +70,7 @@ policy <- read_policy(system.file("extdata", "moderate_syllabus.yaml", package =
 
 grades <- get_grades(policy = policy, gs = moderate_syllabus_data)
 ```
-First, read in your YAML policy file. `validate_policy()` checks the formatting of the policy file. Finally, `get_grades()` grades your assignments based on your policy file.
+First, read in your YAML policy file. `process_policy()` checks the formatting of the policy file. Then,`reconcile_policy_with_gs()` checks for compatibility between the Gradescope file (`moderate_syllabus_data`) and the policy file (`policy`). Finally, `get_grades()` grades your assignments based on your policy file.
 
 The output of the grades looks like:
 
@@ -82,6 +82,6 @@ knitr::kable(grades)
 
 Disclaimers:
 
--   The `weights` of a category with aggregation `weighted_mean` should be corresponding order with the `assignments.`
+-   The `weight` of a category with aggregation `weighted_mean` should be corresponding order with the `assignments.`
 
 -   Categories cannot have the same name as any other assignment name.

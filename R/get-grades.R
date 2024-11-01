@@ -84,7 +84,7 @@ calculate_grades <- function(gs, policy){
 #' @export
 get_category_grade <- function(grades_mat, policy_item){
   #get all keys except category and assignments (which are not functions)
-  keys <- names(policy_item)[-which(names(policy_item) %in% c("category", "assignments", "weights"))]
+  keys <- names(policy_item)[-which(names(policy_item) %in% c("category", "assignments", "weights", "weight"))]
   #all assignments + their associated cols for this category
   for (key in keys){
     grades_mat <- get(key)(grades_mat, policy_item[[key]], policy_item$category, 
@@ -244,7 +244,7 @@ weighted_by_points <- function(grades_mat, category, assignments, weights = c())
     grades_mat <- none(grades_mat, category, assignments)
   } else {
     max_cols <- paste0(assignments, " - Max Points")
-    grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols])
+    grades_mat[,category] <- rowSums(grades_mat[, assignments] * grades_mat[, max_cols], na.rm = TRUE) / rowSums(grades_mat[, max_cols], na.rm = TRUE)
   }
   return(grades_mat)
 }

@@ -46,6 +46,16 @@ extract_weights <- function(category){
                                              " is missing a weight"
                                            ))
                                          }
+                                         if(length(weight) > 1){
+                                           weight <- weight[[1]]
+                                           warning(paste0(
+                                             
+                                               "Category ", x$category,
+                                               " has a weight attribute of length > 1.",
+                                               " Weight can only be of length 1.",
+                                               " Check for unintended consequences."
+                                           ))
+                                         }
                                          return(weight)
                                        })
     #normalize weights
