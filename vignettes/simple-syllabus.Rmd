@@ -96,13 +96,9 @@ script_grades <- simple_syllabus_data |>
 
 And, as you can see, the computations align.
 ```{r}
-library(ggplot2)
-tibble::tibble(
-  `Script Grades` = script_grades$`Overall Grade`,
-  `Gradebook Grades` = grades$`Overall Grade`
-) |>
-  ggplot(aes(x = `Gradebook Grades`, y = `Script Grades`)) + 
-  geom_point(size = 2) + geom_abline(slope = 1, color = "red")
+plot(x = script_grades$`Overall Grade`, grades$`Overall Grade`, 
+     xlab = "Script Grades", ylab = "Gradebook Grades")
+abline(a = 0, b = 1, col = "red")
 ```
 ```{r, echo = FALSE}
 if (!all(script_grades$`Overall Grade` == grades$`Overall Grade`))
