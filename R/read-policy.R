@@ -1,13 +1,12 @@
 #' Read Grading Policy .yml
 #'
-#' This functions reads the grading policy YAML file, checks for correct format,
-#'  converts NA values to zeros and computes scores for each assignment.
+#' This functions reads the grading policy YAML file and checks for correct format
 #'  
 #'
-#' @param path Path to policy file
-#' @param verbose whether or not to print messages
+#' @param path Path to YAML policy file
+#' @param verbose Whether or not to print messages
 #'
-#' @return R list
+#' @return R list of the policy file, if no errors
 #' @importFrom yaml read_yaml
 #' @export
 read_policy <- function(path, verbose = FALSE){
