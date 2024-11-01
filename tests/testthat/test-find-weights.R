@@ -410,7 +410,9 @@ test_that("Extracting Weights with length > 1", {
   pol <- list(categories = cats)
   expect_warning(find_weights(pol))
   
-  actual <- find_weights(pol)
+  expect_warning(find_weights(pol))
+  
+  actual <- suppressWarnings(find_weights(pol))
   
   cats2 <- list(list(
     category = "Overall Grade",
