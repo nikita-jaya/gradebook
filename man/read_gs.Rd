@@ -16,4 +16,7 @@ dataframe
 }
 \description{
 This functions reads the Gradescope .csv, checks for correct format.
+
+Now it is favored to use read_files.
+This function is left for backwards-compatibility.
 }
