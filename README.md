@@ -51,7 +51,7 @@ grades <- get_grades(policy = policy, gs = gs_data)
 
 This is what the final grades look like:
 ```r
-print(grades)
+grades
 ```
 
 ------------------------------------------------------------------------
