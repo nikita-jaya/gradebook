@@ -1,6 +1,7 @@
 #' Process Policy File
 #' 
 #' This function processes the policy file in order to compute grades and flattens the nested structure of the file.
+#' 
 #' @param policy R list of a valid policy file
 #' @param verbose Whether or not to print messages; if FALSE, throws error if no assignments found in gs
 #' @importFrom purrr map discard
@@ -170,7 +171,7 @@ set_defaults <- function(policy, gs, verbose = FALSE){
   return (policy)
 }
 
-#' Flatten Policy File
+#' Flatten Policy File ("Un-nest" the Nested Structure of Policy File)
 #' 
 #' This function reshape policy file from nested to flat structure by cycling 
 #' through the top-level categories of a policy file and un-nests all 

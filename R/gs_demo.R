@@ -1,6 +1,9 @@
 #' Gradescope Demo Data
 #'
-#' A fake dataset that mimics Gradescope .csv format
+#' An example dataset that mimics Gradescope .csv format.
+#' All following assignments follow same four-column format of Lab 1, as noted below.
+#'  assignments in gs_demo are as follows: Lab 2, Lab 3, Lab 4, Lab 5, Lab 6, Discussion 1, Discussion 2, Midterm and Final.
+#'  Any other columns that do not follow this format are designated as ID columns.
 #' 
 #'
 #' @format ## `gs_demo`
@@ -13,7 +16,7 @@
 #'   \item{Lab 1}{assignment called Lab 1}
 #'   \item{Lab 1 - Max Points}{maximum possible points for Lab 1}
 #'   \item{Lab 1 - Lateness (H:M:S)}{how late Lab 1 was turned in, formatted HH:MM:SS}
-#'   \item{All following assignments follow same three-column format of Lab 1.}{Additional assignments in gs_demo are as follows: Lab 2, Lab 3, Lab 4, Lab 5, Lab 6, Discussion 1, Discussion 2, Midterm and Final}
+#'   \item{Lab 1 - Submission Time}{when Lab 1 was turned in, formatted MM/DD/YY HH:MM}
 #'   ...
 #' }
 "gs_demo"
