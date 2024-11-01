@@ -17,7 +17,6 @@ reference:
   - get_id_cols
   - get_assignments
   - read_files
-  - read_canvas_grades
   - determine_grade_source
   
 - title: Policy File Functions
@@ -28,7 +27,8 @@ reference:
   - process_policy
   - reconcile_policy_with_gs
   - flatten_policy
-  - find_weights
+  
+  
 
 - title: Grading Functions
   desc: >

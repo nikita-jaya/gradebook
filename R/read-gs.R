@@ -121,6 +121,7 @@ read_files <- function(grades_path,
 #'@importFrom stringr str_extract str_match
 #'@importFrom dplyr filter select slice rename_with rename left_join
 #'@importFrom purrr discard
+#'@keywords internal
 read_canvas_grades <- function(grades){
   #first determine which columns are assignments
   

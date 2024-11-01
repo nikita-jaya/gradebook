@@ -10,3 +10,4 @@ read_canvas_grades(grades)
 Takes in a dataframe uploaded from Canvas.
 Returns a dataframe in our standardized format (ie like Gradescope).
 }
+\keyword{internal}
