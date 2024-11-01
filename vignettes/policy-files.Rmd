@@ -119,6 +119,66 @@ Order of operation is crucial in the accurate computation of the final grades. W
 
 -   apply category drops `drop_n_lowest`,
 
--   `aggregation`, 
+-   `aggregation`
 
-This is generally true for all syllabi. First, there is a penalty for lateness (i.e. penalize 25% for a 1 day lateness), then drop lowest scoring assignments if applicable, then apply aggregations of assignments beginning with the most nested category level going backwards up the levels towards `Overall Grade`.  
+This is generally true for all syllabi. First, there is a penalty for lateness, then drop lowest scoring assignments if applicable, then apply aggregations of assignments beginning with the most nested category level going backwards up the levels towards `Overall Grade`.
+
+For example, take two separate orders of the computations of the `Labs` category, each with six assignments (e.g. `Lab 1`, `Lab 2`, etc.). Both drop the 2 lowest scores. Both apply the same lateness penality: 10% reduction if the assignment is at most a day late and setting the score the zero if any more late. Here's the dataframe that will be used (the `gs_demo` from the package):
+```{r, echo = FALSE}
+library(gradebook)
+gs_demo |>
+  dplyr::select(c(SID, contains("Lab"))) |>
+  knitr::kable()
+```
+
+The first computation would be apply the lateness penalty first to all six assignments and then drop the two lowest scores after the lateness penalty. The second computation would drop the two lowest scores first and then apply the lateness penalty to the four remaining assignments. Here are the computed scores for `Labs` side-by-side:
+```{r, echo = FALSE}
+categories <- list(
+  list(
+    category = "Labs - Lateness First",
+    lateness = list(
+      list(
+        between = list(
+          to = '00:00:01',
+          from = '24:00:00'
+        )
+      ),
+      list(scale_by = 0.9),
+      list(after = '24:00:01'),
+      list(set_to = 0)
+    ),
+    drop_n_lowest = 2,
+    aggregation = "equally_weighted",
+    assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4", "Lab 5", "Lab 6")
+  )
+)
+drops_first <- list(categories = categories) |>
+  get_grades(gs = gs_demo) |>
+  dplyr::select(SID, `Labs - Lateness First`)
+categories <- list(
+  list(
+    category = "Labs - Drops First",
+    drop_n_lowest = 2,
+    lateness = list(
+      list(
+        between = list(
+          to = '00:00:01',
+          from = '24:00:00'
+        )
+      ),
+      list(scale_by = 0.9),
+      list(after = '24:00:01'),
+      list(set_to = 0)
+    ),
+    aggregation = "equally_weighted",
+    assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4", "Lab 5", "Lab 6")
+  )
+)
+list(categories = categories) |>
+  get_grades(gs = gs_demo) |>
+  dplyr::select(SID, `Labs - Drops First`) |>
+  dplyr::left_join(y = drops_first, by = "SID") |>
+  knitr::kable()
+```
+
+While this distinction doesn't affect all students, the first student does get a distinctly different score, highlighing the importance of order in creating these policy files. It's evident that seemingly small distinctions can create a large effect, especially on larger student bodies.
