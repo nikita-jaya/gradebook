@@ -1,6 +1,7 @@
 #' Gradescope Demo Data
 #'
-#' An example dataset that mimics Gradescope .csv format.
+#' An example dataset that mimics Gradescope .csv format  with students as rows 
+#' and assignment information across the columns..
 #' All following assignments follow same four-column format of Lab 1, as noted below.
 #'  assignments in gs_demo are as follows: Lab 2, Lab 3, Lab 4, Lab 5, Lab 6, Discussion 1, Discussion 2, Midterm and Final.
 #'  Any other columns that do not follow this format are designated as ID columns.
