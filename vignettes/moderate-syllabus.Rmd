@@ -40,18 +40,18 @@ Here is what the policy file looks like:
 
 ```{r, include = FALSE}
 library(gradebook)
-yaml::read_yaml(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
+read_policy(system.file("extdata", "moderate_syllabus.yaml", package = "gradebook"))
 ```
 
 ## Gradescope Assigments File
 Here is what the Gradescope assignments file looks like:
 
-<div style="height: 300px; overflow: auto;">
+::: {style="height: 300px; overflow: auto;"}
 ```{r, echo=FALSE}
-moderate_syllabus_data <- readr::read_csv(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
+moderate_syllabus_data <- read_gs(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
 knitr::kable(moderate_syllabus_data)
 ```
-</div>
+:::
 
 ## Workflow
 
@@ -70,7 +70,7 @@ policy <- read_policy(system.file("extdata", "moderate_syllabus.yaml", package =
 
 grades <- get_grades(policy = policy, gs = moderate_syllabus_data)
 ```
-First, read in your YAML policy file. `validate_policy()` checks the formatting of the policy file. Finally, `get_grades()` grades your assignments based on your policy file.
+First, read in your YAML policy file. `process_policy()` checks the formatting of the policy file. Then,`reconcile_policy_with_gs()` checks for compatibility between the Gradescope file (`moderate_syllabus_data`) and the policy file (`policy`). Finally, `get_grades()` grades your assignments based on your policy file.
 
 The output of the grades looks like:
 
@@ -80,8 +80,65 @@ knitr::kable(grades)
 ```
 :::
 
-Disclaimers:
+## Syllabus as a Grading Script
+Here is the coded version of the same syllabus.
+```{r}
+# function to implement lateness policy
+lateness_penalty <- function(score_vec, lateness_vec){
+  lateness <- lubridate::period_to_seconds(lubridate::hms(lateness_vec))/60
+  dplyr::case_when(
+    lateness == 0 ~ score_vec,
+    lateness <= 1440 ~ 0.9*score_vec,
+    .default = 0.7*score_vec
+  )
+}
 
--   The `weights` of a category with aggregation `weighted_mean` should be corresponding order with the `assignments.`
+#function to drop lowest two grades
+two_drops <- function(data){
+  apply(dplyr::select(data, `Homework 1`, `Homework 2`, `Homework 3`, `Homework 4`,`Homework 5`), 1, function(x) sort(x, decreasing = TRUE)[1:3]) |> t()
+}
+
+data_with_lateness <- moderate_syllabus_data |>
+  # calculate percentages
+  dplyr::mutate(
+    `Homework 1` = `Homework 1`/`Homework 1 - Max Points`,
+    `Homework 2` = `Homework 2`/`Homework 2 - Max Points`,
+    `Homework 3` = `Homework 3`/`Homework 3 - Max Points`,
+    `Homework 4` = `Homework 4`/`Homework 4 - Max Points`,
+    `Homework 5` = `Homework 5`/`Homework 5 - Max Points`,
+    `Midterm Exam` = `Midterm Exam`/`Midterm Exam - Max Points`,
+    `Final Exam` = `Final Exam`/`Final Exam - Max Points`
+  ) |>
+  #lateness
+  dplyr::mutate(
+    `Homework 1` = lateness_penalty(`Homework 1`,`Homework 1 - Lateness (H:M:S)`),
+    `Homework 2` = lateness_penalty(`Homework 2`,`Homework 2 - Lateness (H:M:S)`),
+    `Homework 3` = lateness_penalty(`Homework 3`,`Homework 3 - Lateness (H:M:S)`),
+    `Homework 4` = lateness_penalty(`Homework 4`,`Homework 4 - Lateness (H:M:S)`),
+    `Homework 5` = lateness_penalty(`Homework 5`,`Homework 5 - Lateness (H:M:S)`)
+  ) 
+script_grades <- data_with_lateness |>
+  # calculate category grade for "Homework" 
+  dplyr::mutate( 
+    `Homework` = rowMeans(two_drops(data_with_lateness))) |>
+  # calculate final Overall Grade
+  dplyr::mutate(`Overall Grade` = 0.4*`Homework` + 0.2*`Midterm Exam` + 0.4*`Final Exam`) 
+```
+
+And, as you can see, the computations align.
+```{r}
+plot(x = script_grades$`Overall Grade`, grades$`Overall Grade`, 
+     xlab = "Script Grades", ylab = "Gradebook Grades")
+abline(a = 0, b = 1, col = "red")
+```
+```{r, echo = FALSE}
+if (!all(script_grades$`Overall Grade` == grades$`Overall Grade`))
+  stop("Script grades and Gradebook grades do not align for moderate syllabus vignette.")
+```
+
+
+### Disclaimers:
+
+-   The `weight` of a category with aggregation `weighted_mean` should be corresponding order with the `assignments.`
 
 -   Categories cannot have the same name as any other assignment name.
