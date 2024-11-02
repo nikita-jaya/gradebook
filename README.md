@@ -54,14 +54,6 @@ gs_data <- read_gs("gs_demo.csv")
 ```
 
 Start by building a policy file that reflects the assignments from your Gradescope file and the structure of the syllabus. 
-Using `get_assignments()` will give you a list of all the assignments' names within your Gradescope file.
-```r
-get_assignments(gs_data)
-```
-[1] "Discussion 1" "Discussion 2" "Final"        "Lab 1"        "Lab 2"        "Lab 3"        "Lab 4"       
-[8] "Lab 5"        "Lab 6"        "Midterm" 
-
-
 More information and guidance on building your policy file can be found in the [Building a Policy File vignette](https://gradebook-dev.github.io/gradebook/articles/policy-files.html).
 
 This should be loaded in with `read_policy()`, and then course grades can be computed with `get_grades()`.

@@ -41,7 +41,10 @@ Every single category must have the `category` key. This is the name of the subc
 
 ### Assignments
 
-The `assignments` key determines which assignments or subcategories are used to determine the category score. The values for this key must match assignments in the Gradescope data or subcategories determined in the same policy file. This can be left blank, but this means that this category score will not be factored into any of the grade calculations and will be ignored.
+The `assignments` key determines which assignments or subcategories are used to determine the category score. The values for this key must match assignments in the Gradescope data or subcategories determined in the same policy file. This can be left blank, but this means that this category score will not be factored into any of the grade calculations and will be ignored. Using `get_assignments()` will give you a list of all the assignments' names within your Gradescope file (an example is shown below with `gs_demo`).
+```r
+get_assignments(gs_demo)
+```
 
 ### Score
 
