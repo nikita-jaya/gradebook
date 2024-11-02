@@ -71,8 +71,14 @@ While `get_grades()` encapsulates the entire functionality of the R package, it 
 
 # Comparison to Other Packages
 
-Answer following question:  Do the authors describe how this software compares to other commonly-used packages?
-[insert some reference about different gradebooks]
+Most other commonly-used packages -- particularly for R packages -- are used for
+grading on an assignment-level basis. For example, the `gradeR` package "helps
+grade your students’s assignment submissions that are R Scripts" whereas `gradebook` is used for the computations of the final, overall course grade [@GradeR].
+The software that has the most similar computational purpose as `gradebook` are
+popular learning-management systems (LMS) used in higher education. This includes
+Canvas [@canvas_gradebook_guide], Moodle [@moodle_grade_calculations], Blackboard Learn [@blackboard_calculate_grades], and D2L Brightspace [@d2l_about_grades], all of which provide an
+integrated gradebook that allow the instructor to specify the manner in which
+assessment scores are used to calculate a final course grade.
 
 # Acknowledgements
 
