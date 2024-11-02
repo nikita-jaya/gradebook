@@ -43,8 +43,11 @@ read_policy(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"
 Here is what the Gradescope assignments file looks like:
 
 ::: {style="height: 300px; overflow: auto;"}
-```{r, echo=FALSE}
+```{r, message=FALSE}
 simple_syllabus_data <- read_gs(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
+```
+
+```{r, echo=FALSE}
 knitr::kable(simple_syllabus_data)
 ```
 :::
@@ -95,12 +98,14 @@ script_grades <- simple_syllabus_data |>
 ```
 
 And, as you can see, the computations align.
-```{r}
+
+```{r, echo= FALSE, fig.width=7, fig.height=6}
 plot(x = script_grades$`Overall Grade`, grades$`Overall Grade`, 
-     xlab = "Script Grades", ylab = "Gradebook Grades")
+     xlab = "Script Grades", ylab = "Gradebook Grades", cex = 2, pch = 20,
+     main = "Alignment of Script and Nemo Gradebook Grades"
+  )
 abline(a = 0, b = 1, col = "red")
-```
-```{r, echo = FALSE}
+
 if (!all(script_grades$`Overall Grade` == grades$`Overall Grade`))
   stop("Script grades and Gradebook grades do not align for simple syllabus vignette.")
 ```

@@ -74,10 +74,6 @@ While `get_grades()` encapsulates the entire functionality of the R package, it 
 Answer following question:  Do the authors describe how this software compares to other commonly-used packages?
 [insert some reference about different gradebooks]
 
-# Figures
-
-Section of figures (if needed)...
-
 # Acknowledgements
 
 The authors would like to thank lain Carmichael, Calvin Carter, and Zach Turner for helpful ideas and discussions throughout the development of this project.
