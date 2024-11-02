@@ -10,11 +10,11 @@ authors:
     equal-contrib: true
     affiliation: 1
   - name: Monika Voutov
-    orcid: 0000-0000-0000-0000
+    orcid: 0009-0000-9923-0954
     equal-contrib: true
     affiliation: "1, 2"
   - name: Andrew Bray
-    orcid: 0000-0000-0000-0000
+    orcid: 0000-0002-4037-7414
     equal-contrib: true
     affiliation: 1
 affiliations:
