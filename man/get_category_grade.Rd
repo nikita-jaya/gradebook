@@ -2,7 +2,7 @@
 % Please edit documentation in R/get-grades.R
 \name{get_category_grade}
 \alias{get_category_grade}
-\title{Calculate Single Category Grade
+\title{Calculate A Single Category Grade
 This function calculates the grade of a single category based on the policy file.}
 \usage{
 get_category_grade(grades_mat, policy_item)
@@ -10,12 +10,12 @@ get_category_grade(grades_mat, policy_item)
 \arguments{
 \item{grades_mat}{Matrix with assignments + associated cols for that category}
 
-\item{policy_item}{An item from policy file}
+\item{policy_item}{An item from policy file, which is the grading criteria for a specific category}
 }
 \value{
-A data frame
+A matrix with a single category's computed grades appended
 }
 \description{
-Calculate Single Category Grade
+Calculate A Single Category Grade
 This function calculates the grade of a single category based on the policy file.
 }

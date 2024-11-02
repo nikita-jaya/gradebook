@@ -3,21 +3,31 @@
 \name{get_grades}
 \alias{get_grades}
 \title{Get Grades
-This function processes the Gradescope data and the policy file, and then calculates all grades based on the policy file.}
+This function processes the Gradescope data and the policy file,
+and then calculates all grades based on the criteria from the policy file and
+the assignment scores from the Gradescope data. This function assumes the
+YAML policy file and the Gradescope .csv file were read in using the
+\code{read_policy()} and \code{read_gs} functions respectively, which check for proper
+data format.}
 \usage{
 get_grades(gs, policy, verbose = FALSE)
 }
 \arguments{
-\item{gs}{A gradescope dataframe with students as rows and assignment information across the columns.}
+\item{gs}{A Gradescope dataframe}
 
 \item{policy}{A policy file}
 
 \item{verbose}{if FALSE, throws error if no assignments found in gs}
 }
 \value{
-A data frame
+A data frame of the original Gradescope data with computed categories scores appended
 }
 \description{
 Get Grades
-This function processes the Gradescope data and the policy file, and then calculates all grades based on the policy file.
+This function processes the Gradescope data and the policy file,
+and then calculates all grades based on the criteria from the policy file and
+the assignment scores from the Gradescope data. This function assumes the
+YAML policy file and the Gradescope .csv file were read in using the
+\code{read_policy()} and \code{read_gs} functions respectively, which check for proper
+data format.
 }

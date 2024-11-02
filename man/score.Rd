@@ -45,17 +45,17 @@ aggregation_lateness(
 \item{weights}{Weights for \code{weighted_mean}}
 }
 \value{
-A matrix
+A matrix with the additional computation from the relevant key function
 }
 \description{
 A collection of functions to refer to correct classification of grading functions using policy file keys.
 \itemize{
-\item \code{score()} computes the percentage score and saves back into raw points col
-\item \code{aggregation()} computes score for category
-\item \code{lateness()} applies any relevant lateness penalty.
-\item \code{drop_n_lowest()} drops n lowest assignment scores; if n >= num of assignments, return top assignment
-\item \code{aggregation_max_pts()} computes max points for category.
-\item \code{aggregation_lateness()} computes max points for category.
+\item \code{score()} computes the percentage score and saves back into raw-points column (the columnn with the assignment score)
+\item \code{aggregation()} computes the aggregated score for each category
+\item \code{lateness()} applies any relevant lateness penalty within the given thresholds.
+\item \code{drop_n_lowest()} drops n lowest assignment scores; if n >= num of assignments, returns highest assignment score
+\item \code{aggregation_max_pts()} computes the maximum possible points for each category.
+\item \code{aggregation_lateness()} computes the aggregated lateness for each category.
 }
 }
 \concept{{Key Functions}}

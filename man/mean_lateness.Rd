@@ -20,14 +20,14 @@ max_lateness(grades_mat, category, assignments)
 \item{assignments}{Assignment names for this category}
 }
 \value{
-A matrix
+A matrix with the aggregated lateness for each category.
 }
 \description{
 A collection of functions to computes lateness for category.
 \itemize{
-\item \code{mean_lateness()} computes a sum.
-\item \code{sum_lateness()} computes a mean.
-\item \code{max_lateness()} computes a max.
+\item \code{mean_lateness()} computes the aggregated lateness of a category by taking the mean of the lateness of the category's assignments.
+\item \code{sum_lateness()} computes the aggregated lateness of a category by taking the sum of the lateness of the category's assignments.
+\item \code{max_lateness()} computes the aggregated lateness of a category by taking the maximum of the lateness of the category's assignments.
 }
 }
 \concept{{Aggregation for Lateness Functions}}

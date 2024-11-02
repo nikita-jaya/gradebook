@@ -2,7 +2,7 @@
 % Please edit documentation in R/process-policy.R
 \name{flatten_policy}
 \alias{flatten_policy}
-\title{Reshape policy file from nested to flat}
+\title{Flatten Policy File ("Un-nest" the Nested Structure of Policy File)}
 \usage{
 flatten_policy(policy)
 }
@@ -14,9 +14,10 @@ A single level list of all categories and subcategories ordered where
 all leaves will precede the parent category in the list order.
 }
 \description{
-First propagates \code{lateness} to all child categories then cycles through the
-top-level categories of a policy file and unnests all subcategories to create
-a single level list of all categories and subcategories.
+This function reshape policy file from nested to flat structure by cycling
+through the top-level categories of a policy file and un-nests all
+subcategories to create a single level list of all categories and
+subcategories.
 }
 \examples{
 # Example

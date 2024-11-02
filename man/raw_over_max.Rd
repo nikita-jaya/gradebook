@@ -12,10 +12,10 @@ raw_over_max(grades_mat, assignments)
 \item{assignments}{Assignment names for this category}
 }
 \value{
-A matrix
+A matrix with computed assignment scores
 }
 \description{
-A collection of functions to calculate the percentage score and save back into raw points column.
+A collection of functions to calculate the percentage score and save back into raw-points column  (the columnn with the assignment score).
 \itemize{
 \item \code{raw_over_max()} computes score by dividing raw points by max points.
 }

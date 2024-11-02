@@ -2,18 +2,18 @@
 % Please edit documentation in R/read-gs.R
 \name{read_gs}
 \alias{read_gs}
-\title{Read Gradescope .csv}
+\title{Read Gradescope CSV File}
 \usage{
 read_gs(path, verbose = FALSE)
 }
 \arguments{
-\item{path}{Path to Gradescope CSV}
+\item{path}{Path to Gradescope CSV file}
 
-\item{verbose}{whether or not to print messages}
+\item{verbose}{Whether or not to print messages}
 }
 \value{
-dataframe
+A dataframe of Gradescope CSV, if no errors
 }
 \description{
-This functions reads the Gradescope .csv, checks for correct format.
+This functions reads the Gradescope CSV file and checks for correct format.
 }

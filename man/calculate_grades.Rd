@@ -8,12 +8,12 @@ This function calculates all grades based on the policy file.}
 calculate_grades(gs, policy)
 }
 \arguments{
-\item{gs}{A gradescope dataframe with students as rows and assignment information across the columns.}
+\item{gs}{A Gradescope dataframes}
 
 \item{policy}{A  policy file}
 }
 \value{
-A data frame
+A Gradescope data frame with computed categories scores appended
 }
 \description{
 Calculate Grades

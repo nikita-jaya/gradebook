@@ -2,15 +2,15 @@
 % Please edit documentation in R/process-policy.R
 \name{process_policy}
 \alias{process_policy}
-\title{Validate Policy File}
+\title{Process Policy File}
 \usage{
 process_policy(policy, verbose = FALSE)
 }
 \arguments{
-\item{policy}{YAML policy file}
+\item{policy}{R list of a valid policy file}
 
-\item{verbose}{if FALSE, throws error if no assignments found in gs}
+\item{verbose}{Whether or not to print messages; if FALSE, throws error if no assignments found in gs}
 }
 \description{
-Flattens and validates policy file
+This function processes the policy file in order to compute grades and flattens the nested structure of the file.
 }

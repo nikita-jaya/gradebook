@@ -17,13 +17,13 @@ mean_max_pts(grades_mat, category, assignments)
 \item{assignments}{Assignment names for this category}
 }
 \value{
-A matrix
+A matrix with the additional computation of the maximum possible points for each category
 }
 \description{
-A collection of functions to computes max points for category.
+A collection of functions to computes maximum possible points for each category.
 \itemize{
-\item \code{sum_max_pts()} computes a sum.
-\item \code{mean_max_pts()} computes a mean.
+\item \code{sum_max_pts()} computes the maximum possible points for each category as the sum of maximum points of each assignment within the category.
+\item \code{mean_max_pts()} computes the maximum possible points for each category as the maximum of maximum points of each assignment within the category.
 }
 }
-\concept{{Aggregation for Max Points Functions}}
+\concept{{Aggregation for Maximum Possible Points Functions}}

@@ -9,11 +9,11 @@ get_id_cols(gs, verbose = FALSE)
 \arguments{
 \item{gs}{Gradescope dataframe}
 
-\item{verbose}{whether or not to return an alert of assignments}
+\item{verbose}{Whether or not to return an alert of assignments}
 }
 \value{
-a list of id columns
+A vector of the names of the ID columns in the dataframe
 }
 \description{
-This function identified the id columns from gradescope data
+This function identifies the ID columns from Gradescope data.
 }

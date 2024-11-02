@@ -31,10 +31,10 @@ set_to(grades_mat, late_policy, original_late_mat, assignments)
 \item{assignments}{Assignment names for this category}
 }
 \value{
-A matrix
+A matrix with the lateness penalties applied to the score of the category's assignments
 }
 \description{
-A collection of functions to apply lateness policies.
+A collection of functions to apply lateness policies if the lateness of an assignment falls within a specified threshold.
 \itemize{
 \item \code{until()} determines if lateness for \code{assignments} is less than or equal to \code{late_policy}.
 \item \code{add()} adds \code{late_policy} to score if \code{assignments} is determined as late.

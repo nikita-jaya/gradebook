@@ -7,14 +7,13 @@
 read_policy(path, verbose = FALSE)
 }
 \arguments{
-\item{path}{Path to policy file}
+\item{path}{Path to YAML policy file}
 
-\item{verbose}{whether or not to print messages}
+\item{verbose}{Whether or not to print messages}
 }
 \value{
-R list
+R list of the policy file, if no errors
 }
 \description{
-This functions reads the grading policy YAML file, checks for correct format,
-converts NA values to zeros and computes scores for each assignment.
+This functions reads the grading policy YAML file and checks for correct format
 }

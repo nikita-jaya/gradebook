@@ -2,20 +2,22 @@
 % Please edit documentation in R/process-policy.R
 \name{reconcile_policy_with_gs}
 \alias{reconcile_policy_with_gs}
-\title{Reconcile policy file with Gradescope data}
+\title{Reconcile Policy File with Gradescope Data}
 \usage{
 reconcile_policy_with_gs(policy, gs, verbose = FALSE)
 }
 \arguments{
-\item{policy}{A valid policy file stored as a list.}
+\item{policy}{R list of a valid policy file}
 
 \item{gs}{Gradescope data}
 
-\item{verbose}{if FALSE, throws error if no assignments found in gs}
+\item{verbose}{Whether or not to print messages; if FALSE, throws error if no assignments found in gs}
 }
 \value{
 A policy list
 }
 \description{
 This function drops any assignments present in the policy file that are not in the Gradescope data.
+This makes sure that the given policy file is compatible with given Gradescope data.
+This function also sets any default values not explicitly given in the policy file.
 }

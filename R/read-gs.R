@@ -1,9 +1,9 @@
-#' Read Gradescope .csv
+#' Read Gradescope CSV File
 #'
-#' This functions reads the Gradescope .csv and checks for correct format.
+#' This functions reads the Gradescope CSV file and checks for correct format.
 #'  
 #'
-#' @param path Path to Gradescope CSV
+#' @param path Path to Gradescope CSV file
 #' @param verbose Whether or not to print messages
 #'
 #' @return A dataframe of Gradescope CSV, if no errors

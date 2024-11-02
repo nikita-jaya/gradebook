@@ -9,14 +9,14 @@ process_gs(gs, drop_ungraded = TRUE, verbose = FALSE)
 \arguments{
 \item{gs}{A gradescope dataframe with students as rows and assignment information across the columns.}
 
-\item{drop_ungraded}{whether or not to drop ungraded assignments}
+\item{drop_ungraded}{Whether or not to drop ungraded assignments}
 
-\item{verbose}{whether or not to print messages}
+\item{verbose}{Whether or not to print messages}
 }
 \value{
-dataframe
+Gradescope dataframe, optionally with all ungraded assignments removed
 }
 \description{
-This function processes the gradescope data before graidng.  Ungraded assignments are dropped, and
-eventually, this will also merge duplicated students and deal with students with no SID.
+This function processes the gradescope data before grading. Ungraded assignments (i.e. assignments with all NAs for their scores) can be dropped.
+Eventually, this will also merge duplicated students and deal with students with no SID.
 }

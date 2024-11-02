@@ -31,16 +31,16 @@ none(grades_mat, category, assignments, weights = c())
 \item{weights}{Weights for \code{weighted_mean}, default to NULL with other aggregation method}
 }
 \value{
-A matrix
+A matrix with the additional computation of the aggregated category score.
 }
 \description{
-A collection of functions to compute scores for categories.
+A collection of functions to compute aggregated scores for each category.
 \itemize{
-\item \code{equally_weighted()} computes a mean.
-\item \code{weighted_by_points()} computes a weighted mean using a weights vector.
-\item \code{max_score()} computes the max score.
-\item \code{min_score()} computes the min score after optionally dropping lowest scores.
-\item \code{none()} if there is only 1 score, returns it, otherwise defaults to \code{equally_weighted}
+\item \code{equally_weighted()} computes the aggregated category score by taking the mean of assignment scores.
+\item \code{weighted_by_points()} computes the aggregated category score by taking the weighted mean of assignment scores using a weights vector.
+\item \code{max_score()} computes the aggregated category score by taking the maximum of assignment scores.
+\item \code{min_score()} computes the aggregated category score by taking the minimum of assignment scores.
+\item \code{none()} is to be used if there is only 1 score, returns it; otherwise defaults to \code{equally_weighted}
 }
 }
 \concept{{Aggregation Functions}}
