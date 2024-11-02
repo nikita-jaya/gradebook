@@ -4,30 +4,30 @@ tags:
   - R
   - education
   - data science
+date: "4 November 2024"
+citation_author: Jayaprakash et al.
 authors:
   - name: Nikita Jayaprakash
-    orcid: 0009-0001-2708-0210
+    orcid: "0009-0001-2708-0210"
     equal-contrib: true
     affiliation: 1
   - name: Monika Voutov
-    orcid: 0009-0000-9923-0954
+    orcid: "0009-0000-9923-0954"
     equal-contrib: true
-    affiliation: "1, 2"
+    affiliation: 1, 2
   - name: Andrew Bray
-    orcid: 0000-0002-4037-7414
+    orcid: "0000-0002-4037-7414"
     equal-contrib: true
     affiliation: 1
-affiliations:
- - name: UC Berkeley, Department of Statistics
-   index: 1
-   ror: 00hx57361
- - name: UC Berkeley, College of Engineering
-   index: 2
-citation_author: Jayaprakash et al.
-date: 4 November 2024
 year: 2024
 bibliography: paper.bib
 journal: JOSS
+affiliations:
+  - name: UC Berkeley, Department of Statistics
+    index: 1
+  - name: UC Berkeley, College of Engineering
+    index: 2
+output: pdf_document
 ---
 
 # Summary
