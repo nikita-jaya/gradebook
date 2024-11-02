@@ -18,7 +18,7 @@
 #' @export
 read_gs <- function(path, verbose = FALSE){
   # read in csv
-  gs <- read_csv(path, trim_ws = FALSE) |>
+  read_csv(path, trim_ws = FALSE) |>
     #check format
     check_data_format()
 }
