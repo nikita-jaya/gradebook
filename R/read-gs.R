@@ -1,6 +1,9 @@
 #' Read Gradescope CSV File
 #'
-#' This functions reads the Gradescope CSV file and checks for correct format.
+#' This functions reads the Gradescope CSV file and checks for correct Gradescope
+#' format. Each assignment should follow the four-column format:
+#' `Assignment Name`, `Assignment Name - Max Points`, `Assignment Name - Submission Time`,
+#' `Assignment Name - Lateness (H:M:S)`. All other columns are designed as ID columns.
 #'  
 #'
 #' @param path Path to Gradescope CSV file

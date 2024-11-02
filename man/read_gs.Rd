@@ -15,5 +15,8 @@ read_gs(path, verbose = FALSE)
 A dataframe of Gradescope CSV, if no errors
 }
 \description{
-This functions reads the Gradescope CSV file and checks for correct format.
+This functions reads the Gradescope CSV file and checks for correct Gradescope
+format. Each assignment should follow the four-column format:
+\verb{Assignment Name}, \verb{Assignment Name - Max Points}, \verb{Assignment Name - Submission Time},
+\verb{Assignment Name - Lateness (H:M:S)}. All other columns are designed as ID columns.
 }
