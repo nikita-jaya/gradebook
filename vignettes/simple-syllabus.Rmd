@@ -42,7 +42,7 @@ read_policy(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"
 
 Here is what the Gradescope assignments file looks like:
 
-::: {style="height: 300px; overflow: auto;"}
+::: {style="height: 500px; overflow: auto;"}
 ```{r, message=FALSE}
 simple_syllabus_data <- read_gs(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
 ```
