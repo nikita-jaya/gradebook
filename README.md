@@ -50,27 +50,25 @@ library(gradebook)
 Load in your Gradescope data using `read_gs()`.
 ```r
 library(gradebook)
-gs_data <- read_gs(system.file("extdata", "gs_demo.csv", package = "gradebook"))
+gs_data <- read_gs("gs_demo.csv")
 ```
 
 Start by building a policy file that reflects the assignments from your Gradescope file and the structure of the syllabus. 
-More information and guidance on building your policy file can be found in the [Building a Policy File vignette](https://gradebook-dev.github.io/gradebook/articles/policy-files.html).
-Here is an example of a policy file that uses `gs_data`:
-
-```yaml
-`r xfun::file_string(system.file("extdata", "policy_demo.yaml", package = "gradebook"))`
+Using `get_assignments()` will give you a list of all the assignments' names within your Gradescope file.
+```r
+get_assignments(gs_data)
 ```
+[1] "Discussion 1" "Discussion 2" "Final"        "Lab 1"        "Lab 2"        "Lab 3"        "Lab 4"       
+[8] "Lab 5"        "Lab 6"        "Midterm" 
+
+
+More information and guidance on building your policy file can be found in the [Building a Policy File vignette](https://gradebook-dev.github.io/gradebook/articles/policy-files.html).
 
 This should be loaded in with `read_policy()`, and then course grades can be computed with `get_grades()`.
 ```r
-policy <- read_policy(system.file("extdata", "policy_demo.yaml", package = "gradebook"))
+policy <- read_policy("policy_demo.yaml")
 
 grades <- get_grades(policy = policy, gs = gs_data)
-```
-
-This is what the final grades look like:
-```r
-grades
 ```
 
 ------------------------------------------------------------------------
