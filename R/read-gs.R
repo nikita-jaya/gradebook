@@ -12,6 +12,9 @@
 #' @return A dataframe of Gradescope CSV, if no errors
 #' @importFrom readr read_csv
 #' @importFrom dplyr mutate across cur_column mutate_at vars all_of ends_with
+#' @examples
+#' path <- system.file("extdata", "gs_demo.csv", package = "gradebook")
+#' read_gs(path = path)
 #' @export
 read_gs <- function(path, verbose = FALSE){
   # read in csv

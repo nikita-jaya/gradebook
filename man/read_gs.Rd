@@ -20,3 +20,7 @@ format. Each assignment should follow the four-column format:
 \verb{Assignment Name}, \verb{Assignment Name - Max Points}, \verb{Assignment Name - Submission Time},
 \verb{Assignment Name - Lateness (H:M:S)}. All other columns are designed as ID columns.
 }
+\examples{
+path <- system.file("extdata", "gs_demo.csv", package = "gradebook")
+read_gs(path = path)
+}
