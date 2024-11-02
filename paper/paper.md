@@ -39,7 +39,17 @@ The package uses these two inputs to break down wide range of complex syllabi in
 
 While the final grade at the end of a course is an elementary part of most college courses, the computations for these grades quickly become deceptively intricate, especially with larger STEM classes that use various complexities to accommodate a diverse student body. Even though most classes use slight variations of the same policies, many LMS cannot sustain these complex computations. In response, courses will turn to hard-coded scripts. These scripts quickly accumulate hundreds of lines of code, and there is no method to assess accuracy of the final computation. 
 
+
+
 `Gradebook` is an R package that maintains the structure and complexity of a course grade while guaranteeing accuracy through comprehensive unit-testing. The challenges of consistency and precision in grading systems are addressed by applying the practices of data analysis and the principles of software development. The rigorous unit-testing in the package minimizes computational error and reduces the manual inputs, significantly lower the risks of typographic and logical errors in scripts ... [insert reference about software practices, testing, etc.]. Because of this, course grades can be computed accurately and quickly: the accuracy allows course instructors to have reliable grade computations, and the speed allows them to compute grades throughout the semester in order to monitor student progress. The structure of the package -- and the open-source nature of it -- allows for courses to contribute functionality that is unique to their course. This R package also functions as the backend of the NemoGB Shiny app [@Gradebook-App], which lets the user create their grading policy file in a straightforward way. 
+
+Grading Workflow WITH Nemo Gradebook             |  Grading Workflow WITHOUT Nemo Gradebook
+:-------------------------:|:-------------------------:
+![](with_nemogb_workflow.png){height="178pt"}  |  ![](without_nemogb_workflow.png){height="178pt"}
+
+
+
+
 
 
 # Underlying Principle
