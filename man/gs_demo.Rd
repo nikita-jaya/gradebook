@@ -9,14 +9,14 @@
 
 A data frame with 10 rows and 44 columns:
 \describe{
-\item{Names}{student name}
-\item{Email}{student email}
-\item{SID}{student ID number}
-\item{Sections}{student class section}
-\item{Lab 1}{assignment called Lab 1}
-\item{Lab 1 - Max Points}{maximum possible points for Lab 1}
-\item{Lab 1 - Lateness (H:M:S)}{how late Lab 1 was turned in, formatted HH:MM:SS}
-\item{Lab 1 - Submission Time}{when Lab 1 was turned in, formatted MM/DD/YY HH:MM}
+\item{Names}{Student name}
+\item{Email}{Student email}
+\item{SID}{Student ID number}
+\item{Sections}{Student class section}
+\item{Lab 1}{An assignment called Lab 1}
+\item{Lab 1 - Max Points}{Maximum possible points for Lab 1}
+\item{Lab 1 - Lateness (H:M:S)}{How late Lab 1 was turned in, formatted HH:MM:SS}
+\item{Lab 1 - Submission Time}{When Lab 1 was turned in, formatted MM/DD/YY HH:MM}
 ...
 }
 }
@@ -25,10 +25,15 @@ A data frame with 10 rows and 44 columns:
 gs_demo
 }
 \description{
-An example dataset that mimics Gradescope .csv format  with students as rows
-and assignment information across the columns..
-All following assignments follow same four-column format of Lab 1, as noted below.
-assignments in gs_demo are as follows: Lab 2, Lab 3, Lab 4, Lab 5, Lab 6, Discussion 1, Discussion 2, Midterm and Final.
+An example dataset that mimics Gradescope format with students as rows
+and assignment information across the columns.
+All assignments follow the same four-column format of Lab 1, as noted below.
+Assignments in \code{gs_demo} are Lab 1, Lab 2, Lab 3, Lab 4, Lab 5, Lab 6, Discussion 1,
+Discussion 2, Midterm and Final.
 Any other columns that do not follow this format are designated as ID columns.
+}
+\examples{
+gs_demo
+
 }
 \keyword{datasets}
