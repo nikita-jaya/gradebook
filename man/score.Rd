@@ -34,28 +34,29 @@ aggregation_lateness(
 )
 }
 \arguments{
-\item{grades_mat}{Matrix with assignments + associated cols for that category}
+\item{grades_mat}{Matrix with assignments + associated columns for that category}
 
-\item{policy_line}{Policy list item for that key}
+\item{policy_line}{Policy list item for each key}
 
 \item{category}{Category name}
 
-\item{assignments}{Assignment names for this category}
+\item{assignments}{Assignment names for this category as a vector}
 
-\item{weights}{Weights for \code{weighted_mean}}
+\item{weights}{Weights for \code{weighted_mean} as a vector}
 }
 \value{
 A matrix with the additional computation from the relevant key function
 }
 \description{
-A collection of functions to refer to correct classification of grading functions using policy file keys.
+A collection of functions that correspond to the keys used in the policy YAML
+file: each function/key corresponds to a specific cluster of grading functionality.
 \itemize{
-\item \code{score()} computes the percentage score and saves back into raw-points column (the columnn with the assignment score)
-\item \code{aggregation()} computes the aggregated score for each category
-\item \code{lateness()} applies any relevant lateness penalty within the given thresholds.
-\item \code{drop_n_lowest()} drops n lowest assignment scores; if n >= num of assignments, returns highest assignment score
-\item \code{aggregation_max_pts()} computes the maximum possible points for each category.
-\item \code{aggregation_lateness()} computes the aggregated lateness for each category.
+\item \code{score()} computes the percentage score and saves back into the column with the original assignment score
+\item \code{aggregation()} computes the category score by aggregating the associated assignment scores
+\item \code{lateness()} applies any relevant lateness penalty within the given thresholds
+\item \code{drop_n_lowest()} drops the n lowest assignment scores; if n >= num of assignments, returns highest assignment score
+\item \code{aggregation_max_pts()} computes the maximum possible points for each category
+\item \code{aggregation_lateness()} computes the aggregated lateness for each category
 }
 }
 \concept{{Key Functions}}
