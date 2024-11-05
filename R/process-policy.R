@@ -4,13 +4,13 @@
 #' the nested structure of the file.
 #' 
 #' @param policy R list of a valid policy file
-#' @param verbose Whether or not to print messages; if FALSE, throws error if no assignments found in gs
+#' @param verbose Whether or not to print messages and warnings
 #' 
 #' @examples
 #' process_policy(policy_demo, verbose = TRUE)
 #' 
 #' 
-#' @return a flattened policy R list
+#' @return a (un-nested) flattened policy R list
 #' @importFrom purrr map discard
 #' @export
 process_policy <- function(policy, verbose = FALSE){
@@ -85,13 +85,14 @@ extract_weights <- function(category){
 
 #' Reconcile Policy File with Gradescope Data
 #' 
-#' This function drops any assignments present in the policy file that are not in the Gradescope data.
-#' This makes sure that the given policy file is compatible with given Gradescope data.
-#' This function also sets any default values not explicitly given in the policy file.
+#' This function drops any assignments present in the policy file that are not 
+#' in the Gradescope data, making sure that both the policy file and Gradescope 
+#' data are compatible. This function also sets any default values not explicitly 
+#' specified in the policy file but required for grading.
 #'
 #' @param policy R list of a valid policy file
 #' @param gs Gradescope data
-#' @param verbose Whether or not to print messages; if FALSE, throws error if no assignments found in gs
+#' @param verbose Whether or not to print messages; if FALSE, still throws error if no assignments found in gs
 #' 
 #' @examples
 #' reconcile_policy_with_gs(policy = policy_demo, gs = gs_demo, verbose = TRUE)
@@ -180,8 +181,8 @@ set_defaults <- function(policy, gs, verbose = FALSE){
 
 #' Flatten Policy File ("Un-nest" the Nested Structure of Policy File)
 #' 
-#' This function reshape policy file from nested to flat structure by cycling 
-#' through the top-level categories of a policy file and un-nests all 
+#' This function reshapes the policy file from nested to flat structure by cycling 
+#' through the top-level categories of a policy file and un-nesting all 
 #' subcategories to create a single level list of all categories and
 #' subcategories.
 #'

@@ -2,20 +2,27 @@
 % Please edit documentation in R/get-grades.R
 \name{calculate_grades}
 \alias{calculate_grades}
-\title{Calculate Grades
-This function calculates all grades based on the policy file.}
+\title{Calculate Grades}
 \usage{
 calculate_grades(gs, policy)
 }
 \arguments{
-\item{gs}{A Gradescope dataframes}
+\item{gs}{A Gradescope dataframe}
 
-\item{policy}{A  policy file}
+\item{policy}{A grading policy file as an R list}
 }
 \value{
-A Gradescope data frame with computed categories scores appended
+A dataframe of the original Gradescope data with computed categories' scores appended as additional columns
 }
 \description{
-Calculate Grades
-This function calculates all grades based on the policy file.
+This function calculates all grades based on the policy file. This function is
+called within \code{get_grades()} because it requires previous data processing.
+Note that the example below is essentially the functionality of \code{get_grades()}.
+}
+\examples{
+gs <- process_gs(gs = gs_demo)
+policy <- process_policy(policy = policy_demo, verbose = TRUE)
+policy <- reconcile_policy_with_gs(policy = policy, gs = gs_demo, verbose = TRUE)
+calculate_grades(gs = gs, policy = policy)
+
 }

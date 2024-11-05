@@ -14,8 +14,8 @@ A single level list of all categories and subcategories ordered where
 all leaves will precede the parent category in the list order.
 }
 \description{
-This function reshape policy file from nested to flat structure by cycling
-through the top-level categories of a policy file and un-nests all
+This function reshapes the policy file from nested to flat structure by cycling
+through the top-level categories of a policy file and un-nesting all
 subcategories to create a single level list of all categories and
 subcategories.
 }

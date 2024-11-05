@@ -4,7 +4,7 @@
 #'  
 #'
 #' @param path Path to YAML policy file
-#' @param verbose Whether or not to print messages
+#' @param verbose Whether or not to print messages and warnings
 #'
 #' @examples
 #' path <- system.file("extdata", "policy_demo.yaml", package = "gradebook")

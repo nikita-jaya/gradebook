@@ -9,10 +9,10 @@ process_policy(policy, verbose = FALSE)
 \arguments{
 \item{policy}{R list of a valid policy file}
 
-\item{verbose}{Whether or not to print messages; if FALSE, throws error if no assignments found in gs}
+\item{verbose}{Whether or not to print messages and warnings}
 }
 \value{
-a flattened policy R list
+a (un-nested) flattened policy R list
 }
 \description{
 This function processes the policy file in order to compute grades and flattens

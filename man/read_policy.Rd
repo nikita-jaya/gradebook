@@ -9,7 +9,7 @@ read_policy(path, verbose = FALSE)
 \arguments{
 \item{path}{Path to YAML policy file}
 
-\item{verbose}{Whether or not to print messages}
+\item{verbose}{Whether or not to print messages and warnings}
 }
 \value{
 R list of the policy file, if no errors

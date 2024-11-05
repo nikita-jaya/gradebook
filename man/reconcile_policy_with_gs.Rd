@@ -11,15 +11,16 @@ reconcile_policy_with_gs(policy, gs, verbose = FALSE)
 
 \item{gs}{Gradescope data}
 
-\item{verbose}{Whether or not to print messages; if FALSE, throws error if no assignments found in gs}
+\item{verbose}{Whether or not to print messages; if FALSE, still throws error if no assignments found in gs}
 }
 \value{
 A policy list
 }
 \description{
-This function drops any assignments present in the policy file that are not in the Gradescope data.
-This makes sure that the given policy file is compatible with given Gradescope data.
-This function also sets any default values not explicitly given in the policy file.
+This function drops any assignments present in the policy file that are not
+in the Gradescope data, making sure that both the policy file and Gradescope
+data are compatible. This function also sets any default values not explicitly
+specified in the policy file but required for grading.
 }
 \examples{
 reconcile_policy_with_gs(policy = policy_demo, gs = gs_demo, verbose = TRUE)

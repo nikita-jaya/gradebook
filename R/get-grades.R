@@ -4,14 +4,17 @@
 #' and then calculates all grades based on the criteria from the policy file and
 #' the assignment scores from the Gradescope data. This function assumes the 
 #' YAML policy file and the Gradescope .csv file were read in using the 
-#' `read_policy()` and `read_gs` functions respectively, which check for proper
+#' `read_policy()` and `read_gs()` functions respectively, which check for proper
 #' data format.
 #'
 #' @param gs A Gradescope dataframe
-#' @param policy A policy file
+#' @param policy A grading policy file as an R list
 #' @param verbose if FALSE, throws error if no assignments found in gs
 #'
-#' @return A data frame of the original Gradescope data with computed categories scores appended
+#' @examples
+#' get_grades(gs = gs_demo, policy = policy_demo, verbose = TRUE)
+#' 
+#' @return A dataframe of the original Gradescope data with computed categories' scores appended as additional columns 
 #'
 #' @importFrom dplyr select relocate left_join mutate_at vars mutate
 #' 
@@ -30,12 +33,21 @@ get_grades <- function(gs, policy, verbose = FALSE){
 }
 
 #' Calculate Grades
-#' This function calculates all grades based on the policy file.
+#' 
+#' This function calculates all grades based on the policy file. This function is 
+#' called within `get_grades()` because it requires previous data processing. 
+#' Note that the example below is essentially the functionality of `get_grades()`.
 #'
-#' @param gs A Gradescope dataframes
-#' @param policy A  policy file
+#' @param gs A Gradescope dataframe
+#' @param policy A grading policy file as an R list
+#' 
+#' @examples
+#' gs <- process_gs(gs = gs_demo)
+#' policy <- process_policy(policy = policy_demo, verbose = TRUE)
+#' policy <- reconcile_policy_with_gs(policy = policy, gs = gs_demo, verbose = TRUE)
+#' calculate_grades(gs = gs, policy = policy)
 #'
-#' @return A Gradescope data frame with computed categories scores appended
+#' @return A dataframe of the original Gradescope data with computed categories' scores appended as additional columns
 #'
 #' @export
 calculate_grades <- function(gs, policy){
