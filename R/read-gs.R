@@ -9,7 +9,7 @@
 #' @param path Path to Gradescope CSV file
 #' @param verbose Whether or not to print messages
 #'
-#' @return A dataframe of Gradescope CSV, if no errors
+#' @return A dataframe of Gradescope CSV file, if no errors
 #' @importFrom readr read_csv
 #' @importFrom dplyr mutate across cur_column mutate_at vars all_of ends_with
 #' @examples
@@ -27,10 +27,10 @@ read_gs <- function(path, verbose = FALSE){
 #'
 #' This functions checks the column names throughout the Gradescope data.
 #' There must be an SID column and at least one assignment.
-#' It also gives an alert for what ID columnss and assignments are in the data.
+#' It also gives an alert for what ID columns and assignments are in the data.
 #'
 #' @param gs Gradescope data frame
-#' @param verbose Whether or not to print messages
+#' @param verbose Whether or not to print messages and warnings
 #'
 #' @examples
 #' check_data_format(gs_demo, verbose = TRUE)
@@ -63,6 +63,9 @@ check_data_format <- function(gs, verbose = FALSE){
 #'
 #' @param gs  Gradescope dataframe
 #' @param verbose Whether or not to return an alert of assignments
+#' 
+#' @examples
+#' get_id_cols(gs_demo, verbose = TRUE)
 #' 
 #' @return A vector of the names of the ID columns in the dataframe
 #' @importFrom stringr str_replace_all regex
@@ -105,6 +108,9 @@ get_id_cols <- function(gs, verbose = FALSE) {
 #'
 #' @param gs Gradescope dataframe
 #' @param verbose Whether or not to print assignment names
+#'
+#' @examples
+#' get_assignments(gs_demo, verbose = TRUE)
 #' 
 #' @return A vector of the names of the assignments in the dataframe
 #' @importFrom stringr str_replace_all regex
