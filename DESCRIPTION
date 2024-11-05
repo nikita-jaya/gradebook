@@ -20,7 +20,7 @@ Authors@R: c(person(
                     given = "Zachary",
                     family = "Turner",
                     email = "zachturner@berkeley.edu",
-                    role = "aut"
+                    role = "ctb"
             )
                     )
 Description: A system to make course grade calculations easy, fast, 
