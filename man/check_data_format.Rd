@@ -19,3 +19,7 @@ This functions checks the column names throughout the Gradescope data.
 There must be an SID column and at least one assignment.
 It also gives an alert for what ID columnss and assignments are in the data.
 }
+\examples{
+check_data_format(gs_demo, verbose = TRUE)
+
+}
