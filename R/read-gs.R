@@ -32,6 +32,9 @@ read_gs <- function(path, verbose = FALSE){
 #' @param gs Gradescope data frame
 #' @param verbose Whether or not to print messages
 #'
+#' @examples
+#' check_data_format(gs_demo, verbose = TRUE)
+#' 
 #' @return Same gs dataframe if no errors.
 #' @export
 check_data_format <- function(gs, verbose = FALSE){
