@@ -1,12 +1,13 @@
 #' Process Policy File
 #' 
-#' This function processes the policy file in order to compute grades and flattens the nested structure of the file.
+#' This function processes the policy file in order to compute grades and flattens
+#' the nested structure of the file.
 #' 
 #' @param policy R list of a valid policy file
 #' @param verbose Whether or not to print messages; if FALSE, throws error if no assignments found in gs
 #' 
 #' @examples
-#' process_policy(policy_deno, verbose = TRUE)
+#' process_policy(policy_demo, verbose = TRUE)
 #' 
 #' 
 #' @return a flattened policy R list
@@ -22,8 +23,8 @@ process_policy <- function(policy, verbose = FALSE){
 #' @importFrom purrr map
 find_weights <- function(policy){
   # This function will return a policy file where the weights have been extracted from 
-  # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
-  # otherwise identical to the input. 
+  # assignments into the above category featuring aggregation "weighted_mean", 
+  # where the returned policy file is otherwise identical to the input. 
   policy$categories <- policy$categories |>
     purrr::map(extract_weights)
   return(policy)
@@ -112,10 +113,6 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     categories <- map(policy$categories, "category") |> unlist()
     assignments <- c(get_assignments(gs), categories)
     policy$categories <- map(policy$categories, function(cat){
-      # if (cat$aggregation == "weighted_mean"){
-      #   #drop the respective weight(s) if category not found
-      #   cat$weights <- cat$weights[cat$assignments %in% assignments]
-      # }
       # drop categories with unavailable assignments/nested categories
       remaining_assignments <- cat$assignments %in% assignments
       cat$assignments <- cat$assignments[remaining_assignments]

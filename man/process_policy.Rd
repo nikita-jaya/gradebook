@@ -15,10 +15,11 @@ process_policy(policy, verbose = FALSE)
 a flattened policy R list
 }
 \description{
-This function processes the policy file in order to compute grades and flattens the nested structure of the file.
+This function processes the policy file in order to compute grades and flattens
+the nested structure of the file.
 }
 \examples{
-process_policy(policy_deno, verbose = TRUE)
+process_policy(policy_demo, verbose = TRUE)
 
 
 }
