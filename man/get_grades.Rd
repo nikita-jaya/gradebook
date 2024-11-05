@@ -2,13 +2,7 @@
 % Please edit documentation in R/get-grades.R
 \name{get_grades}
 \alias{get_grades}
-\title{Get Grades
-This function processes the Gradescope data and the policy file,
-and then calculates all grades based on the criteria from the policy file and
-the assignment scores from the Gradescope data. This function assumes the
-YAML policy file and the Gradescope .csv file were read in using the
-\code{read_policy()} and \code{read_gs} functions respectively, which check for proper
-data format.}
+\title{Get Grades}
 \usage{
 get_grades(gs, policy, verbose = FALSE)
 }
@@ -23,7 +17,6 @@ get_grades(gs, policy, verbose = FALSE)
 A data frame of the original Gradescope data with computed categories scores appended
 }
 \description{
-Get Grades
 This function processes the Gradescope data and the policy file,
 and then calculates all grades based on the criteria from the policy file and
 the assignment scores from the Gradescope data. This function assumes the

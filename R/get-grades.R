@@ -1,4 +1,5 @@
 #' Get Grades
+#' 
 #' This function processes the Gradescope data and the policy file, 
 #' and then calculates all grades based on the criteria from the policy file and
 #' the assignment scores from the Gradescope data. This function assumes the 
