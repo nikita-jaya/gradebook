@@ -6,6 +6,10 @@
 #' @param path Path to YAML policy file
 #' @param verbose Whether or not to print messages
 #'
+#' @examples
+#' path <- system.file("extdata", "policy_demo.yaml", package = "gradebook")
+#' read_policy(path = path, verbose = TRUE)
+#' 
 #' @return R list of the policy file, if no errors
 #' @importFrom yaml read_yaml
 #' @export

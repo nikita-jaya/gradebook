@@ -21,3 +21,8 @@ This function drops any assignments present in the policy file that are not in t
 This makes sure that the given policy file is compatible with given Gradescope data.
 This function also sets any default values not explicitly given in the policy file.
 }
+\examples{
+reconcile_policy_with_gs(policy = policy_demo, gs = gs_demo, verbose = TRUE)
+
+
+}

@@ -4,11 +4,16 @@
 #' 
 #' @param policy R list of a valid policy file
 #' @param verbose Whether or not to print messages; if FALSE, throws error if no assignments found in gs
+#' 
+#' @examples
+#' process_policy(policy_deno, verbose = TRUE)
+#' 
+#' 
+#' @return a flattened policy R list
 #' @importFrom purrr map discard
 #' @export
 process_policy <- function(policy, verbose = FALSE){
   policy <- policy |>
-    # insert extract_weights here!
     find_weights() |>
     flatten_policy()
   
@@ -86,6 +91,11 @@ extract_weights <- function(category){
 #' @param policy R list of a valid policy file
 #' @param gs Gradescope data
 #' @param verbose Whether or not to print messages; if FALSE, throws error if no assignments found in gs
+#' 
+#' @examples
+#' reconcile_policy_with_gs(policy = policy_demo, gs = gs_demo, verbose = TRUE)
+#' 
+#' 
 #' @return A policy list
 #'
 #' @importFrom purrr map list_flatten
@@ -184,8 +194,8 @@ set_defaults <- function(policy, gs, verbose = FALSE){
 #' all leaves will precede the parent category in the list order.
 #'
 #' @examples
-#' # Example
 #' flatten_policy(policy_demo)
+#' 
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {

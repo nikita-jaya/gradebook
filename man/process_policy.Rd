@@ -11,6 +11,14 @@ process_policy(policy, verbose = FALSE)
 
 \item{verbose}{Whether or not to print messages; if FALSE, throws error if no assignments found in gs}
 }
+\value{
+a flattened policy R list
+}
 \description{
 This function processes the policy file in order to compute grades and flattens the nested structure of the file.
+}
+\examples{
+process_policy(policy_deno, verbose = TRUE)
+
+
 }
