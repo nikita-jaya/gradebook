@@ -17,3 +17,7 @@ A vector of the names of the ID columns in the dataframe
 \description{
 This function identifies the ID columns from Gradescope data.
 }
+\examples{
+get_id_cols(gs_demo, verbose = TRUE)
+
+}

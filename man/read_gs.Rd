@@ -12,7 +12,7 @@ read_gs(path, verbose = FALSE)
 \item{verbose}{Whether or not to print messages}
 }
 \value{
-A dataframe of Gradescope CSV, if no errors
+A dataframe of Gradescope CSV file, if no errors
 }
 \description{
 This functions reads the Gradescope CSV file and checks for correct Gradescope

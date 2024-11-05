@@ -2,21 +2,22 @@
 % Please edit documentation in R/process-gs.R
 \name{process_gs}
 \alias{process_gs}
-\title{Process Gradescope .csv}
+\title{Process Gradescope Data}
 \usage{
 process_gs(gs, drop_ungraded = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{gs}{A gradescope dataframe with students as rows and assignment information across the columns.}
+\item{gs}{A Gradescope dataframe with students as rows and assignment information across the columns.}
 
 \item{drop_ungraded}{Whether or not to drop ungraded assignments}
 
-\item{verbose}{Whether or not to print messages}
+\item{verbose}{Whether or not to print messages and warnings}
 }
 \value{
 Gradescope dataframe, optionally with all ungraded assignments removed
 }
 \description{
-This function processes the gradescope data before grading. Ungraded assignments (i.e. assignments with all NAs for their scores) can be dropped.
+This function processes the Gradescope data before grading. Ungraded assignments
+(i.e. assignments with all NAs for their scores) can optionally be dropped.
 Eventually, this will also merge duplicated students and deal with students with no SID.
 }

@@ -17,3 +17,7 @@ A vector of the names of the assignments in the dataframe
 \description{
 This function identifies the assignments from Gradescope data and returns the assignments' names.
 }
+\examples{
+get_assignments(gs_demo, verbose = TRUE)
+
+}
