@@ -2,8 +2,8 @@
 
 An R package to make course grade calculations easy, fast, and most importantly,
 correct. Course grades are produced from a data frame of assignment grades along
-with a grading policy file that specifies how they should be weighted when
-combined into a final grade.
+with a grading policy file that allows for accurate and systematic computations 
+of the final course letter grades.
 
 ### Statement of Need
 
@@ -11,7 +11,7 @@ While the final grade at the end of a course is an elementary part of most
 college courses, the computations for these grades quickly become deceptively
 intricate, especially with larger STEM classes that use various complexities to
 accommodate a diverse student body. Even though most classes use slight
-variations of the same policies, many LMS cannot sustain these complex
+variations of the same policies, many learning management systems (LMS) cannot sustain these complex
 computations. In response, courses will turn to hard-coded scripts. These scripts
 quickly accumulate hundreds of lines of code, and there is no method to assess
 accuracy of the final computation. 
@@ -54,9 +54,9 @@ gs_data <- read_gs("gs_demo.csv")
 ```
 
 Start by building a policy file that reflects the assignments from your Gradescope file and the structure of the syllabus. 
-More information and guidance on building your policy file can be found in the [Building a Policy File vignette](https://gradebook-dev.github.io/gradebook/articles/policy-files.html).
+More information and guidance on building your policy file in YAML format can be found in the [Building a Policy File vignette](https://gradebook-dev.github.io/gradebook/articles/policy-files.html).
 
-This should be loaded in with `read_policy()`, and then course grades can be computed with `get_grades()`.
+This YAML policy file should be loaded in with `read_policy()`, and then course grades can be computed with `get_grades()`.
 ```r
 policy <- read_policy("policy_demo.yaml")
 
