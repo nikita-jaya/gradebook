@@ -50,7 +50,7 @@ While the final grade at the end of a course is an elementary part of most colle
 
 Grading Workflow WITH Nemo Gradebook             |  Grading Workflow WITHOUT Nemo Gradebook
 :-------------------------:|:-------------------------:
-![](with_nemogb_workflow.png){height="178pt"}  |  ![](without_nemogb_workflow.png){height="178pt"}
+![](with_nemogb_workflow.png){height="150pt"}  |  ![](without_nemogb_workflow.png){height="150pt"}
 
 
 

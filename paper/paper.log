@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.11.9)  4 NOV 2024 17:30
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.11.9)  4 NOV 2024 17:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1156,17 +1156,12 @@ Package hyperref Warning: Suppressing link with empty target on input line 284.
 File: with_nemogb_workflow.png Graphic file (type bmp)
 <with_nemogb_workflow.png>
 
-Overfull \hbox (40.26527pt too wide) in paragraph at lines 342--343
+Overfull \hbox (4.40163pt too wide) in paragraph at lines 342--343
  []|[]| 
  []
 
 File: without_nemogb_workflow.png Graphic file (type bmp)
 <without_nemogb_workflow.png>
-
-Overfull \hbox (19.00203pt too wide) in paragraph at lines 344--345
- []|[]| 
- []
-
 File: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/library/rti
 cles/rmarkdown/templates/joss/resources/JOSS-logo.png Graphic file (type bmp)
 </Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/library/rticles/
@@ -1219,7 +1214,7 @@ Package logreq Info: Writing requests to 'paper.run.xml'.
 Here is how much of TeX's memory you used:
  34767 strings out of 476919
  698020 string characters out of 5821840
- 1494770 words of memory out of 5000000
+ 1492770 words of memory out of 5000000
  54193 multiletter control sequences out of 15000+600000
  410286 words of font info for 73 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
