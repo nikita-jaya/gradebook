@@ -5,3 +5,8 @@
 *.Rproj
 docs
 inst/doc
+*.aux
+*.bcf
+*.out
+paper/paper.html
+paper/paper.run.xml
