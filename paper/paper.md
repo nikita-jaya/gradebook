@@ -88,7 +88,7 @@ the flexible YAML structure allows for the former and the open-source nature of 
 
 The authors would like to thank lain Carmichael, Calvin Carter, and Zach Turner for helpful ideas and discussions throughout the development of this project.
 
-As of summer 2024, we are funded by the RTL grant from the Statistics Departmemt at University of California, Berkeley. 
+As of summer 2024, this project was funded by the an Instructional Technology and Innovation Micro Grant Program through the University of California, Berkeley. 
 
 As of October 2024, there is a pending poster submission to Technical Symposium on Computer Science Education (SIGCSE) that utilizes this package, called "Your Grades Are Wrong - Nemo Gradebook: A tool for easy, accurate course grades". The poster was submitted by the same set of authors.
 
