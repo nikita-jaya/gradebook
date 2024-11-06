@@ -8,5 +8,7 @@ inst/doc
 *.aux
 *.bcf
 *.out
+*.log
 paper/paper.html
 paper/paper.run.xml
+paper/paper.tex
