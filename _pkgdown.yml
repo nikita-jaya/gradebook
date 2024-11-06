@@ -77,6 +77,8 @@ articles:
   - simple-syllabus
   - moderate-syllabus
   - complex-syllabus
+  - working-with-canvas-data
+  - detailed-canvas-export-info
 
 development:
   mode: auto
