@@ -21,3 +21,8 @@ This function processes the Gradescope data before grading. Ungraded assignments
 (i.e. assignments with all NAs for their scores) can optionally be dropped.
 Eventually, this will also merge duplicated students and deal with students with no SID.
 }
+\examples{
+process_gs(gs = gs_demo, drop_ungraded = TRUE, verbose = TRUE)
+
+
+}
