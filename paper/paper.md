@@ -30,8 +30,6 @@ bibliography: paper.bib
 output: 
   rticles::joss_article:
     keep_tex: true
-    includes:
-      in_header: columns.tex
 journal: JOSS
 ---
 
