@@ -313,3 +313,229 @@ test_that("Test read_canvas_grades", {
   
   expect_equal(actual, expected)
 })
+
+
+test_that("Test read_canvas_grades With Test Student", {
+  data <- tibble::tibble(
+    Student = c("    Points Possible", "Smith, Adam", "Rock, John", "Porch, Stephanie", "Pai, Henry",
+                "Student, Test"),
+    ID = c(NA, 989786, 453657, 123786, 876345, 670504),
+    `SIS User ID` = c(NA, 456789, 768596, 567812, 888763, NA),
+    `SIS Login ID` = c(NA, 46574, 75685, 64573, 12345, 0xeff85769),
+    Section = c(NA, "1", "1", "2", "3", "1"),
+    `HW 1 (867568)` = c(10, 5, 6, 7, 8, 0),
+    `HW 2 (867573)` = c(5, 1, 2, 3, 4, 0),
+    `Midterm (867589)` = c(50, 34, 46, 12, 31, 155),
+    `Final (345678)` = c(100, 34, 45, 65, 87, 0),
+    `Beep Boop Category` = c(NA, 6, 7, 3, 2, NA)
+  )
+  
+  expected <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                             as.POSIXct(NA), as.POSIXct(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                           as.POSIXct(NA), as.POSIXct(NA)),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA)
+    
+  )
+  
+  attr(expected, "source") <- "Canvas"
+  
+  actual <- read_canvas_grades(data)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("Test read_canvas_grades With Test Student and Cols including (...)", {
+  data <- tibble::tibble(
+    Student = c("    Points Possible", "Smith, Adam", "Rock, John", "Porch, Stephanie", "Pai, Henry",
+                "Student, Test"),
+    ID = c(NA, 989786, 453657, 123786, 876345, 670504),
+    `SIS User ID` = c(NA, 456789, 768596, 567812, 888763, NA),
+    `SIS Login ID` = c(NA, 46574, 75685, 64573, 12345, 0xeff85769),
+    Section = c(NA, "1", "1", "2", "3", "1"),
+    `HW 1 (867568)` = c(10, 5, 6, 7, 8, 0),
+    `HW 2 (867573)` = c(5, 1, 2, 3, 4, 0),
+    `Midterm (867589)` = c(50, 34, 46, 12, 31, 155),
+    `Final (345678)` = c(100, 34, 45, 65, 87, 0),
+    `Beep Boop Category` = c(NA, 6, 7, 3, 2, NA),
+    `Beep Boop Category (Final Grade)` = c(NA, 6, 7, 3, 2, NA),
+    `Beep Boop Category (Unposted Final Grade 321)` = c(NA, 6, 7, 3, 2, NA),
+  )
+  
+  expected <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                             as.POSIXct(NA), as.POSIXct(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                           as.POSIXct(NA), as.POSIXct(NA)),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA)
+    
+  )
+  
+  attr(expected, "source") <- "Canvas"
+  
+  actual <- read_canvas_grades(data)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("Test read_canvas_grades With Test Student and Cols including ( )", {
+  data <- tibble::tibble(
+    Student = c("    Points Possible", "Smith, Adam", "Rock, John", "Porch, Stephanie", "Pai, Henry",
+                "Student, Test"),
+    ID = c(NA, 989786, 453657, 123786, 876345, 670504),
+    `SIS User ID` = c(NA, 456789, 768596, 567812, 888763, NA),
+    `SIS Login ID` = c(NA, 46574, 75685, 64573, 12345, 0xeff85769),
+    Section = c(NA, "1", "1", "2", "3", "1"),
+    `HW 1 (867568)` = c(10, 5, 6, 7, 8, 0),
+    `HW 2 (867573)` = c(5, 1, 2, 3, 4, 0),
+    `Midterm (867589)` = c(50, 34, 46, 12, 31, 155),
+    `Final (345678)` = c(100, 34, 45, 65, 87, 0),
+    `Beep Boop Category` = c(NA, 6, 7, 3, 2, NA),
+    `Beep Boop Category (Final Grade)` = c(NA, 6, 7, 3, 2, NA),
+    `Beep Boop Category (Unposted Final Grade 321)` = c(NA, 6, 7, 3, 2, NA),
+    `Beep Boop Category ( )` = c(NA, 6, 7, 3, 2, NA),
+  )
+  
+  expected <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                             as.POSIXct(NA), as.POSIXct(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                           as.POSIXct(NA), as.POSIXct(NA)),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA)
+    
+  )
+  
+  attr(expected, "source") <- "Canvas"
+  
+  actual <- read_canvas_grades(data)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("Test read_canvas_grades With Test Student and Cols including ()", {
+  data <- tibble::tibble(
+    Student = c("    Points Possible", "Smith, Adam", "Rock, John", "Porch, Stephanie", "Pai, Henry",
+                "Student, Test"),
+    ID = c(NA, 989786, 453657, 123786, 876345, 670504),
+    `SIS User ID` = c(NA, 456789, 768596, 567812, 888763, NA),
+    `SIS Login ID` = c(NA, 46574, 75685, 64573, 12345, 0xeff85769),
+    Section = c(NA, "1", "1", "2", "3", "1"),
+    `HW 1 (867568)` = c(10, 5, 6, 7, 8, 0),
+    `HW 2 (867573)` = c(5, 1, 2, 3, 4, 0),
+    `Midterm (867589)` = c(50, 34, 46, 12, 31, 155),
+    `Final (345678)` = c(100, 34, 45, 65, 87, 0),
+    `Beep Boop Category` = c(NA, 6, 7, 3, 2, NA),
+    `Beep Boop Category (Final Grade)` = c(NA, 6, 7, 3, 2, NA),
+    `Beep Boop Category (Unposted Final Grade 321)` = c(NA, 6, 7, 3, 2, NA),
+    `Beep Boop Category ()` = c(NA, 6, 7, 3, 2, NA),
+  )
+  
+  expected <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                          as.POSIXct(NA), as.POSIXct(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                             as.POSIXct(NA), as.POSIXct(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
+                                           as.POSIXct(NA), as.POSIXct(NA)),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA)
+    
+  )
+  
+  attr(expected, "source") <- "Canvas"
+  
+  actual <- read_canvas_grades(data)
+  
+  expect_equal(actual, expected)
+})
+
