@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-There are two ingredients that are needed to calculate course grades with `gradebook`: a data frame containing assignment scores and a file that encodes the grading policies often described in a syllabus. We call that file a *policy file*.
+There are two ingredients that are needed to calculate course grades with `gradebook`: a dataframe containing assignment scores and a file that encodes the grading policies often described in a syllabus. We call that file a *policy file*.
 
 Policy files are stored as [.yaml](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started) files, a simple format for storing hierarchical data in a text file with minimal markup. Here is an example of a policy file for a course with a fairly simple grading scheme.
 
@@ -28,8 +28,7 @@ Note that category names cannot be the same as any assignment names.
 Once you have written your policy file, you can read it into R as a list.
 
 ```{r}
-yaml::read_yaml(system.file("extdata", "policy_demo.yaml", package = "gradebook"))
-# to be replaced with gradebook::read_policy()
+policy <- gradebook::read_policy(system.file("extdata", "policy_demo.yaml", package = "gradebook"))
 ```
 
 ## Recognized Keys
@@ -38,19 +37,19 @@ There are a series of recognized keys with corresponding values. Each key repres
 
 ### Category
 
-Every single category must have the `category` key. This is the name of the subcategory and must be unique from all other category names and all assignment names as well.
+Every single category must have the `category` key. This is the name of the subcategory and must be unique from all other category names and all assignment names.
 
 ### Assignments
 
-The `assignments` key determines which assignments or subcategories are used to determine the category score. The values for this key must match assignments in the Gradescope data or subcategories determined in the same policy file. This can be left blank, but this means that this category score will not be factored into any of the grade calculations and will be ignored.
+The `assignments` key determines which assignments or subcategories are used to determine the category score. The values for this key must match assignments in the Gradescope data or subcategories determined in the same policy file. If left blank, the category score will not be factored into any of the grade calculations and will be ignored (this is usually relevant when computing grades in the middle of the semester when not all assignments have been assigned and/or graded). Using `get_assignments()` will give you a list of all the assignments' names within your Gradescope file.
 
 ### Score
 
 The `score` key determines how the percentage of an assignment score is calculated. At the moment, there is only one valid value for this key:
 
--   `raw_over_max`: the percentage of an assignment score is the point-value of the assignment divided by the maximum points of the assignment.
+-   `raw_over_max`: the percentage of an assignment score is the score of the assignment divided by the maximum points of the assignment.
 
-    -   Note: if `score` is not explicitly determined, this is the *default*.
+    -   Note: if `score` is not explicitly defined, this is the *default*.
 
 ### Aggregation
 
@@ -58,7 +57,7 @@ The `aggregation` key determines how the various assignment scores are aggregate
 
 -   `equally_weighted`: the category score is the average of the assignment scores with no regard to the relative point-values of the assignments.
 
-    -   Note: if `aggregation` is not explicitly determined, this is the *default*.
+    -   Note: if `aggregation` is not explicitly defined, this is the *default*.
 
 -   `weighted_by_points`: the category score is the weighted average of the assignment scores with the weights determined by the relative point-values of the assignments.
 
@@ -72,6 +71,8 @@ The `aggregation` key determines how the various assignment scores are aggregate
 
 -   `none`: this is reserved for when a category is comprised of only one assignment; hence no aggregation is necessary because the category score is simply the assignment score.
 
+    -   Note: if an category has `none` for its aggregation and multiple assignments, the function defaults to `equally_weighted`.
+
 ### Lateness
 
 The `lateness` key is used to write lateness policies. The values for this key are divided into threshold functions and penalty functions.
@@ -80,9 +81,9 @@ Threshold functions determine the valid lateness period for which the penalty is
 
 -   `until`: this marks the lateness-period up until and including the specified value.
 
--   `after`: this marks the lateness-period after and including the specified value.
-
 -   `between`: this marks the lateness-period between and including the two specified values.
+
+-   `after`: this marks the lateness-period after and including the specified value.
 
 Here are the possible penalty functions:
 
@@ -98,12 +99,85 @@ Here are the possible penalty functions:
 
     -   Note: this is often used to set an assignment score to zero if the assignment is turned in too late.
 
-See `Case Study: Moderate Syllabus` to view an example of a lateness policy
+See `Case Study: Moderate Syllabus` vignette to view an example of a lateness policy
 
 ### Drop N Lowest
 
-The `drop_n_lowest` key is used to drop *n* of the lowest assignments scores. This *n*-value can take any integer that is less than the total number of assignments in the category.
+The `drop_n_lowest` key is used to drop *n* of the lowest assignments scores. This *n*-value can take any integer that is less than the total number of assignments in the category. If *n* is bigger than the number of assignments within a category, then the highest assignment score is returned. 
 
-## Nesting and Inheritance
+## Nesting
+
+The highest level category is `Overall Grade` with all other categories and/or assignments nested within. The nested structure of categories allows for the structured breakdown of each category of a syllabus. Using the example above, `Overall Grade` is the highest level of nesting with subcategories of `Labs`, `Discussion`, `Midterm Exam` and `Final Exam`. Each of these subcategories have their own respective assignments nested within them. Computations begin with the most nested category level going up the levels toward `Overall Grade`.
+
 
 ## Importance of Order
+
+Order of operation is crucial in the accurate computation of the final grades. When computing grades, generally the high level ordering is the following: 
+
+-   `lateness` penalties,
+
+-   apply category drops `drop_n_lowest`, and
+
+-   `aggregation`
+
+This is generally true for all syllabi. First, apply penalty for lateness, then drop lowest scoring assignments, and finally apply aggregations of assignments.
+
+For example, take two separate orders of the computations of the `Labs` category, each with six assignments (e.g. `Lab 1`, `Lab 2`, etc.). Both drop the 2 lowest scores. Both apply the same lateness penality: 10% reduction if the assignment is at most a day late and setting the score to zero if any more late. Here's the dataframe that will be used (the `gs_demo` from the package):
+```{r, echo = FALSE}
+library(gradebook)
+gs_demo |>
+  dplyr::select(c(SID, contains("Lab"))) |>
+  knitr::kable()
+```
+
+The first computation would apply the lateness penalty first to all six assignments and then drop the two lowest scores after. The second computation would drop the two lowest scores first and then apply the lateness penalty to the four remaining assignments. Here are the computed scores for `Labs` side-by-side:
+```{r, echo = FALSE}
+categories <- list(
+  list(
+    category = "Labs - Lateness First",
+    lateness = list(
+      list(
+        between = list(
+          to = '00:00:01',
+          from = '24:00:00'
+        )
+      ),
+      list(scale_by = 0.9),
+      list(after = '24:00:01'),
+      list(set_to = 0)
+    ),
+    drop_n_lowest = 2,
+    aggregation = "equally_weighted",
+    assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4", "Lab 5", "Lab 6")
+  )
+)
+drops_first <- list(categories = categories) |>
+  get_grades(gs = gs_demo) |>
+  dplyr::select(SID, `Labs - Lateness First`)
+categories <- list(
+  list(
+    category = "Labs - Drops First",
+    drop_n_lowest = 2,
+    lateness = list(
+      list(
+        between = list(
+          to = '00:00:01',
+          from = '24:00:00'
+        )
+      ),
+      list(scale_by = 0.9),
+      list(after = '24:00:01'),
+      list(set_to = 0)
+    ),
+    aggregation = "equally_weighted",
+    assignments = c("Lab 1", "Lab 2", "Lab 3", "Lab 4", "Lab 5", "Lab 6")
+  )
+)
+list(categories = categories) |>
+  get_grades(gs = gs_demo) |>
+  dplyr::select(SID, `Labs - Drops First`) |>
+  dplyr::left_join(y = drops_first, by = "SID") |>
+  knitr::kable()
+```
+
+While this distinction doesn't affect all students, the first student does get a distinctly different score, highlighing the importance of order in creating these policy files. It's evident that seemingly small distinctions can create a significant effect, especially on larger student bodies.

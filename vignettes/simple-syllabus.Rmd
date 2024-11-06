@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Now, we will walk through a simple syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website:
+Now, we will walk through a simple syllabus and its Gradebook implementation with 5 students in the class. Let's start with what this syllabus would look like on a class website:
 
 ## Syllabus
 
@@ -42,9 +42,12 @@ read_policy(system.file("extdata", "simple_syllabus.yaml", package = "gradebook"
 
 Here is what the Gradescope assignments file looks like:
 
-::: {style="height: 300px; overflow: auto;"}
-```{r, echo=FALSE}
+::: {style="height: 500px; overflow: auto;"}
+```{r, message=FALSE}
 simple_syllabus_data <- read_gs(system.file("extdata", "simple_syllabus_data.csv", package = "gradebook"))
+```
+
+```{r, echo=FALSE}
 knitr::kable(simple_syllabus_data)
 ```
 :::
@@ -53,7 +56,7 @@ knitr::kable(simple_syllabus_data)
 
 **Overall grade** is calculated using the three categories, with the weights as shown above; This is represented by `Overall Grade` with an aggregation of `weighted_mean`.
 
-The **Midterm** and **Final Exam** categories contain only a single assignment, as shown in the `simple_syllabus_data` file, which is usually downloaded from gradescope.
+The **Midterm** and **Final Exam** categories contain only a single assignment, as shown in the `simple_syllabus_data` file, which is usually downloaded from Gradescope.
 
 The **Homework** category is compiled of two assignments: *"Homework 1"* and *"Homework 2"* in the `simple_syllabus_data`.
 
@@ -67,7 +70,7 @@ policy <- read_policy(system.file("extdata", "simple_syllabus.yaml", package = "
 grades <- get_grades(gs = simple_syllabus_data, policy = policy)
 ```
 
-First, read in your YAML policy file. `process_policy()` checks the formatting of the policy file. Then,`reconcile_policy_with_gs()` checks for compatibility between the Gradescope file (`simple_syllabus_data`) and the policy file (`policy`). Finally, `get_grades()` grades your assignments based on your policy file.
+First, read in your YAML policy file. `read_policy()` and `read_gs()` read in their respective files and check for correct formatting. Finally, `get_grades()` computes your assignment grades based on your policy file.
 
 The output of the grades looks like:
 
@@ -95,12 +98,14 @@ script_grades <- simple_syllabus_data |>
 ```
 
 And, as you can see, the computations align.
-```{r}
+
+```{r, echo= FALSE, fig.width=7, fig.height=6}
 plot(x = script_grades$`Overall Grade`, grades$`Overall Grade`, 
-     xlab = "Script Grades", ylab = "Gradebook Grades")
+     xlab = "Script Grades", ylab = "Gradebook Grades", cex = 2, pch = 20,
+     main = "Alignment of Script and Nemo Gradebook Grades"
+  )
 abline(a = 0, b = 1, col = "red")
-```
-```{r, echo = FALSE}
+
 if (!all(script_grades$`Overall Grade` == grades$`Overall Grade`))
   stop("Script grades and Gradebook grades do not align for simple syllabus vignette.")
 ```

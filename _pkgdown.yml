@@ -19,7 +19,7 @@ reference:
   
 - title: Policy File Functions
   desc: >
-    These functions are to validate and process the policy file.
+    These functions are to read in and process the policy file.
   contents:
   - read_policy
   - process_policy

@@ -3,27 +3,27 @@
 \name{sum_max_pts}
 \alias{sum_max_pts}
 \alias{mean_max_pts}
-\title{Aggregation for Max Points Functions}
+\title{Aggregation for Maximum Possible Points Functions}
 \usage{
 sum_max_pts(grades_mat, category, assignments)
 
 mean_max_pts(grades_mat, category, assignments)
 }
 \arguments{
-\item{grades_mat}{Matrix with assignments + associated cols for that category}
+\item{grades_mat}{Matrix with assignments + associated columns for each category}
 
 \item{category}{Category name}
 
 \item{assignments}{Assignment names for this category}
 }
 \value{
-A matrix
+A matrix with the additional computation of the maximum possible points for each category
 }
 \description{
-A collection of functions to computes max points for category.
+A collection of functions to compute the maximum possible points for each category
 \itemize{
-\item \code{sum_max_pts()} computes a sum.
-\item \code{mean_max_pts()} computes a mean.
+\item \code{sum_max_pts()} computes the maximum possible points for each category as the sum of maximum points of each assignment within the category
+\item \code{mean_max_pts()} computes the maximum possible points for each category as the average of maximum points of each assignment within the category
 }
 }
-\concept{{Aggregation for Max Points Functions}}
+\concept{{Aggregation for Maximum Possible Points Functions}}

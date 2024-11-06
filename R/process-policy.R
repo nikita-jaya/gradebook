@@ -1,13 +1,20 @@
-#' Validate Policy File
+#' Process Policy File
 #' 
-#' Flattens and validates policy file
-#' @param policy YAML policy file
-#' @param verbose if FALSE, throws error if no assignments found in gs
+#' This function processes the policy file in order to compute grades and flattens
+#' the nested structure of the file.
+#' 
+#' @param policy R list of a valid policy file
+#' @param verbose Whether or not to print messages and warnings
+#' 
+#' @examples
+#' process_policy(policy_demo, verbose = TRUE)
+#' 
+#' 
+#' @return a (un-nested) flattened policy R list
 #' @importFrom purrr map discard
 #' @export
 process_policy <- function(policy, verbose = FALSE){
   policy <- policy |>
-    # insert extract_weights here!
     find_weights() |>
     flatten_policy()
   
@@ -16,8 +23,8 @@ process_policy <- function(policy, verbose = FALSE){
 #' @importFrom purrr map
 find_weights <- function(policy){
   # This function will return a policy file where the weights have been extracted from 
-  # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
-  # otherwise identical to the input. 
+  # assignments into the above category featuring aggregation "weighted_mean", 
+  # where the returned policy file is otherwise identical to the input. 
   policy$categories <- policy$categories |>
     purrr::map(extract_weights)
   return(policy)
@@ -76,13 +83,21 @@ extract_weights <- function(category){
   
 }
 
-#' Reconcile policy file with Gradescope data
+#' Reconcile Policy File with Gradescope Data
 #' 
-#' This function drops any assignments present in the policy file that are not in the Gradescope data.
+#' This function drops any assignments present in the policy file that are not 
+#' in the Gradescope data, making sure that both the policy file and Gradescope 
+#' data are compatible. This function also sets any default values not explicitly 
+#' specified in the policy file but required for grading.
 #'
-#' @param policy A valid policy file stored as a list.
+#' @param policy R list of a valid policy file
 #' @param gs Gradescope data
-#' @param verbose if FALSE, throws error if no assignments found in gs
+#' @param verbose Whether or not to print messages; if FALSE, still throws error if no assignments found in gs
+#' 
+#' @examples
+#' reconcile_policy_with_gs(policy = policy_demo, gs = gs_demo, verbose = TRUE)
+#' 
+#' 
 #' @return A policy list
 #'
 #' @importFrom purrr map list_flatten
@@ -99,10 +114,6 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     categories <- map(policy$categories, "category") |> unlist()
     assignments <- c(get_assignments(gs), categories)
     policy$categories <- map(policy$categories, function(cat){
-      # if (cat$aggregation == "weighted_mean"){
-      #   #drop the respective weight(s) if category not found
-      #   cat$weights <- cat$weights[cat$assignments %in% assignments]
-      # }
       # drop categories with unavailable assignments/nested categories
       remaining_assignments <- cat$assignments %in% assignments
       cat$assignments <- cat$assignments[remaining_assignments]
@@ -168,11 +179,12 @@ set_defaults <- function(policy, gs, verbose = FALSE){
   return (policy)
 }
 
-#' Reshape policy file from nested to flat
+#' Flatten Policy File ("Un-nest" the Nested Structure of Policy File)
 #' 
-#' First propagates `lateness` to all child categories then cycles through the
-#' top-level categories of a policy file and unnests all subcategories to create
-#' a single level list of all categories and subcategories.
+#' This function reshapes the policy file from nested to flat structure by cycling 
+#' through the top-level categories of a policy file and un-nesting all 
+#' subcategories to create a single level list of all categories and
+#' subcategories.
 #'
 #' @param policy A valid policy file stored as a list.
 #'
@@ -180,8 +192,8 @@ set_defaults <- function(policy, gs, verbose = FALSE){
 #' all leaves will precede the parent category in the list order.
 #'
 #' @examples
-#' # Example
 #' flatten_policy(policy_demo)
+#' 
 #' @importFrom purrr map list_flatten
 #' @export
 flatten_policy <- function(policy) {
@@ -215,37 +227,3 @@ extract_nested <- function(category) {
   # Return the flattened nested categories followed by the current category
   c(nested_categories_flattened, list(category))
 }
-
-#' 
-#' find_weights <- function(policy){
-#'   # This function will return a policy file where the weights have been extracted from 
-#'   # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
-#'   # otherwise identical to the input. 
-#'   policy$categories[[1]] <- extract_weights(policy$categories[[1]])
-#'   return(policy)
-#' }
-#' #'
-#' #'@importFrom purrr map map_dbl
-#' extract_weights <- function(category){
-#'   # If there's no more nesting, return the category as a list
-#'   if (!("assignments" %in% names(category) && is.list(category$assignments)
-#'   )) {
-#'     # remove the weight from the individual category it is in for cleanliness
-#'     #category$weight <- NULL
-#'     return(category)
-#'   }
-#'   if ( category$aggregation == "weighted_mean"){
-#'     
-#'     category$weights <- purrr::map_dbl(category$assignments, 
-#'                                        function(x){
-#'                                          x$weight
-#'                                        })
-#'     #normalize weights
-#'     category$weights <- category$weights / sum(category$weights)
-#'   }
-#'   
-#'   category$assignments <- purrr::map(category$assignments, extract_weights)
-#'   
-#'   return(category)
-#'   
-#' }

@@ -7,13 +7,17 @@
 get_assignments(gs, verbose = FALSE)
 }
 \arguments{
-\item{gs}{unprocessed Gradescope dataframe}
+\item{gs}{Gradescope dataframe}
 
-\item{verbose}{whether or not to print assignment names}
+\item{verbose}{Whether or not to print assignment names}
 }
 \value{
-vector
+A vector of the names of the assignments in the dataframe
 }
 \description{
-This function identified the assignments from Gradescope data
+This function identifies the assignments from Gradescope data and returns the assignments' names.
+}
+\examples{
+get_assignments(gs_demo, verbose = TRUE)
+
 }

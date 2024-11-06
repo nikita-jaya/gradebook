@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-Now, we will walk through a moderately complex syllabus and its Gradebook implementation with 5 students in the class. Start with what this syllabus would look like on a class website.
+Now, we will walk through a moderately complex syllabus and its Gradebook implementation with 5 students in the class. Let's start with what this syllabus would look like on a class website.
 
 ## Syllabus
 
@@ -44,11 +44,14 @@ read_policy(system.file("extdata", "moderate_syllabus.yaml", package = "gradeboo
 ```
 
 ## Gradescope Assigments File
-Here is what the gradescope assignments file looks like:
+Here is what the Gradescope assignments file looks like:
 
-::: {style="height: 300px; overflow: auto;"}
-```{r, echo=FALSE}
+::: {style="height: 500px; overflow: auto;"}
+```{r, message=FALSE}
 moderate_syllabus_data <- read_gs(system.file("extdata", "moderate_syllabus_data.csv", package = "gradebook"))
+```
+
+```{r, echo=FALSE}
 knitr::kable(moderate_syllabus_data)
 ```
 :::
@@ -126,12 +129,13 @@ script_grades <- data_with_lateness |>
 ```
 
 And, as you can see, the computations align.
-```{r}
+```{r, echo= FALSE, fig.width=7, fig.height=6}
 plot(x = script_grades$`Overall Grade`, grades$`Overall Grade`, 
-     xlab = "Script Grades", ylab = "Gradebook Grades")
+     xlab = "Script Grades", ylab = "Gradebook Grades", cex = 2, pch = 20,
+     main = "Alignment of Script and Nemo Gradebook Grades"
+  )
 abline(a = 0, b = 1, col = "red")
-```
-```{r, echo = FALSE}
+
 if (!all(script_grades$`Overall Grade` == grades$`Overall Grade`))
   stop("Script grades and Gradebook grades do not align for moderate syllabus vignette.")
 ```
