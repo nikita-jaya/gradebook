@@ -61,7 +61,7 @@ Grading Workflow WITH Nemo Gradebook             |  Grading Workflow WITHOUT Nem
 
 The details of the course grading structure -- usually detailed in the syllabus or on the class website -- can be articulated in YAML format using a series of accepted keys (e.g. `score`, `aggregation`, `lateness`, `drop_n_lowest`, etc.). More direction about creating a policy file is provided in the `Building a Policy File` vignette. The nested structure of this policy file reflects the nested structure of the course grade. The assignment scores come directly from Gradescope in a .csv file. These two files (the YAML policy file and the Gradescope data) function as the two inputs for `gradebook`'s primary and overarching function: `get_grades()`. After reading in the assignment data from Gradescope using `read_gs()`and reading in their YAML policy file (that reflects their course syllabus) using `read_policy()`, this singular function computes the entirety of the final course grade computation.
 
-While `get_grades()` encapsulates the entire computational functionality of the R package, it is compromised for four sequential functions:
+While `get_grades()` encapsulates the entire computational functionality of the R package, it is comprised of four sequential functions:
 
 -   `process_gs()` ensures the correct format of the Gradescope csv.
 
