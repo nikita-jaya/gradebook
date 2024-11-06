@@ -7,6 +7,10 @@
 #' @param gs A Gradescope dataframe with students as rows and assignment information across the columns.
 #' @param drop_ungraded Whether or not to drop ungraded assignments
 #' @param verbose Whether or not to print messages and warnings
+#' 
+#' @examples
+#' process_gs(gs = gs_demo, drop_ungraded = TRUE, verbose = TRUE)
+#' 
 #'
 #' @return Gradescope dataframe, optionally with all ungraded assignments removed
 #' @importFrom readr read_csv
