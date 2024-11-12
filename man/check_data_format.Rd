@@ -9,7 +9,7 @@ check_data_format(gs, verbose = FALSE)
 \arguments{
 \item{gs}{Gradescope data frame}
 
-\item{verbose}{whether or not to print messages}
+\item{verbose}{Whether or not to print messages and warnings}
 }
 \value{
 Same gs dataframe if no errors.
@@ -17,5 +17,9 @@ Same gs dataframe if no errors.
 \description{
 This functions checks the column names throughout the Grades data.
 There must be an SID column and at least one assignment.
-It also gives an alert for what id cols and assignments are in the data.
+It also gives an alert for what ID columns and assignments are in the data.
+}
+\examples{
+check_data_format(gs_demo, verbose = TRUE)
+
 }

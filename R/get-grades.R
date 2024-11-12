@@ -1,11 +1,20 @@
 #' Get Grades
-#' This function processes the Gradescope data and the policy file, and then calculates all grades based on the policy file.
+#' 
+#' This function processes the Gradescope data and the policy file, 
+#' and then calculates all grades based on the criteria from the policy file and
+#' the assignment scores from the Gradescope data. This function assumes the 
+#' YAML policy file and the Gradescope .csv file were read in using the 
+#' `read_policy()` and `read_gs()` functions respectively, which check for proper
+#' data format.
 #'
-#' @param gs A gradescope dataframe with students as rows and assignment information across the columns.
-#' @param policy A policy file
+#' @param gs A Gradescope dataframe
+#' @param policy A grading policy file as an R list
 #' @param verbose if FALSE, throws error if no assignments found in gs
 #'
-#' @return A data frame
+#' @examples
+#' get_grades(gs = gs_demo, policy = policy_demo, verbose = TRUE)
+#' 
+#' @return A dataframe of the original Gradescope data with computed categories' scores appended as additional columns 
 #'
 #' @importFrom dplyr select relocate left_join mutate_at vars mutate
 #' 
@@ -24,12 +33,21 @@ get_grades <- function(gs, policy, verbose = FALSE){
 }
 
 #' Calculate Grades
-#' This function calculates all grades based on the policy file.
+#' 
+#' This function calculates all grades based on the policy file. This function is 
+#' called within `get_grades()` because it requires previous data processing. 
+#' Note that the example below is essentially the functionality of `get_grades()`.
 #'
-#' @param gs A gradescope dataframe with students as rows and assignment information across the columns.
-#' @param policy A  policy file
+#' @param gs A Gradescope dataframe
+#' @param policy A grading policy file as an R list
+#' 
+#' @examples
+#' gs <- process_gs(gs = gs_demo)
+#' policy <- process_policy(policy = policy_demo, verbose = TRUE)
+#' policy <- reconcile_policy_with_gs(policy = policy, gs = gs_demo, verbose = TRUE)
+#' calculate_grades(gs = gs, policy = policy)
 #'
-#' @return A data frame
+#' @return A dataframe of the original Gradescope data with computed categories' scores appended as additional columns
 #'
 #' @export
 calculate_grades <- function(gs, policy){
@@ -72,13 +90,16 @@ calculate_grades <- function(gs, policy){
   return (grades)
 }
 
-#' Calculate Single Category Grade
+#' Calculate A Single Category Grade
+#' 
 #' This function calculates the grade of a single category based on the policy file.
+#' Note that this function is called within `calculate_grades()` and it should not be 
+#' used on its own.
 #'
-#' @param grades_mat Matrix with assignments + associated cols for that category
-#' @param policy_item An item from policy file
+#' @param grades_mat Matrix with assignments + associated columns for that category
+#' @param policy_item An item from the policy file, which is the grading criteria for a specific category
 #'
-#' @return A data frame
+#' @return A matrix with a single category's computed grades appended as additional columns
 #'
 #' 
 #' @export
@@ -99,27 +120,28 @@ get_category_grade <- function(grades_mat, policy_item){
 #'
 #' @description
 #' 
-#' A collection of functions to refer to correct classification of grading functions using policy file keys.
+#' A collection of functions that correspond to the keys used in the policy YAML
+#' file: each function/key corresponds to a specific cluster of grading functionality.
 #'
-#' * `score()` computes the percentage score and saves back into raw points col
+#' * `score()` computes the percentage score and saves back into the column with the original assignment score
 #' 
-#' * `aggregation()` computes score for category
+#' * `aggregation()` computes the category score by aggregating the associated assignment scores
 #'
-#' * `lateness()` applies any relevant lateness penalty.
+#' * `lateness()` applies any relevant lateness penalty within the given thresholds
 #' 
-#' * `drop_n_lowest()` drops n lowest assignment scores; if n >= num of assignments, return top assignment
+#' * `drop_n_lowest()` drops the n lowest assignment scores; if n >= num of assignments, returns highest assignment score
 #' 
-#' * `aggregation_max_pts()` computes max points for category.
+#' * `aggregation_max_pts()` computes the maximum possible points for each category
 #' 
-#' * `aggregation_lateness()` computes max points for category.
+#' * `aggregation_lateness()` computes the aggregated lateness for each category
 #'
-#' @param grades_mat Matrix with assignments + associated cols for that category
-#' @param policy_line Policy list item for that key
+#' @param grades_mat Matrix with assignments + associated columns for that category
+#' @param policy_line Policy list item for each key
 #' @param category Category name
-#' @param assignments Assignment names for this category
-#' @param weights Weights for `weighted_mean`
+#' @param assignments Assignment names for this category as a vector
+#' @param weights Weights for `weighted_mean` as a vector
 #' 
-#' @return A matrix
+#' @return A matrix with the additional computation from the relevant key function
 #'
 #' @family {Key Functions}
 #' 
@@ -185,14 +207,15 @@ aggregation_lateness <- function(grades_mat, policy_line, category, assignments,
 #'
 #' @description
 #' 
-#' A collection of functions to calculate the percentage score and save back into raw points column.
+#' A collection of functions to calculate the percentage score and save back into
+#' the column with the assignment score
 #'
-#' * `raw_over_max()` computes score by dividing raw points by max points.
+#' * `raw_over_max()` computes score by dividing the original assignment score by the maximum possible points for the assignment
 #'
-#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param grades_mat Matrix with assignments + associated columns for that category
 #' @param assignments Assignment names for this category
 #' 
-#' @return A matrix
+#' @return A matrix with computed assignment scores
 #'
 #' @family {Score Functions}
 #' 
@@ -206,24 +229,24 @@ raw_over_max <- function(grades_mat, assignments){
 #'
 #' @description
 #' 
-#' A collection of functions to compute scores for categories.
+#' A collection of functions to compute aggregated scores for each category.
 #'
-#' * `equally_weighted()` computes a mean.
+#' * `equally_weighted()` computes the aggregated category score by taking the mean of assignment scores
 #' 
-#' * `weighted_by_points()` computes a weighted mean using a weights vector.
+#' * `weighted_by_points()` computes the aggregated category score by taking the weighted mean of assignment scores using a `weights` vector
 #'
-#' * `max_score()` computes the max score.
+#' * `max_score()` computes the aggregated category score by taking the maximum of assignment scores
 #' 
-#' * `min_score()` computes the min score after optionally dropping lowest scores.
+#' * `min_score()` computes the aggregated category score by taking the minimum of assignment scores
 #' 
-#' * `none()` if there is only 1 score, returns it, otherwise defaults to `equally_weighted` 
+#' * `none()` is used if there is only one assignment in a category and returns that single score; otherwise it defaults to `equally_weighted` 
 #'
-#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param grades_mat Matrix with assignments + associated columns for each category
 #' @param category Category name
 #' @param assignments Assignment names for this category
-#' @param weights Weights for `weighted_mean`, default to NULL with other aggregation method
+#' @param weights Weights for `weighted_mean`, defaults to NULL with other aggregation method
 #' 
-#' @return A matrix
+#' @return A matrix with the additional computation of the aggregated category score
 #'
 #' @family {Aggregation Functions}
 #' 
@@ -291,24 +314,24 @@ none <- function(grades_mat, category, assignments, weights = c()){
   equally_weighted(grades_mat, category, assignments)
 }
 
-#' Aggregation for Max Points Functions
+#' Aggregation for Maximum Possible Points Functions
 #'
 #' @description
 #' 
-#' A collection of functions to computes max points for category.
+#' A collection of functions to compute the maximum possible points for each category
 #'
-#' * `sum_max_pts()` computes a sum.
+#' * `sum_max_pts()` computes the maximum possible points for each category as the sum of maximum points of each assignment within the category
 #' 
-#' * `mean_max_pts()` computes a mean.
+#' * `mean_max_pts()` computes the maximum possible points for each category as the average of maximum points of each assignment within the category
 #'
 #'
-#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param grades_mat Matrix with assignments + associated columns for each category
 #' @param category Category name
 #' @param assignments Assignment names for this category
 #' 
-#' @return A matrix
+#' @return A matrix with the additional computation of the maximum possible points for each category
 #'
-#' @family {Aggregation for Max Points Functions}
+#' @family {Aggregation for Maximum Possible Points Functions}
 #' 
 #' @export
 sum_max_pts <- function(grades_mat, category, assignments){
@@ -334,27 +357,27 @@ mean_max_pts <- function(grades_mat, category, assignments){
 #'
 #' @description
 #' 
-#' A collection of functions to apply lateness policies.
+#' A collection of functions to apply lateness policies if the lateness of an assignment falls within a specified threshold
 #'
-#' * `until()` determines if lateness for `assignments` is less than or equal to `late_policy`.
+#' * `until()` determines if the lateness for `assignments` is less than or equal to `late_policy`
 #' 
-#' * `add()` adds `late_policy` to score if `assignments` is determined as late.
+#' * `between()` determines if lateness for `assignments` is between `late_policy`
 #' 
-#' * `between()` determines if lateness for `assignments` is between `late_policy`.
+#' * `after()` determines if lateness for `assignments` is more than or equal to `late_policy`
 #' 
-#' * `scale_by()` scales score by `late_policy` if `assignments` is determined as late.
+#' * `add()` adds `late_policy` to score if the lateness of the `assignments` is within the threshold (Note: a positive value for `late_policy` would increase the score for that assignment)
+#'
+#' * `scale_by()` scales score by `late_policy` if the lateness of the `assignments` is within the threshold
 #' 
-#' * `after()` determines if lateness for `assignments` is more than or equal to `late_policy`.
-#' 
-#' * `set_to()` sets score to `late_policy` if `assignments` is determined as late.
+#' * `set_to()` sets score to `late_policy` if the lateness of the `assignments` is within the threshold
 #'
 #'
-#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param grades_mat Matrix with assignments + associated columns for each category
 #' @param late_policy Relevant threshold/scalar for lateness policy
 #' @param original_late_mat Matrix that saves original lateness values
 #' @param assignments Assignment names for this category
 #' 
-#' @return A matrix
+#' @return A matrix with the lateness penalties applied to the score of the category's assignments
 #'
 #' @family {Lateness Functions}
 #' 
@@ -420,18 +443,18 @@ set_to <- function(grades_mat, late_policy, original_late_mat, assignments){
 #' 
 #' A collection of functions to computes lateness for category.
 #'
-#' * `mean_lateness()` computes a sum.
+#' * `mean_lateness()` computes the aggregated lateness of a category by taking the mean of the lateness of the category's assignments
 #' 
-#' * `sum_lateness()` computes a mean.
+#' * `sum_lateness()` computes the aggregated lateness of a category by taking the sum of the lateness of the category's assignments
 #' 
-#' * `max_lateness()` computes a max.
+#' * `max_lateness()` computes the aggregated lateness of a category by taking the maximum of the lateness of the category's assignments
 #'
 #'
-#' @param grades_mat Matrix with assignments + associated cols for that category
+#' @param grades_mat Matrix with assignments + associated columns for each category
 #' @param category Category name
 #' @param assignments Assignment names for this category
 #' 
-#' @return A matrix
+#' @return A matrix with the aggregated lateness for each category
 #'
 #' @family {Aggregation for Lateness Functions}
 #' 

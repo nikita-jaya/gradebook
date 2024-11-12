@@ -22,7 +22,7 @@ after(grades_mat, late_policy, original_late_mat, assignments)
 set_to(grades_mat, late_policy, original_late_mat, assignments)
 }
 \arguments{
-\item{grades_mat}{Matrix with assignments + associated cols for that category}
+\item{grades_mat}{Matrix with assignments + associated columns for each category}
 
 \item{late_policy}{Relevant threshold/scalar for lateness policy}
 
@@ -31,17 +31,17 @@ set_to(grades_mat, late_policy, original_late_mat, assignments)
 \item{assignments}{Assignment names for this category}
 }
 \value{
-A matrix
+A matrix with the lateness penalties applied to the score of the category's assignments
 }
 \description{
-A collection of functions to apply lateness policies.
+A collection of functions to apply lateness policies if the lateness of an assignment falls within a specified threshold
 \itemize{
-\item \code{until()} determines if lateness for \code{assignments} is less than or equal to \code{late_policy}.
-\item \code{add()} adds \code{late_policy} to score if \code{assignments} is determined as late.
-\item \code{between()} determines if lateness for \code{assignments} is between \code{late_policy}.
-\item \code{scale_by()} scales score by \code{late_policy} if \code{assignments} is determined as late.
-\item \code{after()} determines if lateness for \code{assignments} is more than or equal to \code{late_policy}.
-\item \code{set_to()} sets score to \code{late_policy} if \code{assignments} is determined as late.
+\item \code{until()} determines if the lateness for \code{assignments} is less than or equal to \code{late_policy}
+\item \code{between()} determines if lateness for \code{assignments} is between \code{late_policy}
+\item \code{after()} determines if lateness for \code{assignments} is more than or equal to \code{late_policy}
+\item \code{add()} adds \code{late_policy} to score if the lateness of the \code{assignments} is within the threshold (Note: a positive value for \code{late_policy} would increase the score for that assignment)
+\item \code{scale_by()} scales score by \code{late_policy} if the lateness of the \code{assignments} is within the threshold
+\item \code{set_to()} sets score to \code{late_policy} if the lateness of the \code{assignments} is within the threshold
 }
 }
 \concept{{Lateness Functions}}
