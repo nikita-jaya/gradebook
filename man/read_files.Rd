@@ -17,5 +17,5 @@ read_files(grades_path, other_file_paths = list(), source = "auto")
 A dataframe of grades. Later support for other files will be returned as a list as well.
 }
 \description{
-This function will read in input data and combine in the appropriate manner.
+This function will read in all input data to Gradebook.
 }
