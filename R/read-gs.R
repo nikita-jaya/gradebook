@@ -2,8 +2,8 @@
 #'
 #' This functions reads the Gradescope .csv, checks for correct format.
 #'  
-#'Now it is favored to use read_files. 
-#'This function is left for backwards-compatibility.
+#' Now it is favored to use read_files. 
+#' This function is left for backwards-compatibility.
 #' @param path Path to Gradescope CSV
 #' @param verbose whether or not to print messages
 #'
@@ -14,44 +14,36 @@
 read_gs <- function(path, verbose = FALSE){
   # read in csv
   gs <- read_csv(path, trim_ws = FALSE) |>
-    #check format
+    # check format
     check_data_format()
-  #add source attribute
+  # add source attribute
   attr(gs, "source") <- "Gradescope"
   
   gs
 }
 
 
-#'Read in 1 or more files from Grading Platform
+#' Read in 1 or more files from Grading Platform
 #'
-#'This function will read in input data and combine in the appropriate manner.
-#'@param grades_path Is the path to the csv containing graded assignments.
-#'@param other_file_paths Is a list containing any other filepaths desired to be read in. Each name should be a designated type of file. For example, "lateness" and "roster" and the value should be the filepath.
-#'@param source Determines how to read the grade file. By default, it is auto so that Gradebook can determine what format the file is in. Alternatively, users can specify "Gradescope" or "Canvas" to force certain interpretations.
-#'@return A dataframe of grades. Later support for other files will be returned as a list as well.
-#'@importFrom readr read_csv
-#'@export
+#' This function will read in all input data to Gradebook.
+#' @param grades_path Is the path to the csv containing graded assignments.
+#' @param other_file_paths Is a list containing any other filepaths desired to be read in. Each name should be a designated type of file. For example, "lateness" and "roster" and the value should be the filepath.
+#' @param source Determines how to read the grade file. By default, it is auto so that Gradebook can determine what format the file is in. Alternatively, users can specify "Gradescope" or "Canvas" to force certain interpretations.
+#' @return A dataframe of grades. Later support for other files will be returned as a list as well.
+#' @importFrom readr read_csv
+#' @export
 read_files <- function(grades_path, 
                        other_file_paths = list(), 
                        source = "auto"){
-  #first read in all of the files
+  # first read in all of the files
   
-  #begininng with the grades csv
+  # beginning with the grades csv
   
-  tryCatch({
+  
     grades <- readr::read_csv(grades_path, trim_ws = FALSE)
-    },
-    error = function(e){
-      stop(
-      paste0("Error when attempting to read grade csv file. 
-           Check that the filepath is correct. Error: ",
-             e)
-      )
-    }
-  )
+    
   
-  #now read in other supplied data 
+  # now read in other supplied data 
  for (data_type in names(other_file_paths)){
    warning(paste0(data_type, 
                   " is not currently supported as an extra file source."))
@@ -62,14 +54,14 @@ read_files <- function(grades_path,
   auto_determine <- determine_grade_source(grades)
   
   if (source == "auto"){
-    #fill in later
+    
     
     if (auto_determine == "Gradescope"){
-      attr(grades, "source") <- "Gradescope"
       
-      return(check_data_format(grades))
+      
+      return(read_gradescope_grades(grades))
     } else if (auto_determine == "Canvas"){
-      #the read_canvas_grades does all of the lifting
+      # the read_canvas_grades does all of the lifting
       return(read_canvas_grades(grades))
     } else {
       stop("Data source is unrecognized.")
@@ -85,9 +77,9 @@ read_files <- function(grades_path,
       ))
     }
     
-    attr(grades, "source") <- "Gradescope"
     
-    return(check_data_format(grades))
+    
+    return(read_gradescope_grades(grades))
       
   } else if (source == "Canvas"){
     if (source != auto_determine){
@@ -98,7 +90,7 @@ read_files <- function(grades_path,
         auto_determine, "."
       ))
     }
-    #the read_canvas_grades does all of the lifting
+    # the read_canvas_grades does all of the lifting
     return(read_canvas_grades(grades))
     
   } else {
@@ -112,53 +104,65 @@ read_files <- function(grades_path,
  
 }
 
-#'Convert Canvas grade dataframe into standard format
-#'
-#'Takes in a dataframe uploaded from Canvas. 
-#'Returns a dataframe in our standardized format (ie like Gradescope).
-#'
-#'
-#'@importFrom stringr str_extract str_match
-#'@importFrom dplyr filter select slice rename_with rename left_join
-#'@importFrom purrr discard
-#'@keywords internal
-read_canvas_grades <- function(grades){
-  #first determine which columns are assignments
+read_gradescope_grades <- function(df){
+  # almost identity function when reading in gradescope grades 
+  # to create symmetry with read_canvas_grades
   
-  #canvas categories will not be kept
+  attr(df, "source") <- "Gradescope"
+  check_data_format(df)
+}
+
+
+
+#' @importFrom stringr str_extract str_match
+#' @importFrom dplyr filter select slice rename_with rename bind_cols
+#' @importFrom purrr discard
+#' @importFrom lubridate make_difftime
+#' 
+read_canvas_grades <- function(grades){
+  # Convert Canvas grade dataframe into standard format
+  #
+  # Takes in a dataframe uploaded from Canvas. 
+  # Returns a dataframe in our standardized format (ie like Gradescope).
+  #
+  #
+  
+  # first determine which columns are assignments
+  
+  # canvas categories will not be kept
   
   assignments <- stringr::str_extract(names(grades),
                                       ".+\\s*\\(\\d+\\)") |>
                 purrr::discard(is.na)
   
  
-  #now reconfigure the points possible info
-  max_points <- dplyr::filter(grades, Student == "    Points Possible") |>
+  # now reconfigure the points possible info
+  max_points <- dplyr::filter(grades, Student %in% c( "    Points Possible", "Points Possible")) |>
     dplyr::select(all_of(assignments)) |>
     dplyr::slice(rep.int(1, nrow(grades))) |>
-    dplyr::rename_with(function(x){
-      paste0(x, " - Max Points")
-    })
-  #add ID column to max points to facilitate matching
-  max_points$ID <- grades$ID
+    dplyr::rename_with(
+        function(x){
+          paste0(x, " - Max Points")
+        }
+    )
   
-  #remove unneeded cols, add max_point column, and remove rows that are not students
+  
+  # remove unneeded cols, add max_point column, and remove rows that are not students
   grades <- grades |>
     dplyr::select(c(all_of(assignments), "ID", "Student", 
                     "SIS User ID", "Section")) |>
-    dplyr::left_join(max_points, 
-                     by = dplyr::join_by(ID == ID)) |>
-    dplyr::filter(!(Student %in% c("    Points Possible", "Student, Test")))
+    dplyr::bind_cols(max_points) |>
+    dplyr::filter(!(Student %in% c("    Points Possible", "Student, Test", "Points Possible")))
   
-  #add columns for submission time and lateness
+  # add columns for submission time and lateness
   
   sub_cols <- paste0(assignments, " - Submission Time")
   
   late_cols <- paste0(assignments, " - Lateness (H:M:S)")
   
-  grades[sub_cols] <- as.POSIXct(NA)
+  grades[sub_cols] <- NA
   
-  grades[late_cols] <- NA
+  grades[late_cols] <- lubridate::make_difftime(NA)
   
   grades$`First Name` <- (stringr::str_match(grades$Student, 
                                              ".+,\\s(.+)"))[, 2]
@@ -171,7 +175,9 @@ read_canvas_grades <- function(grades){
     dplyr::rename(SID = `SIS User ID`,
                   Sections = Section) |>
     dplyr::select(c("First Name", "Last Name", "SID", "Sections",
-                    as.vector(rbind(assignments, 
+                    as.vector(
+                            mapply(c,
+                                   assignments, 
                                     paste0(assignments, " - Max Points"), 
                                     sub_cols,
                                     late_cols)
@@ -185,12 +191,12 @@ read_canvas_grades <- function(grades){
   
 }
 
-#'Predict the source of grade dataframe.
+#' Predict the source of grade dataframe.
 #'
-#'This function performs the auto-determination of where the grades dataframe was sourced.
-#'@param grades_df This is the input Dataframe
-#'@returns A string "Canvas", "Gradescope", or "Unrecognized" of the determination.
-#'@export
+#' This function performs the auto-determination of where the grades dataframe was sourced.
+#' @param grades_df This is the input Dataframe
+#' @returns A string "Canvas", "Gradescope", or "Unrecognized" of the determination.
+#' @export
 determine_grade_source <- function(grades_df){
   
   columns <- names(grades_df)
@@ -251,7 +257,7 @@ check_data_format <- function(gs, verbose = FALSE){
 #' @export
 
 get_id_cols <- function(gs, verbose = FALSE) {
-  #REGEX pattern: case INsensitive, then matches the extensions
+  # REGEX pattern: case INsensitive, then matches the extensions
   regex <- "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
   
   # extract base names and excludes the extensions (max points, submission time and lateness)
@@ -293,8 +299,8 @@ get_id_cols <- function(gs, verbose = FALSE) {
 #' @export
 
 get_assignments <- function(gs, verbose = FALSE){
-  #REGEX pattern: case INsensitive, then matches the extensions
-  #works with untouched GS dataframe so we can match the pattern
+  # REGEX pattern: case INsensitive, then matches the extensions
+  # works with untouched GS dataframe so we can match the pattern
   regex = "(?i)( - max points| - submission time| - lateness \\(h:m:s\\))"
   
   # extract base names and excludes the extensions (max points, submission time and lateness)

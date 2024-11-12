@@ -7,14 +7,14 @@
 #' @export
 process_policy <- function(policy, verbose = FALSE){
   policy <- policy |>
-    # insert extract_weights here!
+    
     find_weights() |>
     flatten_policy()
   
   return (policy)
 }
+
 #' @importFrom purrr map
-#' @keywords internal
 find_weights <- function(policy){
   # This function will return a policy file where the weights have been extracted from 
   # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
@@ -23,19 +23,19 @@ find_weights <- function(policy){
     purrr::map(extract_weights)
   return(policy)
 }
-#'
+
+
 #'@importFrom purrr map map_dbl
-#'@keywords internal
 extract_weights <- function(category){
   # If there's no more nesting, return the category as a list
   if (!("assignments" %in% names(category) && is.list(category$assignments)
   )) {
     # remove the weight from the individual category it is in for cleanliness
-    #category$weight <- NULL
+    # category$weight <- NULL (under debate; may use in the future)
     return(category)
   }
   
-  #potential problems encoded as warnings in order to allow execution to continue for app
+  # potential problems encoded as warnings in order to allow execution to continue for app
   if ( category$aggregation == "weighted_mean"){
     
     category$weights <- purrr::map_dbl(category$assignments, 
@@ -60,8 +60,8 @@ extract_weights <- function(category){
                                          }
                                          return(weight)
                                        })
-    #normalize weights
-    #policy under such conditions can be a subject of discussion
+    # normalize weights
+    # policy under such conditions can be a subject of refinement
     if (sum(category$weights) == 0){
       category$weights <- rep.int(1/length(category$weights), length(category$weights))
     } else {
@@ -101,16 +101,13 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     categories <- map(policy$categories, "category") |> unlist()
     assignments <- c(get_assignments(gs), categories)
     policy$categories <- map(policy$categories, function(cat){
-      # if (cat$aggregation == "weighted_mean"){
-      #   #drop the respective weight(s) if category not found
-      #   cat$weights <- cat$weights[cat$assignments %in% assignments]
-      # }
+      
       # drop categories with unavailable assignments/nested categories
       remaining_assignments <- cat$assignments %in% assignments
       cat$assignments <- cat$assignments[remaining_assignments]
       cat$weights <- cat$weights[remaining_assignments]
       if (length(cat$assignments) == 0){
-        #if category has no assignments, drop
+        # if category has no assignments, drop
         return (NULL)
       }
       return (cat)
@@ -127,7 +124,7 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     stop("None of the assignments in policy file are found in gs.")
   }
   
-  #check if lateness is attempted to be used with Canvas data
+  # check if lateness is attempted to be used with Canvas data
   if ((attr(gs, "source") == "Canvas") && 
       (any(purrr::map_lgl(policy$categories, 
                         function(x){
@@ -148,15 +145,15 @@ set_defaults <- function(policy, gs, verbose = FALSE){
   
   # add default values if missing
   policy$categories <- map(policy$categories, function(cat){
-    #if min_score/max_score aggregation
+    # if min_score/max_score aggregation
     if ("aggregation" %in% names(cat) & cat[["aggregation"]] %in% c("min_score", "max_score")){
-      #default for max pts aggregation is "mean_max_pts"
+      # default for max pts aggregation is "mean_max_pts"
       default_cat[["aggregation_max_pts"]] = "mean_max_pts"
     } else {
       default_cat[["aggregation_max_pts"]] = "sum_max_pts"
     }
     
-    #merge default_cat to category
+    # merge default_cat to category
     for (default_name in names(default_cat)){
       if (!(default_name %in% names(cat))){
         default <- list(default_cat[[default_name]])
@@ -164,9 +161,9 @@ set_defaults <- function(policy, gs, verbose = FALSE){
         cat <- append(cat, default)
       }
     }
-    #if all assignments are in gs (i.e. there are no nested categories)
+    # if all assignments are in gs (i.e. there are no nested categories)
     if (!("score" %in% names(cat)) & sum(cat[["assignments"]] %in% get_assignments(gs)) != 0){
-      #default score is raw_over_max
+      # default score is raw_over_max
       score <- list(
         category = cat[["category"]],
         score = "raw_over_max")
@@ -227,36 +224,3 @@ extract_nested <- function(category) {
   c(nested_categories_flattened, list(category))
 }
 
-#' 
-#' find_weights <- function(policy){
-#'   # This function will return a policy file where the weights have been extracted from 
-#'   # assignments into the above category featuring aggregation "weighted_mean", where the returned policy file is
-#'   # otherwise identical to the input. 
-#'   policy$categories[[1]] <- extract_weights(policy$categories[[1]])
-#'   return(policy)
-#' }
-#' #'
-#' #'@importFrom purrr map map_dbl
-#' extract_weights <- function(category){
-#'   # If there's no more nesting, return the category as a list
-#'   if (!("assignments" %in% names(category) && is.list(category$assignments)
-#'   )) {
-#'     # remove the weight from the individual category it is in for cleanliness
-#'     #category$weight <- NULL
-#'     return(category)
-#'   }
-#'   if ( category$aggregation == "weighted_mean"){
-#'     
-#'     category$weights <- purrr::map_dbl(category$assignments, 
-#'                                        function(x){
-#'                                          x$weight
-#'                                        })
-#'     #normalize weights
-#'     category$weights <- category$weights / sum(category$weights)
-#'   }
-#'   
-#'   category$assignments <- purrr::map(category$assignments, extract_weights)
-#'   
-#'   return(category)
-#'   
-#' }
