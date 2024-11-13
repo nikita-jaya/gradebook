@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(gradebook)
 ```
 
-Canvas is a popular classroom management tool throughout colleges and universities that is commonly used to grade assignments and collect student grades. This article describes how to use Gradebook with Canvas data. 
+Canvas is a popular classroom management tool that is commonly used to grade assignments and collect student grades throughout colleges and universities. This article describes how to use `Gradebook` with Canvas data. 
 
 Advanced users wishing to gain a deep understanding of how Canvas data is structured can also read the "Detailed Canvas Export Info" vignette. 
 
@@ -39,9 +39,9 @@ The grades csv is the only file that is needed to generate final grades with Gra
 
 ## Data Format
 
-The internal standard for Gradebook data is for assignment grades data to be formatted in the manner given by an export from Gradescope, which is another platform for collecting student grades. Gradebook functionality allows a csv of assignment grade exports from Canvas to be converted into our internal standards for seamless use of Canvas data. 
+The internal standard for Gradebook data is for assignment data to be formatted like Gradescope data, which is another platform for collecting student grades. Gradebook functionality converts the Canvas assignment data into our internal standards for seamless use of Canvas data.
 
-To use grade data from Canvas, simply call read_files() as one would with any other data source. Gradebook uses intelligent algorithms that can determine the source of the file (Canvas in this example) and load in file in appropriately. To force the file to be read in as a Canvas sourced file, users can pass the argument `source = "Canvas"` into the read_files() function. Gradebook will track where the data originated and prevent potentially dangerous operations during grading. 
+To use grade data from Canvas, simply use `read_files()`; this process is not unique to Canvas data. Gradebook assesses the source of the file (e.g. Gradescope, Canvas, or other) and load in file in appropriately. To force the file to be read in as a Canvas sourced file, users can pass the argument `source = "Canvas"` into the read_files() function. Gradebook will track where the data originated and prevent potentially dangerous operations during grading. 
 
 After reading in the data, the data can be used to calculate grades as in the case study vignettes. 
 
@@ -63,21 +63,19 @@ Here is the processed dataframe.
 
 ## Limitations
 
-There are limitations to using assignment data sourced from Canvas, resulting in a reduction of possible grading policies in Gradebook. The primary limitation surrounds applies lateness policies when using data sourced from Canvas. 
+With our current implemention, there are limitations to using assignment data sourced from Canvas, resulting in a reduction of potential grading functionality in Gradebook. The primary limitation surrounds the application of lateness policies when using data sourced from Canvas. 
 
-The grades csv exported from Canvas does not include information on assignment lateness. As mentioned below, Canvas also can export files detailing late assignments. However, this lateness file omits the time that the assignment was due, making it not possible to accurately calculate how late any late assignment is. 
-
-As a result, we do not allow lateness policies to be used when the data is sourced from Canvas. Attempts to do so will raise an error. 
+The grades csv exported from Canvas does not include information on assignment lateness. As mentioned below, Canvas also can export files detailing late assignments. However, this lateness file omits the time that the assignment was due, making it not possible to accurately calculate how late any late assignment is. As a result, we do not allow lateness policies to be used when the data is sourced from Canvas. Attempts to do so will raise an error. 
 
 Currently, our recommendation is for Canvas users to apply any late policies in Canvas, since Canvas can apply simple lateness policies. 
 
 ## Other Data
 
-In addition to the grades file, Canvas also exports information that can be relevant to grade calculation. Examples include the lateness csv file and a roster csv file. 
+In addition to the grades file, Canvas also exports information that can be relevant to grade calculation. Examples include the lateness csv file and a roster csv file. Integrating the information from these two files are currently not supported.
 
-The lateness file details which assignments where submitted late by which students. Due to the drawbacks mentioned above, we are currently not using this file to calculate late policies in Gradebook. 
+The lateness file details which assignments where submitted late by which students. Due to the drawbacks mentioned above, we are currently not using this file to implement lateness penalties in Gradebook. 
 
-The roster csv file gives all student names and their contact information, which can be relevant if instructors desire to have student contact information available in the exported grades file. Integrating roster information is currently not supported.
+The roster csv file gives all student names and their contact information, which can be relevant if instructors desire to have student contact information available in the exported grades file.
 
 Both of these files are accessed through the "New Analytics" tab available on the right side of the course homepage. To download these files, click Analytics on the home page, navigate to the Reports tab and download the desired report. Reference the photos below. 
 
@@ -92,6 +90,6 @@ Both of these files are accessed through the "New Analytics" tab available on th
 ```
 
 
-Currently, providing files other than the grades file is not supported by Gradebook. However, we have built the infrastructure to read in these files, should the need or opportunity arise. 
+Currently, providing files other than the grades file is not supported by Gradebook. However, we have built the infrastructure to read in these files for future integration of other data sources (e.g. the lateness or roster csv files from Canvas).
 
 For full information on the formatting of Canvas exported data, see the "Detailed Canvas Export Info" vignette. 
