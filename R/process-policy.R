@@ -102,7 +102,7 @@ extract_weights <- function(category){
 #' 
 #' @return A policy list
 #'
-#' @importFrom purrr map list_flatten
+#' @importFrom purrr map list_flatten map_lgl
 #' @export
 reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
   # check if grades has source attr set
