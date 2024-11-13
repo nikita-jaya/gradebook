@@ -120,8 +120,8 @@ read_gradescope_grades <- function(df){
 
 
 
-#' @importFrom stringr str_extract str_match
-#' @importFrom dplyr filter select slice rename_with rename bind_cols
+#' @importFrom stringr str_extract str_match str_replace
+#' @importFrom dplyr filter select slice rename_with rename bind_cols mutate_at
 #' @importFrom purrr discard
 #' @importFrom lubridate make_difftime
 #' 
@@ -141,6 +141,14 @@ read_canvas_grades <- function(grades){
                                       ".+\\s*\\(\\d+\\)") |>
                 purrr::discard(is.na)
   
+  # coerce into numerical and convert excused assignments into set value
+  grades <- grades |>
+    dplyr::filter(!is.na(Student)) |>
+    dplyr::mutate_at(assignments, function(x) {
+        dplyr::if_else(x == "EX", NA, x) |>
+        as.numeric()
+      })
+  
  
   # now reconfigure the points possible info
   max_points <- dplyr::filter(grades, Student %in% c( "    Points Possible", "Points Possible")) |>
@@ -158,7 +166,7 @@ read_canvas_grades <- function(grades){
     dplyr::select(c(all_of(assignments), "ID", "Student", 
                     "SIS User ID", "Section")) |>
     dplyr::bind_cols(max_points) |>
-    dplyr::filter(!(Student %in% c("    Points Possible", "Student, Test", "Points Possible")))
+    dplyr::filter(!(Student %in% c("    Points Possible", "Student, Test", "Points Possible", NA)))
   
   # add columns for submission time and lateness
   
@@ -189,7 +197,11 @@ read_canvas_grades <- function(grades){
                                     late_cols)
                               )
                     )
-                  )
+                  ) |>
+    dplyr::mutate_at("SID", function(x){
+      stringr::str_replace(x, "^UID:", "") |> 
+        as.numeric()
+    })
   
   attr(grades, "source") <- "Canvas"
   

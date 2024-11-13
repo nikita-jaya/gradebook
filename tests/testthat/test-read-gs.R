@@ -593,6 +593,170 @@ test_that("Test read_canvas_grades With Test Student and whitespace trimmed Poin
   expect_equal(actual, expected)
 })
 
+test_that("Test read_canvas_grades With UID", {
+  data <- tibble::tibble(
+    Student = c("    Points Possible", "Smith, Adam", "Rock, John", "Porch, Stephanie", "Pai, Henry",
+                "Student, Test"),
+    ID = c(NA, 989786, 453657, 123786, 876345, 670504),
+    `SIS User ID` = c(NA, "456789", "UID:768596", "567812", "UID:888763", NA),
+    `SIS Login ID` = c(NA, 46574, 75685, 64573, 12345, 0xeff85769),
+    Section = c(NA, "1", "1", "2", "3", "1"),
+    `HW 1 (867568)` = c(10, 5, 6, 7, 8, 0),
+    `HW 2 (867573)` = c(5, 1, 2, 3, 4, 0),
+    `Midterm (867589)` = c(50, 34, 46, 12, 31, 155),
+    `Final (345678)` = c(100, 34, 45, 65, 87, 0),
+    `Beep Boop Category` = c(NA, 6, 7, 3, 2, NA)
+  )
+  
+  expected <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
+    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    
+  )
+  
+  attr(expected, "source") <- "Canvas"
+  
+  actual <- read_canvas_grades(data)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("Test read_canvas_grades With Excused assignments", {
+  data <- tibble::tibble(
+    Student = c("    Points Possible", "Smith, Adam", "Rock, John", "Porch, Stephanie", "Pai, Henry",
+                "Student, Test"),
+    ID = c(NA, 989786, 453657, 123786, 876345, 670504),
+    `SIS User ID` = c(NA, 456789, 768596, 567812, 888763, NA),
+    `SIS Login ID` = c(NA, 46574, 75685, 64573, 12345, 0xeff85769),
+    Section = c(NA, "1", "1", "2", "3", "1"),
+    `HW 1 (867568)` = c(10, 5, 6, "EX", 8, 0),
+    `HW 2 (867573)` = c(5, 1, "EX", 3, 4, 0),
+    `Midterm (867589)` = c(50, 34, 46, 12, 31, 155),
+    `Final (345678)` = c(100, 34, "EX", 65, 87, 0),
+    `Beep Boop Category` = c(NA, 6, 7, 3, 2, NA)
+  )
+  
+  expected <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, NA, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `HW 2 (867573)` = c( 1, NA, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
+    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Final (345678)` = c( 34, NA, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    
+  )
+  
+  attr(expected, "source") <- "Canvas"
+  
+  actual <- read_canvas_grades(data)
+  
+  expect_equal(actual, expected)
+})
+
+test_that("Test read_canvas_grades With Notes Row", {
+  data <- tibble::tibble(
+    Student = c(NA , "    Points Possible", "Smith, Adam", "Rock, John", "Porch, Stephanie", "Pai, Henry",
+                "Student, Test"),
+    ID = c(NA, NA, 989786, 453657, 123786, 876345, 670504),
+    `SIS User ID` = c(NA, NA, 456789, 768596, 567812, 888763, NA),
+    `SIS Login ID` = c(NA, NA, 46574, 75685, 64573, 12345, 0xeff85769),
+    Section = c(NA, NA, "1", "1", "2", "3", "1"),
+    `HW 1 (867568)` = c("Manually Entered" ,10, 5, 6, 7, 8, 0),
+    `HW 2 (867573)` = c(NA, 5, 1, 2, 3, 4, 0),
+    `Midterm (867589)` = c("Some text", 50, 34, 46, 12, 31, 155),
+    `Final (345678)` = c(NA, 100, 34, 45, 65, 87, 0),
+    `Beep Boop Category` = c(NA, NA, 6, 7, 3, 2, NA)
+  )
+  
+  expected <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
+    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    
+  )
+  
+  attr(expected, "source") <- "Canvas"
+  
+  actual <- read_canvas_grades(data)
+  
+  expect_equal(actual, expected)
+})
+
+
+
 test_that("Test read_gradescope_grades", {
   data <- tibble::tibble(
     `First Name` = c("Joe", "Harrison", "Don", "Kevin"),
