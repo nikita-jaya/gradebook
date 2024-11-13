@@ -573,7 +573,8 @@ test_that("reconcile policy with gs - no assignments in gs", {
   
   policy <- list(categories = categories)
   gs <- data.frame()
-  expect_error(reconcile_policy_with_gs(policy, gs))
+  
+  expect_error(supressWarnings(reconcile_policy_with_gs(policy, gs)))
   
 })
 
@@ -986,30 +987,35 @@ test_that("flatten policy - unnested policy", {
 
 test_that("Canvas Data and Lateness Policy", {
   data <- tibble::tibble(
-    `HW 1 (867568)` = c( 5, 6, 7, 8),
-    `HW 2 (867573)` = c( 1, 2, 3, 4),
-    `Midterm (867589)` = c(34, 46, 12, 31),
-    `Final (345678)` = c( 34, 45, 65, 87),
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
     SID = c(456789, 768596, 567812, 888763),
     Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
+    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
-    `HW 1 (867568) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
-                                          as.POSIXct(NA), as.POSIXct(NA)),
-    `HW 2 (867573) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
-                                          as.POSIXct(NA), as.POSIXct(NA)),
-    `Midterm (867589) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
-                                             as.POSIXct(NA), as.POSIXct(NA)),
-    `Final (345678) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
-                                           as.POSIXct(NA), as.POSIXct(NA)),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
-    `Last Name` = c("Smith", "Rock", "Porch", "Pai")
+    
+    `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    
   )
   
   attr(data, "source") <- "Canvas"
@@ -1047,30 +1053,35 @@ test_that("Canvas Data and Lateness Policy", {
 
 test_that("Canvas Data with No Lateness", {
   data <- tibble::tibble(
-    `HW 1 (867568)` = c( 5, 6, 7, 8),
-    `HW 2 (867573)` = c( 1, 2, 3, 4),
-    `Midterm (867589)` = c(34, 46, 12, 31),
-    `Final (345678)` = c( 34, 45, 65, 87),
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
     SID = c(456789, 768596, 567812, 888763),
     Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
+    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
-    `HW 1 (867568) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
-                                          as.POSIXct(NA), as.POSIXct(NA)),
-    `HW 2 (867573) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
-                                          as.POSIXct(NA), as.POSIXct(NA)),
-    `Midterm (867589) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
-                                             as.POSIXct(NA), as.POSIXct(NA)),
-    `Final (345678) - Submission Time` = c(as.POSIXct(NA), as.POSIXct(NA), 
-                                           as.POSIXct(NA), as.POSIXct(NA)),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `Final (345678) - Lateness (H:M:S)` = c(NA, NA, NA, NA),
-    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
-    `Last Name` = c("Smith", "Rock", "Porch", "Pai")
+    
+    `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
+    
+    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
+                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    
   )
   
   attr(data, "source") <- "Canvas"
@@ -1100,3 +1111,87 @@ test_that("Canvas Data with No Lateness", {
 })
 
 
+test_that("reconcile policy with gs - correct format with no source attr", {
+  categories <- list(
+    list(
+      category = "Lab 1",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 1.1", "Lab 1.2")
+    ),
+    list(
+      category = "Lab 2",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+    ),
+    list(
+      category = "Labs",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Lab 1", "Lab 2")
+    ),
+    list(
+      category = "Quizzes",
+      score = "raw_over_max",
+      aggregation = "weighted_by_points",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories)
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(1, 0, 0.9, 0.5),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                    "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(1, 0, 0.9, 0.5),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(0, 0, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.2` = c(1, 0, 0.9, 0.5),
+    `Lab 2.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.3` = c(0, 0, 0.9, 0.5),
+    `Lab 2.3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Quiz 1` = c(0.9, 0, 0.4, 0),
+    `Quiz 1 - Max Points` = c(1, 1, 1, 1),
+    `Quiz 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                   "1/22/2023 10:00:00 AM", "0"),
+    `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  expect_warning(reconcile_policy_with_gs(policy, gs))
+  actual <- suppressWarnings(reconcile_policy_with_gs(policy, gs))
+  expected <- flatten_policy(policy)
+  expect_equal(actual, expected)
+  
+})

@@ -2,7 +2,7 @@
 title: "Detailed Canvas Export Info"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{detailed_canvas_export_info}
+  %\VignetteIndexEntry{Detailed Canvas Export Info}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

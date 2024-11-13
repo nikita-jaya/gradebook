@@ -105,6 +105,13 @@ extract_weights <- function(category){
 #' @importFrom purrr map list_flatten
 #' @export
 reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
+  # check if grades has source attr set
+  if (is.null(attr(gs, "source"))){
+    warning(paste0("Grades do not indicate the source. Unexpected behavior could arise. ",
+                   "Reload grades from csv using read_files to prevent such behavior."))
+  }
+  
+  
   #set_default uses gs to determine if there is a "score" key for categories made up of gs assignments
   policy <- policy |>
     set_defaults(gs, verbose = verbose)
@@ -140,11 +147,17 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
   }
   
   # check if lateness is attempted to be used with Canvas data
-  if ((attr(gs, "source") == "Canvas") && 
+  if ( 
+    # first check to ensure source attr exists to prevent errors
+    (!is.null(attr(gs, "source"))) &&
+    # check if grades came from Canvas
+    (attr(gs, "source") == "Canvas") && 
+    # check if lateness is being used in the policy (flattened)
       (any(purrr::map_lgl(policy$categories, 
                         function(x){
                           "lateness" %in% names(x)
-                        })))){
+                        })))
+    ) {
     stop("Canvas data does not allow for lateness calculations.")
   }
   
