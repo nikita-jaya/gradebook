@@ -178,16 +178,19 @@ read_canvas_grades <- function(grades){
   
   grades[late_cols] <- lubridate::make_difftime(NA)
   
+  # extract student name data
+  
   grades$`First Name` <- (stringr::str_match(grades$Student, 
                                              ".+,\\s(.+)"))[, 2]
   
   grades$`Last Name` <- (stringr::str_match(grades$Student, 
                                             "(.+),.+"))[, 2]
   
-  
+  # change names to match Gradescope convention
   grades <- grades |>
     dplyr::rename(SID = `SIS User ID`,
                   Sections = Section) |>
+    # reorder columns to match Gradescope
     dplyr::select(c("First Name", "Last Name", "SID", "Sections",
                     as.vector(
                             mapply(c,
@@ -198,6 +201,7 @@ read_canvas_grades <- function(grades){
                               )
                     )
                   ) |>
+    # remove "UID:" moniker and make SID numeric
     dplyr::mutate_at("SID", function(x){
       stringr::str_replace(x, "^UID:", "") |> 
         as.numeric()
