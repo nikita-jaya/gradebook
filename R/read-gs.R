@@ -29,7 +29,7 @@ read_gs <- function(path, verbose = FALSE){
 }
 
 
-#' Read in 1 or more files from Grading Platform
+#' Read in File(s) from Grading Platform(s)
 #'
 #' This function will read in all input data to Gradebook.
 #' @param grades_path Is the path to the csv containing graded assignments.
@@ -120,10 +120,10 @@ read_gradescope_grades <- function(df){
 
 
 
-#' @importFrom stringr str_extract str_match str_replace
-#' @importFrom dplyr filter select slice rename_with rename bind_cols mutate_at
+#' @importFrom stringr str_extract str_match
+#' @importFrom dplyr filter select slice rename_with rename bind_cols 
 #' @importFrom purrr discard
-#' @importFrom lubridate make_difftime
+#' 
 #' 
 read_canvas_grades <- function(grades){
   # Convert Canvas grade dataframe into standard format
@@ -166,7 +166,7 @@ read_canvas_grades <- function(grades){
     dplyr::select(c(all_of(assignments), "ID", "Student", 
                     "SIS User ID", "Section")) |>
     dplyr::bind_cols(max_points) |>
-    dplyr::filter(!(Student %in% c("    Points Possible", "Student, Test", "Points Possible", NA)))
+    dplyr::filter(!(Student %in% c("    Points Possible", "Student, Test", "Points Possible")))
   
   # add columns for submission time and lateness
   
@@ -176,7 +176,7 @@ read_canvas_grades <- function(grades){
   
   grades[sub_cols] <- NA
   
-  grades[late_cols] <- lubridate::make_difftime(NA)
+  grades[late_cols] <- "00:00:00"
   
   # extract student name data
   
@@ -200,12 +200,7 @@ read_canvas_grades <- function(grades){
                                     late_cols)
                               )
                     )
-                  ) |>
-    # remove "UID:" moniker and make SID numeric
-    dplyr::mutate_at("SID", function(x){
-      stringr::str_replace(x, "^UID:", "") |> 
-        as.numeric()
-    })
+                  ) 
   
   attr(grades, "source") <- "Canvas"
   
@@ -221,16 +216,17 @@ read_canvas_grades <- function(grades){
 #' @export
 determine_grade_source <- function(grades_df){
   
+  gs_assignments <- get_assignments(grades_df)
   columns <- names(grades_df)
   
- if (all(c("Student", "ID", "SIS User ID", "SIS Login ID") %in% columns)){
+  if (length(gs_assignments) >= 1){
+    return("Gradescope")
+  } else if (all(c("Student", "ID") %in% columns)){
    return("Canvas")
- } else if (all(c("First Name", "Last Name", "SID", "Email") %in% columns)){
-   return("Gradescope")
- } else {
+  } else {
    return("Unrecognized")
- }
-  
+  }
+   
 }
 
 

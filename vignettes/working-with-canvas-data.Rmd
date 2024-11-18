@@ -2,7 +2,7 @@
 title: "Working With Canvas Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{working_with_canvas_data}
+  %\VignetteIndexEntry{Working With Canvas Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,7 +20,7 @@ library(gradebook)
 
 Canvas is a popular classroom management tool that is commonly used to grade assignments and collect student grades throughout colleges and universities. This article describes how to use `Gradebook` with Canvas data. 
 
-Advanced users wishing to gain a deep understanding of how Canvas data is structured can also read the "Detailed Canvas Export Info" vignette. 
+Advanced users wishing to gain a deep understanding of how Canvas data is structured can also read the [Detailed Canvas Export Info](https://gradebook-dev.github.io/gradebook/articles/detailed-canvas-export-info.html) vignette. 
 
 ## Getting the Data
 
@@ -47,12 +47,14 @@ After reading in the data, the data can be used to calculate grades as in the ca
 
 Here is an example of the transformation Gradebook applies to Canvas grade data.
 
+Below is assignment grade data as exported from Canvas. 
+
 ```{r, echo = FALSE}
   canvas_demo_data <- readr::read_csv(system.file("extdata", "canvas_demo_data.csv", package = "gradebook"), trim_ws = FALSE)
   knitr::kable(canvas_demo_data)
 ```
 
-Here is the processed dataframe.
+Below is the dataframe after being transformed by Gradebook. 
 
 ```{r echo = FALSE}
   proc_canvas_data <- read_files(system.file("extdata", "canvas_demo_data.csv", package = "gradebook"))
@@ -92,4 +94,4 @@ Both of these files are accessed through the "New Analytics" tab available on th
 
 Currently, providing files other than the grades file is not supported by Gradebook. However, we have built the infrastructure to read in these files for future integration of other data sources (e.g. the lateness or roster csv files from Canvas).
 
-For full information on the formatting of Canvas exported data, see the "Detailed Canvas Export Info" vignette. 
+For full information on the formatting of Canvas exported data, see the [Detailed Canvas Export Info](https://gradebook-dev.github.io/gradebook/articles/detailed-canvas-export-info.html) vignette. 

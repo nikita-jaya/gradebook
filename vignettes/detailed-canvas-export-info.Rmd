@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(gradebook)
 ```
 
-This vignette details the specific structure of exported Canvas files. For information on how to use Canvas grade data with Gradebook, view the "Working With Canvas Data" vignette instead. This vignette details in depth information about Canvas file exports for curious advanced users.
+This vignette details the specific structure of exported Canvas files. For information on how to use Canvas grade data with Gradebook, view the [Working With Canvas Data](https://gradebook-dev.github.io/gradebook/articles/working-with-canvas-data.html) vignette instead. This vignette details in depth information about Canvas file exports for curious advanced users.
 
 There are many exports from Canvas: Canvas divides student information into multiple separate csv exports as compared to the singular Gradescope csv. Currently, there are three relevant csv exports: grades.csv, lateness.csv, and roster.csv.
 

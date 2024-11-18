@@ -53,32 +53,33 @@ get_grades <- function(gs, policy, verbose = FALSE){
 calculate_grades <- function(gs, policy){
   # convert gs into a matrix with only assignment info
   grades_mat <- gs |>
-    #only assignment info
+    # only assignment info
     select(-get_id_cols(gs)) |> 
-    #convert lateness into minutes
+    # convert lateness into minutes
     mutate_at(vars(ends_with(" - Lateness (H:M:S)")), convert_to_min) |> 
-    #convert to matrix
+    # convert to matrix
     data.matrix()
   raw_cols <- get_assignments(gs)
   grades_mat[, raw_cols][is.na(grades_mat[, raw_cols])] <- 0
-  #rownames are SID of student
+  # rownames are SID of student
   rownames(grades_mat) <- gs$SID
-  #pre_allotted cols
+  # pre_allotted cols
   categories <- unlist(map(policy$categories, "category"))
   empty <- matrix(nrow = length(gs$SID), ncol = length(categories)*3)
   colnames(empty) <- paste0(rep(categories, each = 3), c("", " - Max Points", " - Lateness (H:M:S)"))
   grades_mat <- cbind(grades_mat, empty)
   
   
-  #iterate through each policy item
+  # iterate through each policy item
   for (policy_item in policy$categories){
-    #compute calculations for each policy file and save into grades matrix
+    # compute calculations for each policy file and save into grades matrix
     grades_mat <- get_category_grade(grades_mat, policy_item)
   }
   
   grades <- grades_mat |>
     as.data.frame()
-  grades$SID <- as.numeric(rownames(grades_mat)) #add back SID
+  grades$SID <- as.numeric(rownames(grades_mat)) # add back SID
+ 
   
   idcols <- gs |>
     select(get_id_cols(gs))
@@ -104,9 +105,9 @@ calculate_grades <- function(gs, policy){
 #' 
 #' @export
 get_category_grade <- function(grades_mat, policy_item){
-  #get all keys except category and assignments (which are not functions)
+  # get all keys except category and assignments (which are not functions)
   keys <- names(policy_item)[-which(names(policy_item) %in% c("category", "assignments", "weights", "weight"))]
-  #all assignments + their associated cols for this category
+  # all assignments + their associated cols for this category
   for (key in keys){
     grades_mat <- get(key)(grades_mat, policy_item[[key]], policy_item$category, 
                            policy_item$assignments, policy_item$weights)
@@ -174,12 +175,12 @@ drop_n_lowest <- function(grades_mat, policy_line, category, assignments, weight
     return (grades_mat) #no change
   }
   grades_mat[, assignments] <- t(apply(t(grades_mat[, assignments]), 2, function(assign){
-    if (length(assignments) == 1) return (assign) #if only one assignment, no drops
-    lowest_indices <- order(assign)[1:n] #indices of n lowest assignments
-    if (n >= length(assignments)) { #if more drops than assignments
+    if (length(assignments) == 1) return (assign) # if only one assignment, no drops
+    lowest_indices <- order(assign)[1:n] # indices of n lowest assignments
+    if (n >= length(assignments)) { # if more drops than assignments
       lowest_indices <- order(assign)[1:(length(assignments)-1)] #drop all but one
     }
-    assign[lowest_indices] <- NA #drop designated scores
+    assign[lowest_indices] <- NA # drop designated scores
     return(assign)
   }))
   

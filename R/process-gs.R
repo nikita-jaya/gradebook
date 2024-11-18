@@ -19,8 +19,8 @@
 process_gs <- function(gs, drop_ungraded = TRUE, verbose = FALSE){
   # check if grades has source attr set
   if (is.null(attr(gs, "source"))){
-    warning(paste0("Grades do not indicate the source. Unexpected behavior could arise. ",
-                   "Reload grades from csv using read_files to prevent such behavior."))
+    warning("Grades do not indicate the source. Unexpected behavior could arise. ",
+                   "Reload grades from csv using read_files to prevent such behavior.")
   }
   
   if (drop_ungraded) {

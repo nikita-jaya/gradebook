@@ -11,13 +11,13 @@ reference:
   desc: >
     These functions are to read in and process data from a grading platform such as Gradescope.
   contents:
-  - read_gs
+  - read_files
   - process_gs
   - check_data_format
   - get_id_cols
   - get_assignments
-  - read_files
   - determine_grade_source
+  - read_gs
   
 - title: Policy File Functions
   desc: >
@@ -78,6 +78,9 @@ articles:
   - moderate-syllabus
   - complex-syllabus
   - working-with-canvas-data
+  
+- title: Miscellaneous
+  contents:
   - detailed-canvas-export-info
 
 development:

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read-gs.R
 \name{read_files}
 \alias{read_files}
-\title{Read in 1 or more files from Grading Platform}
+\title{Read in File(s) from Grading Platform(s)}
 \usage{
 read_files(grades_path, other_file_paths = list(), source = "auto")
 }

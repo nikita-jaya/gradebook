@@ -283,27 +283,23 @@ test_that("Test read_canvas_grades", {
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
@@ -338,27 +334,23 @@ test_that("Test read_canvas_grades With Test Student", {
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
@@ -394,27 +386,23 @@ test_that("Test read_canvas_grades With Test Student and Cols including (...)", 
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
@@ -451,27 +439,23 @@ test_that("Test read_canvas_grades With Test Student and Cols including ( )", {
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
@@ -508,27 +492,23 @@ test_that("Test read_canvas_grades With Test Student and Cols including ()", {
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
@@ -562,27 +542,23 @@ test_that("Test read_canvas_grades With Test Student and whitespace trimmed Poin
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
@@ -611,32 +587,28 @@ test_that("Test read_canvas_grades With UID", {
   expected <- tibble::tibble(
     `First Name` = c("Adam", "John", "Stephanie", "Henry"),
     `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
-    SID = c(456789, 768596, 567812, 888763),
+    SID = c("456789", "UID:768596", "567812", "UID:888763"),
     Sections = c("1", "1", "2", "3"),
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` =  c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
@@ -670,27 +642,23 @@ test_that("Test read_canvas_grades With Excused assignments", {
     `HW 1 (867568)` = c( 5, 6, NA, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, NA, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, NA, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
@@ -724,27 +692,23 @@ test_that("Test read_canvas_grades With Notes Row", {
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
   
