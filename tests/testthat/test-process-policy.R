@@ -994,29 +994,26 @@ test_that("Canvas Data and Lateness Policy", {
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
+  
   
   attr(data, "source") <- "Canvas"
   
@@ -1060,29 +1057,26 @@ test_that("Canvas Data with No Lateness", {
     `HW 1 (867568)` = c( 5, 6, 7, 8),
     `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
     `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 1 (867568) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `HW 2 (867573)` = c( 1, 2, 3, 4),
     `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
     `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
-    `HW 2 (867573) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                           lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     
     `Midterm (867589)` = c(34, 46, 12, 31),
     `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
     `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
-    `Midterm (867589) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                              lubridate::make_difftime(NA), lubridate::make_difftime(NA)),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
     `Final (345678)` = c( 34, 45, 65, 87),
     `Final (345678) - Max Points` = c( 100, 100, 100, 100),
     
     `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
     
-    `Final (345678) - Lateness (H:M:S)` = c(lubridate::make_difftime(NA), lubridate::make_difftime(NA), 
-                                            lubridate::make_difftime(NA), lubridate::make_difftime(NA))
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
     
   )
+  
   
   attr(data, "source") <- "Canvas"
   
@@ -1192,4 +1186,67 @@ test_that("reconcile policy with gs - correct format with no source attr", {
   expect_error(expect_warning(reconcile_policy_with_gs(policy, gs)))
   
   
+})
+
+
+test_that("Gradescope Data and Lateness Policy", {
+  data <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, 7, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
+    
+    `Midterm (867589)` = c(34, 46, 12, 31),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
+    
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
+    
+  )
+  
+  attr(data, "source") <- "Gradescope"
+  
+  categories <- list(
+    list(
+      category = "Homework",
+      assignments = c("HW 1 (867568)", "HW 2 (867573)"),
+      aggregation = "equally_weighted",
+      lateness = list(
+        until = "02:10:00",
+        scale_by = 0.85,
+        after = "22:10",
+        set_to = 0.4
+      )
+    ),
+    list(
+      category = "Exams",
+      assignments = c("Midterm (867589)", "Final (345678)"),
+      aggregation = "weighted_by_points"
+    ),
+    list(
+      category = "Overall Grade",
+      assignments = c("Homework", "Exams"),
+      aggregation = "equally_weighted"
+    )
+  )
+  
+  pol <- list(categories = categories)
+  
+  expect_no_error(reconcile_policy_with_gs(pol, data))
+  
+ 
 })
