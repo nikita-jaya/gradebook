@@ -146,19 +146,19 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     stop("None of the assignments in policy file are found in gs.")
   }
   
-  # check if lateness is attempted to be used with Canvas data
+  # check if lateness is attempted to be used with non Gradescope data
   if ( 
     # first check to ensure source attr exists to prevent errors
-    (!is.null(attr(gs, "source"))) &&
+    (is.null(attr(gs, "source"))) ||
     # check if grades came from Canvas
-    (attr(gs, "source") == "Canvas") && 
+    ((attr(gs, "source") != "Gradescope") && 
     # check if lateness is being used in the policy (flattened)
       (any(purrr::map_lgl(policy$categories, 
                         function(x){
                           "lateness" %in% names(x)
-                        })))
+                        }))))
     ) {
-    stop("Canvas data does not allow for lateness calculations.")
+    stop("Lateness calculations are only allowed with data sourced from Gradescope.")
   }
   
   policy

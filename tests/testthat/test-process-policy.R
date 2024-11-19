@@ -1189,9 +1189,7 @@ test_that("reconcile policy with gs - correct format with no source attr", {
                                    "1/22/2023 10:00:00 AM", "0"),
     `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
   )
-  expect_warning(reconcile_policy_with_gs(policy, gs))
-  actual <- suppressWarnings(reconcile_policy_with_gs(policy, gs))
-  expected <- flatten_policy(policy)
-  expect_equal(actual, expected)
+  expect_error(expect_warning(reconcile_policy_with_gs(policy, gs)))
+  
   
 })
