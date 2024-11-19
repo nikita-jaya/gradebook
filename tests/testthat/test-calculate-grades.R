@@ -596,3 +596,54 @@ test_that("aggregation for lateness function - max_lateness with one assignment"
   expect_equal(actual, expected)
 })
 
+test_that("Testing handle_excused", {
+  gs <- tibble::tibble(
+    `First Name` = c("Adam", "John", "Stephanie", "Henry"),
+    `Last Name` = c("Smith", "Rock", "Porch", "Pai"),
+    SID = c(456789, 768596, 567812, 888763),
+    Sections = c("1", "1", "2", "3"),
+    `HW 1 (867568)` = c( 5, 6, NA, 8),
+    `HW 1 (867568) - Max Points` = c( 10, 10, 10, 10),
+    `HW 1 (867568) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 1 (867568) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
+    
+    `HW 2 (867573)` = c( 1, 2, 3, 4),
+    `HW 2 (867573) - Max Points` = c( 5, 5, 5, 5),
+    `HW 2 (867573) - Submission Time` = c(NA, NA, NA, NA),
+    `HW 2 (867573) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
+    
+    `Midterm (867589)` = c(34, 46, 12, NA),
+    `Midterm (867589) - Max Points` = c(50, 50, 50, 50),
+    `Midterm (867589) - Submission Time` = c(NA, NA, NA, NA),
+    `Midterm (867589) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00"),
+    `Final (345678)` = c( 34, 45, 65, 87),
+    `Final (345678) - Max Points` = c( 100, 100, 100, 100),
+    
+    `Final (345678) - Submission Time` = c(NA, NA, NA, NA),
+    
+    `Final (345678) - Lateness (H:M:S)` = c("00:00:00", "00:00:00", "00:00:00", "00:00:00")
+    
+  )
+  
+  grades_mat <- gs |>
+    # only assignment info
+    select(-get_id_cols(gs)) |> 
+    # convert lateness into minutes
+    mutate_at(vars(ends_with(" - Lateness (H:M:S)")), convert_to_min) |> 
+    # convert to matrix
+    data.matrix()
+  raw_cols <- get_assignments(gs)
+  
+  # rownames are SID of student
+  rownames(grades_mat) <- gs$SID
+  
+  actual <- handle_excused(grades_mat, raw_cols)
+  
+  expected <- grades_mat
+  
+  expected["888763", "Midterm (867589) - Max Points"] <- NA
+  expected["567812", "HW 1 (867568) - Max Points"] <- NA
+  
+ 
+  expect_equal(actual, expected)
+})

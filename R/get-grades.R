@@ -60,9 +60,12 @@ calculate_grades <- function(gs, policy){
     # convert to matrix
     data.matrix()
   raw_cols <- get_assignments(gs)
-  grades_mat[, raw_cols][is.na(grades_mat[, raw_cols])] <- 0
+  
   # rownames are SID of student
   rownames(grades_mat) <- gs$SID
+  # handle droppping excused assignments
+  grades_mat <- handle_excused(grades_mat, raw_cols)
+  
   # pre_allotted cols
   categories <- unlist(map(policy$categories, "category"))
   empty <- matrix(nrow = length(gs$SID), ncol = length(categories)*3)
@@ -90,6 +93,19 @@ calculate_grades <- function(gs, policy){
   
   return (grades)
 }
+
+
+handle_excused <- function(grades_mat, assignments){
+  # this function sets the max value for excused assignments to NA
+  # similar to the approach of drop_n_lowest, setting the max points to NA drops the assignment for the student
+  
+  max_cols <- paste0(assignments, " - Max Points")
+  
+  grades_mat[,max_cols][is.na(grades_mat[,assignments])] <- NA
+  
+  return(grades_mat)
+}
+
 
 #' Calculate A Single Category Grade
 #' 

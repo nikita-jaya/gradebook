@@ -20,12 +20,7 @@
 read_gs <- function(path, verbose = FALSE){
   # read in csv
   gs <- read_csv(path, trim_ws = FALSE) |>
-    # check format
-    check_data_format()
-  # add source attribute
-  attr(gs, "source") <- "Gradescope"
-  
-  gs
+    read_gradescope_grades()
 }
 
 
@@ -46,14 +41,14 @@ read_files <- function(grades_path,
   # beginning with the grades csv
   
   
-    grades <- readr::read_csv(grades_path, trim_ws = FALSE)
+  grades <- readr::read_csv(grades_path, trim_ws = FALSE)
     
   
   # now read in other supplied data 
- for (data_type in names(other_file_paths)){
-   warning(paste0(data_type, 
+  for (data_type in names(other_file_paths)){
+    warning(paste0(data_type, 
                   " is not currently supported as an extra file source."))
- }
+  }
   
   # now determine how to read in data
   
@@ -110,18 +105,31 @@ read_files <- function(grades_path,
  
 }
 
+
+#' @importFrom dplyr mutate_at
+#' @importFrom tidyr replace_na
 read_gradescope_grades <- function(df){
   # almost identity function when reading in gradescope grades 
   # to create symmetry with read_canvas_grades
   
   attr(df, "source") <- "Gradescope"
-  check_data_format(df)
+  
+  assignments <- get_assignments(df)
+  
+  # missing assignments become 0s
+  
+  df |> 
+    dplyr::mutate_at(assignments, function(x){
+      tidyr::replace_na(x, 0)
+    }) |>
+  check_data_format()
 }
 
 
 
 #' @importFrom stringr str_extract str_match
-#' @importFrom dplyr filter select slice rename_with rename bind_cols 
+#' @importFrom dplyr filter select slice rename_with rename bind_cols if_else
+#' @importFrom tidyr replace_na
 #' @importFrom purrr discard
 #' 
 #' 
@@ -145,6 +153,10 @@ read_canvas_grades <- function(grades){
   grades <- grades |>
     dplyr::filter(!is.na(Student)) |>
     dplyr::mutate_at(assignments, function(x) {
+        if(is.numeric(x)){
+          return(tidyr::replace_na(x, 0))
+        } 
+        x <- tidyr::replace_na(x, "0") 
         dplyr::if_else(x == "EX", NA, x) |>
         as.numeric()
       })
