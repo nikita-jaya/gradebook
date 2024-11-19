@@ -1,0 +1,12 @@
+pandoc: 3.1.11
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  complex-syllabus: complex-syllabus.html
+  moderate-syllabus: moderate-syllabus.html
+  policy-files: policy-files.html
+  simple-syllabus: simple-syllabus.html
+last_built: 2024-11-19T18:42Z
+urls:
+  reference: https://gradebook-dev.github.io/gradebook/reference
+  article: https://gradebook-dev.github.io/gradebook/articles
