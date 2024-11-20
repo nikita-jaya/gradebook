@@ -32,6 +32,7 @@ apply_slip_days <- function(gs, policy){
 
 #' @importFrom dplyr select mutate_at mutate group_by summarize arrange pull
 #' @importFrom tidyr pivot_longer
+#' @importFrom stats median
 order_assignments <- function(gs, policy_item){
   submission_cols <- paste0(policy_item$assignments, " - Submission Time")
   # chronological order of assignments is determined by 
