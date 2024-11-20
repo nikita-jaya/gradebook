@@ -119,9 +119,7 @@ read_gradescope_grades <- function(df){
   # missing assignments become 0s
   
   df |> 
-    dplyr::mutate_at(assignments, function(x){
-      tidyr::replace_na(x, 0)
-    }) |>
+    dplyr::mutate_at(assignments, tidyr::replace_na, 0 ) |>
   check_data_format()
 }
 
@@ -166,11 +164,7 @@ read_canvas_grades <- function(grades){
   max_points <- dplyr::filter(grades, Student %in% c( "    Points Possible", "Points Possible")) |>
     dplyr::select(all_of(assignments)) |>
     dplyr::slice(rep.int(1, nrow(grades))) |>
-    dplyr::rename_with(
-        function(x){
-          paste0(x, " - Max Points")
-        }
-    )
+    dplyr::rename_with(paste0, everything(), " - Max Points")
   
   
   # remove unneeded cols, add max_point column, and remove rows that are not students
