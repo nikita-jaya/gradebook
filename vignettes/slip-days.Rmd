@@ -40,7 +40,7 @@ grades |>
 Note that there is also a column called "Slip Days 1", which shows how much of their "slip-days budget" each student has used up.
 
 Here is a before-and-after comparison of how students' lateness are updated after applying slip days.
-```{r, echo = FALSE, warning = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(dplyr)
 labs <- c("Lab 1", "Lab 2", "Lab 3", "Lab 4", "Lab 5", "Lab 6")
 score_and_late_cols <- paste0(rep(labs, each = 2), c(""," - Lateness (H:M:S)"))
