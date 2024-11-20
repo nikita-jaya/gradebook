@@ -45,7 +45,7 @@ late_cols <- paste0(c("Lab 1", "Lab 2", "Lab 3", "Lab 4", "Lab 5", "Lab 6"), " -
 gs |>
   dplyr::select(c(SID, late_cols)) |>
   knitr::kable()
-grades |>
+apply_slip_days(gs, policy) |>
   dplyr::select(c(SID, late_cols, `Slip Days 1`)) |>
   knitr::kable()
 ```
