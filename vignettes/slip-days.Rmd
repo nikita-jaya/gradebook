@@ -43,16 +43,12 @@ Here is a before-and-after comparison of how students' lateness are updated afte
 ```{r, echo = FALSE, warning = FALSE}
 library(dplyr)
 labs <- c("Lab 1", "Lab 2", "Lab 3", "Lab 4", "Lab 5", "Lab 6")
-late_cols <- paste0(labs, " - Lateness (H:M:S)")
 score_and_late_cols <- paste0(rep(labs, each = 2), c(""," - Lateness (H:M:S)"))
 gs |>
-  select(all_of(c("SID", late_cols))) |>
+  select(all_of(c("SID", score_and_late_cols))) |>
   knitr::kable()
 grades |>
-  select(all_of(c("SID", late_cols, "Slip Days 1"))) |>
-  mutate_at(late_cols, function(lateness){
-    hms::hms(minutes = lateness)
-  }) |>
+  select(all_of(c("SID", score_and_late_cols, "Slip Days 1")))|>
   knitr::kable()
 ```
 Note that majority of late submissions were within the allotted "slip day budget," but the last student had additional lateness in Lab 5. This means that, in the final grades results, this student will receive a zero on this assignment as a resulting penalty.

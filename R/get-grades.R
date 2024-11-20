@@ -30,7 +30,10 @@ get_grades <- function(gs, policy, verbose = FALSE){
   
   gs |>
     apply_slip_days(policy = policy) |>
-    calculate_grades(policy = policy)
+    calculate_grades(policy = policy) |>
+    mutate_at(vars(contains(" - Lateness (H:M:S)")), function(lateness){
+      hms::hms(minutes = lateness)
+    }) 
   
 }
 
