@@ -74,6 +74,7 @@ articles:
   - simple-syllabus
   - moderate-syllabus
   - complex-syllabus
+  - slip-days
 
 development:
   mode: auto

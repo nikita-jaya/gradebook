@@ -28,7 +28,9 @@ get_grades <- function(gs, policy, verbose = FALSE){
     process_policy(verbose = verbose) |>
     reconcile_policy_with_gs(gs = gs, verbose = verbose)
   
-  calculate_grades(gs, policy)
+  gs |>
+    apply_slip_days(policy = policy) |>
+    calculate_grades(policy = policy)
   
 }
 
