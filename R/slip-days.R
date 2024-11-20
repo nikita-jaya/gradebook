@@ -56,12 +56,13 @@ order_assignments <- function(gs, policy_item){
 
 #' @importFrom dplyr case_when
 calculate_slip_days <- function(gs, policy_item){
-  gs[policy_item$name] <- policy_item$num_slip_days
+  slip_day_name <- paste0("Remaining: ", policy_item$name)
+  gs[slip_day_name] <- policy_item$num_slip_days
   late_cols <- paste0(policy_item$assignments, " - Lateness (H:M:S)")
   for (lateness in late_cols){
     # difference = slip days - lateness
-    decrease_lateness <- decrease_lateness(gs[[lateness]], gs[[policy_item$name]])
-    difference <- gs[[policy_item$name]] - round_to_days(gs[[lateness]])
+    decrease_lateness <- decrease_lateness(gs[[lateness]], gs[[slip_day_name]])
+    difference <- gs[[slip_day_name]] - round_to_days(gs[[lateness]])
     #decrease lateness
     gs[lateness] <- dplyr::case_when(
       # if lateness > slipdays
@@ -71,7 +72,7 @@ calculate_slip_days <- function(gs, policy_item){
     )
     
     # decrement slip days counter
-    gs[policy_item$name] <- dplyr::case_when(
+    gs[slip_day_name] <- dplyr::case_when(
       difference >= 0 ~ difference,
       .default = 0
     )

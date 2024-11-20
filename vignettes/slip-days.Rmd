@@ -48,7 +48,7 @@ gs |>
   select(all_of(c("SID", score_and_late_cols))) |>
   knitr::kable()
 grades |>
-  select(all_of(c("SID", score_and_late_cols, "Slip Days 1")))|>
+  select(all_of(c("SID", score_and_late_cols, "Remaining: Slip Days 1")))|>
   knitr::kable()
 ```
 Note that majority of late submissions were within the allotted "slip day budget," but the last student had additional lateness in Lab 5. This means that, in the final grades results, this student will receive a zero on this assignment as a resulting penalty.
