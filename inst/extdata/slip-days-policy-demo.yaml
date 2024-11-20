@@ -16,6 +16,9 @@ categories:
     aggregation: weighted_mean
     assignments:
     - category: Labs
+      lateness:
+      - after: "00:00:01"
+      - set_to: 0.0
       aggregation: weighted_by_points
       weight: 0.3
       assignments:
