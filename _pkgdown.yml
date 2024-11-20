@@ -65,7 +65,6 @@ reference:
   contents:
   - gs_demo
   - policy_demo
-  - slip_days_policy_demo
 
 articles:
 - title: Getting started

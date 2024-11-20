@@ -18,6 +18,8 @@ A dataframe of the original Gradescope data with lateness updated according to t
 This function applies any slip day policies within the policy file.
 }
 \examples{
+path <- system.file("extdata", "slip-days-policy-demo.yaml", package = "gradebook")
+slip_days_policy_demo <- read_policy(path = path)
 apply_slip_days(gs = gs_demo, policy = slip_days_policy_demo)
 
 }
