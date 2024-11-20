@@ -494,10 +494,11 @@ max_lateness <- function(grades_mat, category, assignments){
 }
 
 
-#' @importFrom lubridate hms period_to_seconds 
 convert_to_min <- function(hms){
-  save <- lubridate::hms(hms) |>
-    lubridate::period_to_seconds()
-  save <- save/60
-  return (save)
+  purrr::map_vec(hms, function(time){
+    units <- stringr::str_split(time, pattern = ":") |>
+      unlist() |>
+      as.numeric()
+    sum(units*c(60,1,1/60))
+  })
 }
