@@ -33,13 +33,13 @@ apply_slip_days <- function(gs, policy){
 }
 
 #' @importFrom dplyr select mutate_at mutate group_by summarize arrange pull
-#' @importFrom tidyr pivot_longer
+#' @importFrom tidyr pivot_longer drop_na
 #' @importFrom stats median
 order_assignments <- function(gs, policy_item){
   submission_cols <- paste0(policy_item$assignments, " - Submission Time")
   # chronological order of assignments is determined by 
   # median submission time of each assignment
-  gs |>
+  chronological_assigns <- gs |>
     dplyr::select(all_of(submission_cols)) |>
     dplyr::mutate_at(submission_cols, as.POSIXct, format = "%m/%d/%Y %H:%M") |>
     tidyr::pivot_longer(
@@ -48,10 +48,17 @@ order_assignments <- function(gs, policy_item){
       values_to = "Submission Time"
     ) |>
     dplyr::mutate(Assignment = stringr::str_remove(Assignment, " - Submission Time")) |>
+    #tidyr::drop_na(`Submission Time`) |>
     dplyr::group_by(Assignment) |>
-    dplyr::summarize(`Submission Median` = median(`Submission Time`)) |>
+    dplyr::summarize(`Submission Median` = median(`Submission Time`, na.rm = TRUE))
+  # if NA submission for all of at least one assignment
+  if (sum(is.na(chronological_assigns$`Submission Median`)) > 0) {
+    #keep original order
+    return (policy_item$assignments)
+  }
+  chronological_assigns |>
     dplyr::arrange(`Submission Median`) |>
-    dplyr::pull(`Assignment`)
+    dplyr::pull(Assignment)
 }
 
 #' @importFrom dplyr case_when
