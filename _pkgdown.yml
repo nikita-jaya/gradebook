@@ -57,6 +57,7 @@ reference:
   - mean_lateness
   - sum_lateness
   - max_lateness
+  - apply_slip_days
 
 - title: Demo Items
   desc: >
@@ -64,6 +65,7 @@ reference:
   contents:
   - gs_demo
   - policy_demo
+  - slip_days_policy_demo
 
 articles:
 - title: Getting started
