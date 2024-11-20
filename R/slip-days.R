@@ -81,7 +81,7 @@ calculate_slip_days <- function(gs, policy_item){
 
 #' @importFrom hms hms
 decrease_lateness <- function(lateness_col, slipdays_col){
-  hms::hms(convert_to_min(lateness_col) - slipdays_col*24*60) |>
+  hms::hms(minutes = convert_to_min(lateness_col) - slipdays_col*24*60) |>
     as.character()
 }
 
