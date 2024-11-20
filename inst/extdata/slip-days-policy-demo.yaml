@@ -3,7 +3,7 @@ coursewide:
   description: Syllabus for gs_demo
 slip_days:
   - name: "Slip Days 1"
-    num_slip_days: 3
+    num_slip_days: 2
     assignments:
         - "Lab 1"
         - "Lab 2"

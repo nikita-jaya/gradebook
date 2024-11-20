@@ -19,7 +19,7 @@ Slip days are a unique grading policy, where there is an allotted budget of allo
 `r xfun::file_string(system.file("extdata", "slip-days-policy-demo.yaml", package = "gradebook"))`
 
 ```
-In this policy, there are 5 allotted "slip days" for the six Lab assignments. This means that students can turn in their assignments up to 3 days late across their Lab assignments with no additional lateness penalty applied. These slip days are allotted chronologically, so if a student turns in Lab 1 5 dates late, they do not have any more slip days for the rest of the labs. Similarly, if a student turned in Lab 1 1 days late, they can still turn in the rest of the labs up to 2 days late (across the remaining 5 labs). In addition, the lateness are rounded up to the next day, so a student will use up a slip day if their assignment is turned in 1 minute late or 23 hours late.
+In this policy, there are 5 allotted "slip days" for the six Lab assignments. This means that students can turn in their assignments up to 2 days late across their Lab assignments with no additional lateness penalty applied. These slip days are allotted chronologically, so if a student turns in Lab 1 5 dates late, they do not have any more slip days for the rest of the labs. Similarly, if a student turned in Lab 1 a day late, they can still turn one of the other labs at most a day late with no penalty. In addition, the lateness are rounded up to the next day, so a student will use up a slip day if their assignment is turned in 1 minute late or 23 hours late.
 
 The lateness policy for `Labs` in `categories` section shows that any late assignments receive a zero. This is implemented after a student's slip days run out.
 
