@@ -22,9 +22,12 @@ apply_slip_days <- function(gs, policy){
   # iterate through all slip day policies
   for (policy_item in policy$slip_days){
     
-    # put assignments in chronological order
-    # save back into policy item
-    policy_item$assignments <- order_assignments(gs, policy_item)
+    # defaults to chronological, if not, keeps order of policy file
+    if (is.null(policy_item$order) | (!is.null(policy_item$order) && policy_item$order == "chronological")){
+      # put assignments in chronological order
+      # save back into policy item
+      policy_item$assignments <- order_assignments(gs, policy_item)
+    }
     
     # apply slip days
     gs <- calculate_slip_days(gs, policy_item)

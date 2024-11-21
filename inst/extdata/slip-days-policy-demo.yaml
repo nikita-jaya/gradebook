@@ -4,6 +4,7 @@ coursewide:
 slip_days:
   - name: "Slip Days 1"
     num_slip_days: 2
+    order: chronological
     assignments:
         - "Lab 1"
         - "Lab 2"
