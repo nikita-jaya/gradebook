@@ -106,7 +106,7 @@ read_files <- function(grades_path,
 }
 
 
-#' @importFrom dplyr mutate_at
+#' @importFrom dplyr mutate_at if_else
 #' @importFrom tidyr replace_na
 read_gradescope_grades <- function(df){
   # almost identity function when reading in gradescope grades 
@@ -119,15 +119,14 @@ read_gradescope_grades <- function(df){
   # missing assignments become 0s
   
   df |> 
-    dplyr::mutate_at(assignments, tidyr::replace_na, 0 ) |>
-  check_data_format()
+    dplyr::mutate_at(assignments, impute_missing_excused_input) |>
+    check_data_format()
 }
 
 
 
 #' @importFrom stringr str_extract str_match
-#' @importFrom dplyr filter select slice rename_with rename bind_cols if_else
-#' @importFrom tidyr replace_na
+#' @importFrom dplyr filter select slice rename_with rename bind_cols mutate_at
 #' @importFrom purrr discard
 #' 
 #' 
@@ -150,14 +149,7 @@ read_canvas_grades <- function(grades){
   # coerce into numerical and convert excused assignments into set value
   grades <- grades |>
     dplyr::filter(!is.na(Student)) |>
-    dplyr::mutate_at(assignments, function(x) {
-        if(is.numeric(x)){
-          return(tidyr::replace_na(x, 0))
-        } 
-        x <- tidyr::replace_na(x, "0") 
-        dplyr::if_else(x == "EX", NA, x) |>
-        as.numeric()
-      })
+    dplyr::mutate_at(assignments, impute_missing_excused_input)
   
  
   # now reconfigure the points possible info
@@ -212,6 +204,22 @@ read_canvas_grades <- function(grades){
   
   check_data_format(grades)
   
+}
+
+
+#' @importFrom tidyr replace_na
+#' @importFrom dplyr if_else
+impute_missing_excused_input <- function(x) {
+  # this function will impute missing and excused assignments upon readin
+  # it is a helper function for read_gradescope_grades and read_canvas_grades
+  # Logic: Missing assignments (read in as NAs) get 0 score
+  # Excused assignments (read in as "EX") get NA value
+  if(is.numeric(x)){
+    return(tidyr::replace_na(x, 0))
+  } 
+  x <- tidyr::replace_na(x, "0") 
+  dplyr::if_else(x == "EX", NA, x) |>
+    as.numeric()
 }
 
 #' Predict the source of grade dataframe.

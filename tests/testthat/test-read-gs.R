@@ -908,3 +908,71 @@ test_that("Test read_gradescope_grades with missing assignments", {
   
   expect_equal(actual, expected)
 })
+
+test_that("Test read_gradescope_grades with missing and excused assignments", {
+  data <- tibble::tibble(
+    `First Name` = c("Joe", "Harrison", "Don", "Kevin"),
+    `Last Name` = c("Oneida", "Eagle", "Torrensen", "Falcon"),
+    SID = c(98657, 12345, 76589, 44567),
+    Email = c("joe@on.com", "he@eagle.net", "don@gmail.com", "kev@berkeley.edu"),
+    `Lab 1` = c(1, "EX", 0.9, NA),
+    `Lab 1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                  "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2` = c(1, 0, 0.9, "EX"),
+    `Lab 2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                  "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 3` = c(0, 0, 0.9, 0.5),
+    `Lab 3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                  "1/21/2023 9:50:00 AM"),
+    `Lab 3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Project 1` = c(0.9, 0, NA, 0),
+    `Project 1 - Max Points` = c(1, 1, 1, 1),
+    `Project 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                      "1/22/2023 10:00:00 AM", "0"),
+    `Project 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  
+  expected <- tibble::tibble(
+    `First Name` = c("Joe", "Harrison", "Don", "Kevin"),
+    `Last Name` = c("Oneida", "Eagle", "Torrensen", "Falcon"),
+    SID = c(98657, 12345, 76589, 44567),
+    Email = c("joe@on.com", "he@eagle.net", "don@gmail.com", "kev@berkeley.edu"),
+    `Lab 1` = c(1, NA, 0.9, 0),
+    `Lab 1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                  "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2` = c(1, 0, 0.9, NA),
+    `Lab 2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                  "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 3` = c(0, 0, 0.9, 0.5),
+    `Lab 3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                  "1/21/2023 9:50:00 AM"),
+    `Lab 3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Project 1` = c(0.9, 0, 0, 0),
+    `Project 1 - Max Points` = c(1, 1, 1, 1),
+    `Project 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                      "1/22/2023 10:00:00 AM", "0"),
+    `Project 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  
+  attr(expected, "source") <- "Gradescope"
+  
+  actual <- read_gradescope_grades(data)
+  
+  expect_equal(actual, expected)
+})
