@@ -191,13 +191,23 @@ drop_n_lowest <- function(grades_mat, policy_line, category, assignments, weight
     return (grades_mat) # no change
   }
   grades_mat[, assignments] <- t(apply(t(grades_mat[, assignments]), 2, function(assign){
-    if (length(assignments) == 1) return (assign) # if only one assignment, no drops
+    # if only one assignment, no drops
+    # unnecessary but keep for efficiency
+    if (length(assignments) == 1) return (assign) 
     
-    if (n >= length(assignments)) { # if more drops than assignments
-      lowest_indices <- order(assign)[1:(length(assignments)-1)] # drop all but one
-    } else {
-      lowest_indices <- order(assign)[1:n] # indices of n lowest assignments
-    }
+    # count the number of excused assignments
+    num_excused <- sum(is.na(assign))
+    
+    # the number of graded assignments will be length(assignment) - num_excused
+    # a student can drop up to that many - 1. 
+    # so take the min of n and possible allowed drops
+    num_to_drop <- min(c(n, length(assignments) - num_excused - 1))
+    
+    # if no drops to do return assign
+    if (num_to_drop <= 0) return (assign) 
+    
+    lowest_indices <- order(assign)[1:num_to_drop]
+    
     assign[lowest_indices] <- NA # drop designated scores
     return(assign)
   }))
