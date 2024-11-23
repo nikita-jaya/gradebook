@@ -76,6 +76,14 @@ calculate_grades <- function(gs, policy){
   # iterate through each policy item
   for (policy_item in policy$categories){
     # compute calculations for each policy file and save into grades matrix
+    stu_with_all_ex <- apply(is.na(grades_mat[, policy_item$assignments, drop = FALSE]), 
+                             1, all)
+    if (any(stu_with_all_ex)){
+      stop("Student(s) ", paste0(
+        row.names(grades_mat)[stu_with_all_ex], collapse = ", "), 
+           " have no unexcused assignments in category ", policy_item$category, 
+           ". This is not allowed.")
+    }
     grades_mat <- get_category_grade(grades_mat, policy_item)
   }
   

@@ -161,6 +161,7 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     stop("Lateness calculations are only allowed with data sourced from Gradescope.")
   }
   
+  
   policy
 }
 
