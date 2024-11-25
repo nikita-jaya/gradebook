@@ -102,6 +102,7 @@ extract_weights <- function(category){
 #' 
 #' @return A policy list
 #'
+#' @importFrom dplyr select rowwise summarise pull
 #' @importFrom purrr map list_flatten map_lgl
 #' @export
 reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
@@ -161,6 +162,29 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     stop("Lateness calculations are only allowed with data sourced from Gradescope.")
   }
   
+  gs_assignments <- get_assignments(gs)
+  
+  # determine if any students have all assignments excused in a category
+  for (policy_item in policy$categories){
+    # only need to test categories 100% sourced from grade assignments per my theorem
+    # thm: any category ungradeable -> there exists some category with only assignments from gs that is ungradeable
+    if (all(policy_item$assignments %in% gs_assignments)){
+      
+      stu_with_all_ex <- gs |>
+        dplyr::select(policy_item$assignments) |>
+        dplyr::rowwise() |>
+        dplyr::summarise(nans = all(is.na(across(policy_item$assignments)))) |>
+        dplyr::pull(nans)
+      
+      if (any(stu_with_all_ex)){
+        # if any students have all assignments excused in a category, raise error detailing students and category
+        stop("Student(s) ", paste0(
+          gs$SID[stu_with_all_ex], collapse = ", "), 
+          " have no unexcused assignments in category ", policy_item$category, 
+          ". This is not allowed.")
+      }
+    }
+  }
   
   policy
 }
