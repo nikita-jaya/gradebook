@@ -42,7 +42,7 @@ Users of other grade aggregators who wish to excuse assignments should set the a
 
 In addition to excusing assignments, Gradebook users may also specify a number of drops that will drop each student's lowest n assignment scores in the specified category. Full details on the working of drops are available [here](https://gradebook-dev.github.io/gradebook/articles/policy-files.html). 
 
-When working with drops and excused assignments, Gradebook has the constraint that all students must have at least one un-dropped and un-excused assignments in each category. When necessary to retain 1 graded assignment, having excused assignments in the category can lead to fewer assignments being dropped in the category than the n specified in drop_n_lowest. 
+When working with drops and excused assignments, Gradebook has the constraint that all students must have at least one un-dropped and un-excused assignments in each category. When necessary to retain 1 graded assignment, having excused assignments in the category can lead to fewer assignments being dropped in the category than the n specified in drop_n_lowest. Should this corner case arise, a warning will be raised informing instructors to review the student's grades, in case their intentions are different.
 
 ### Example
 
@@ -50,4 +50,4 @@ Consider the following example again involving Timmy. Imagine that there are 4 a
 
 ## Other Constraints with Excused Assignments
 
-As mentioned above, every policy category must have at least one un-excused assignment for all students. If any student has all assignments excused for some category, Gradebook will raise an error detailing the student and category.
+As mentioned above, every policy category must have at least one un-excused assignment for all students. If any student has all assignments excused for some category, Gradebook will raise a warning detailing the student and category. For any students in this situation, their grade should be manually set after running Gradebook.

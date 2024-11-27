@@ -103,7 +103,7 @@ extract_weights <- function(category){
 #' @return A policy list
 #'
 #' @importFrom dplyr select rowwise summarise pull
-#' @importFrom purrr map list_flatten map_lgl walk
+#' @importFrom purrr map list_flatten map_lgl discard
 #' @export
 reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
   # check if grades has source attr set
@@ -164,8 +164,11 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
   
   gs_assignments <- get_assignments(gs)
   
+  
+  stu_wo_full_drop <- character(0)
+  
   # determine if any students have all assignments excused in a category
-  purrr::walk(policy$categories, function(policy_item){
+  all_excused_assignments <- purrr::map(policy$categories, function(policy_item){
       # only need to test categories 100% sourced from grade assignments per my theorem
       # thm: any category ungradeable -> there exists some category with only assignments from gs that is ungradeable
       if (all(policy_item$assignments %in% gs_assignments)){
@@ -178,14 +181,54 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
         
         if (any(stu_with_all_ex)){
           # if any students have all assignments excused in a category, raise error detailing students and category
-          stop("Student(s) ", paste0(
+          return (paste0("Student(s) ", paste0(
             gs$SID[stu_with_all_ex], collapse = ", "), 
             " have no unexcused assignments in category ", policy_item$category, 
-            ". This is not allowed.")
+            "."))
         }
+        return (NULL)
       }
     }
-  )
+  ) |>
+    purrr::discard(is.null) |>
+    as.character()
+  
+  stu_wo_full_drop <- purrr::map(policy$categories, function(policy_item){
+    
+    if ("drop_n_lowest" %in% names(policy_item)) {
+     if (all(policy_item$assignments %in% gs_assignments)){
+        stu_num_na <- gs |>
+          dplyr::select(policy_item$assignments) |>
+          dplyr::rowwise() |>
+          dplyr::summarise(nans = sum(is.na(across(policy_item$assignments)))) |>
+          dplyr::pull(nans)
+        
+        not_full_drops <- (length(policy_item$assignments) - stu_num_na - 1) < policy_item$drop_n_lowest
+        
+        if (any(not_full_drops)){
+          return (paste0("Student(s) ", paste0(
+            gs$SID[not_full_drops], collapse = ", "), 
+            " will not receive full drops in category ", policy_item$category, 
+            "."))
+        }
+        return(NULL)
+        
+      }
+    }
+    return(NULL)
+  }) |>
+    purrr::discard(is.null) |>
+    as.character()
+  
+  if (length(all_excused_assignments) > 0){
+    warning(paste0(all_excused_assignments, collapse = "\n"), 
+            "\nManually set grades for any effected students.")
+  }
+  
+  if (length(stu_wo_full_drop) > 0){
+    warning(paste0(stu_wo_full_drop, collapse = "\n"), 
+            "\nManually set grades for any effected students.")
+  }
   
   policy
 }

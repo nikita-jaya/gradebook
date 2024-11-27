@@ -1331,8 +1331,9 @@ test_that("Test reconcile when a student has all excused for some category - mul
   )
   attr(gs, "source") <- "Gradescope"
   
-  expect_error(reconcile_policy_with_gs(policy, gs), 
-               regexp = "Student(s) 3032412514, 3032412517 have no unexcused assignments in category Lab 1. This is not allowed.",
+  expect_warning(reconcile_policy_with_gs(policy, gs), 
+               regexp = "Student(s) 3032412514, 3032412517 have no unexcused assignments in category Lab 1.
+Manually set grades for any effected students.",
                fixed = TRUE
   )
 })
@@ -1417,8 +1418,9 @@ test_that("Test reconcile_policy_with_gs when a student has all excused for some
   )
   attr(gs, "source") <- "Gradescope"
   
-  expect_error(reconcile_policy_with_gs(policy, gs),
-               regexp = "Student(s) 3032412514 have no unexcused assignments in category Lab 1. This is not allowed.",
+  expect_warning(reconcile_policy_with_gs(policy, gs),
+               regexp = "Student(s) 3032412514 have no unexcused assignments in category Lab 1.
+Manually set grades for any effected students.",
                fixed = TRUE
   )
 })
@@ -1503,8 +1505,9 @@ test_that("Test reconcile_policy_with_gs when a student has all excused for some
   )
   attr(gs, "source") <- "Gradescope"
   
-  expect_error(reconcile_policy_with_gs(policy, gs),
-               regexp = "Student(s) 3032412514 have no unexcused assignments in category Lab 2. This is not allowed.",
+  expect_warning(reconcile_policy_with_gs(policy, gs),
+               regexp = "Student(s) 3032412514 have no unexcused assignments in category Lab 2.
+Manually set grades for any effected students.",
                fixed = TRUE
   )
 })
@@ -1589,8 +1592,9 @@ test_that("Test reconcile_policy_with_gs when a student has all excused for some
   )
   attr(gs, "source") <- "Gradescope"
   
-  expect_error(reconcile_policy_with_gs(policy, gs),
-               regexp = "Student(s) 3032122516 have no unexcused assignments in category Quizzes. This is not allowed.",
+  expect_warning(reconcile_policy_with_gs(policy, gs),
+               regexp = "Student(s) 3032122516 have no unexcused assignments in category Quizzes.
+Manually set grades for any effected students.",
                fixed = TRUE
   )
 })
@@ -1759,4 +1763,271 @@ test_that("Test reconcile_policy_with_gs - clean", {
   attr(gs, "source") <- "Gradescope"
   
   expect_no_error(reconcile_policy_with_gs(policy, gs))
+})
+
+test_that("Test reconcile when a student has less un-excused than drops for some category - multiple students", {
+  categories <- list(
+    list(
+      category = "Lab 1",
+      score = "raw_over_max",
+      drop_n_lowest = 1,
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 1.1", "Lab 1.2")
+    ),
+    list(
+      category = "Lab 2",
+      score = "raw_over_max",
+      drop_n_lowest = 0,
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+    ),
+    list(
+      category = "Labs",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Lab 1", "Lab 2")
+    ),
+    list(
+      category = "Quizzes",
+      score = "raw_over_max",
+      aggregation = "weighted_by_points",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories)
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(0.1, 0, 0.9, NA),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                    "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(NA, 0, 0.9, 0.7),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(NA, 0, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.2` = c(1, 0, 0.9, 0.5),
+    `Lab 2.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.3` = c(0, 0, 0.9, 0.5),
+    `Lab 2.3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Quiz 1` = c(0.9, 0, 0.4, 0),
+    `Quiz 1 - Max Points` = c(1, 1, 1, 1),
+    `Quiz 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                   "1/22/2023 10:00:00 AM", "0"),
+    `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  attr(gs, "source") <- "Gradescope"
+  
+  expect_warning(reconcile_policy_with_gs(policy, gs), 
+                 regexp = "Student(s) 3032412514, 3032412517 will not receive full drops in category Lab 1.
+Manually set grades for any effected students.",
+                 fixed = TRUE
+  )
+})
+
+test_that("Test reconcile when a student has less un-excused than drops for 2 categories - multiple students", {
+  categories <- list(
+    list(
+      category = "Lab 1",
+      score = "raw_over_max",
+      drop_n_lowest = 1,
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 1.1", "Lab 1.2")
+    ),
+    list(
+      category = "Lab 2",
+      score = "raw_over_max",
+      drop_n_lowest = 1,
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+    ),
+    list(
+      category = "Labs",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Lab 1", "Lab 2")
+    ),
+    list(
+      category = "Quizzes",
+      score = "raw_over_max",
+      aggregation = "weighted_by_points",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories)
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(0.1, 0, 0.9, NA),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                    "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(NA, 0, 0.9, 0.7),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(0.8, NA, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.2` = c(1, 0, 0.9, NA),
+    `Lab 2.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.3` = c(0, NA, 0.9, NA),
+    `Lab 2.3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Quiz 1` = c(0.9, 0, 0.4, 0),
+    `Quiz 1 - Max Points` = c(1, 1, 1, 1),
+    `Quiz 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                   "1/22/2023 10:00:00 AM", "0"),
+    `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  attr(gs, "source") <- "Gradescope"
+  
+  expect_warning(reconcile_policy_with_gs(policy, gs), 
+                 regexp = "Student(s) 3032412514, 3032412517 will not receive full drops in category Lab 1.
+Student(s) 3032122516, 3032412517 will not receive full drops in category Lab 2.
+Manually set grades for any effected students.",
+                 fixed = TRUE
+  )
+})
+
+test_that("Test reconcile when a student has all excused for two category - multiple students", {
+  categories <- list(
+    list(
+      category = "Lab 1",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 1.1", "Lab 1.2")
+    ),
+    list(
+      category = "Lab 2",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+    ),
+    list(
+      category = "Labs",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Lab 1", "Lab 2")
+    ),
+    list(
+      category = "Quizzes",
+      score = "raw_over_max",
+      aggregation = "weighted_by_points",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories)
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(NA, 0, 0.9, NA),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                    "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(NA, 0, 0.9, NA),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(NA, NA, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.2` = c(NA, NA, 0.9, 0.5),
+    `Lab 2.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.3` = c(NA, NA, 0.9, 0.5),
+    `Lab 2.3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Quiz 1` = c(0.9, 0, 0.4, 0),
+    `Quiz 1 - Max Points` = c(1, 1, 1, 1),
+    `Quiz 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                   "1/22/2023 10:00:00 AM", "0"),
+    `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  attr(gs, "source") <- "Gradescope"
+  
+  expect_warning(reconcile_policy_with_gs(policy, gs), 
+                 regexp = "Student(s) 3032412514, 3032412517 have no unexcused assignments in category Lab 1.
+Student(s) 3032412514, 3032122516 have no unexcused assignments in category Lab 2.
+Manually set grades for any effected students.",
+                 fixed = TRUE
+  )
 })
