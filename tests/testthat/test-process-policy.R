@@ -1679,7 +1679,7 @@ test_that("Test reconcile_policy_with_gs when a student has all gs assignments e
   )
   attr(gs, "source") <- "Gradescope"
   
-  expect_no_error(reconcile_policy_with_gs(policy, gs))
+  expect_no_warning(reconcile_policy_with_gs(policy, gs))
 })
 
 test_that("Test reconcile_policy_with_gs - clean", {
@@ -1762,7 +1762,7 @@ test_that("Test reconcile_policy_with_gs - clean", {
   )
   attr(gs, "source") <- "Gradescope"
   
-  expect_no_error(reconcile_policy_with_gs(policy, gs))
+  expect_no_warning(reconcile_policy_with_gs(policy, gs))
 })
 
 test_that("Test reconcile when a student has less un-excused than drops for some category - multiple students", {
