@@ -48,3 +48,36 @@ check_keys <- function(policy, verbose = FALSE){
   
   policy
 }
+
+#' Get the Category Names for Policy
+#'
+#' This function identifies the names of all categories in a policy list.
+#'
+#' @param policy R list of a valid policy file
+#' @param verbose Whether or not to return an alert of categories
+#' 
+#' @examples
+#' get_categories(policy_demo, verbose = TRUE)
+#' 
+#' @return A vector of the names of the categories in the policy R list
+#' @importFrom purrr map
+#' @importFrom cli cli_alert_info cli_div cli_text cli_end
+#' @export
+
+get_categories <- function(policy, verbose = FALSE){
+  policy <- flatten_policy(policy)
+  
+  categories <- purrr::map(policy$categories, "category") |>
+    unlist()
+  
+  alert <- function() {
+    cli::cli_div(theme = list(span.emph = list(color = "orange")))
+    cli::cli_text("{.emph Important Message}")
+    cli::cli_end()
+    cli::cli_alert_info("The categories from the policy are {categories}")
+  }
+  
+  if (verbose){
+    alert()
+  }
+}

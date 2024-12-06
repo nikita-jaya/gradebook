@@ -25,6 +25,7 @@ reference:
   - process_policy
   - reconcile_policy_with_gs
   - flatten_policy
+  - get_categories
 
 - title: Grading Functions
   desc: >
