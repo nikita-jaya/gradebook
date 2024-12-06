@@ -26,6 +26,7 @@ reference:
   - reconcile_policy_with_gs
   - flatten_policy
   - get_categories
+  - get_nested_assignments
 
 - title: Grading Functions
   desc: >

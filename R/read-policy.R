@@ -83,3 +83,48 @@ get_categories <- function(policy, verbose = FALSE){
   
   return(categories)
 }
+
+#' Get the Nested Assignments for Category
+#'
+#' This function identifies the nested assignments for a given category.
+#'
+#' @param category a category from a policy R list
+#' @param verbose Whether or not to return an alert of assignments
+#' 
+#' @examples
+#' category <- policy_demo[["categories"]][[1]]
+#' get_nested_assignments(category = category, verbose = TRUE)
+#' 
+#' @return A vector of the names of the nested assignments in the category
+#' @importFrom purrr map
+#' @importFrom cli cli_alert_info cli_div cli_text cli_end
+#' @export
+
+get_nested_assignments <- function(category, verbose = FALSE){
+  name <- category$category
+  assignments <- extract_nested_assignments(category) |> 
+    unlist()
+  alert <- function() {
+    cli::cli_div(theme = list(span.emph = list(color = "orange")))
+    cli::cli_text("{.emph Important Message}")
+    cli::cli_end()
+    cli::cli_alert_info("The assignments from the category {name} are {assignments}")
+  }
+  
+  if (verbose){
+    alert()
+  }
+  
+  return(assignments)
+}
+
+#' @importFrom purrr map
+extract_nested_assignments <- function(category){
+  if (!is.list(category$assignments)){
+    return(category$assignments)
+  } else{
+    purrr::map(category$assignments, function(nested_cat){
+      get_nested_assignments(nested_cat)
+    })
+  }
+}
