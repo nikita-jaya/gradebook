@@ -80,4 +80,6 @@ get_categories <- function(policy, verbose = FALSE){
   if (verbose){
     alert()
   }
+  
+  return(categories)
 }
