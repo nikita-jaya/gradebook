@@ -936,3 +936,57 @@ test_that("Testing calculate_grades without UID in SID col", {
   expect_no_error(calculate_grades(gs, pol))
   
 })
+
+test_that("Testing get_grades without UID in SID col", {
+  gs <- tibble::tibble(
+    `First Name` = c("Joe", "Harrison", "Don", "Kevin"),
+    `Last Name` = c("Oneida", "Eagle", "Torrensen", "Falcon"),
+    SID = c(98657, "12345", "76589", 44567),
+    Email = c("joe@on.com", "he@eagle.net", "don@gmail.com", "kev@berkeley.edu"),
+    `Lab 1` = c(1, 0, 0.9, 0.5),
+    `Lab 1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                  "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2` = c(1, 0, 0.9, 0.5),
+    `Lab 2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                  "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 3` = c(0, 0, 0.9, 0.5),
+    `Lab 3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                  "1/21/2023 9:50:00 AM"),
+    `Lab 3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Project 1` = c(0.9, 0, 0.4, 0),
+    `Project 1 - Max Points` = c(1, 1, 1, 1),
+    `Project 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                      "1/22/2023 10:00:00 AM", "0"),
+    `Project 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  attr(gs, "source") <- "Gradescope"
+  
+  cats <- list(
+    list(
+      category = "Labs",
+      aggregation = "equally_weighted",
+      assignments = c("Lab 1", "Lab 2", "Lab 3")
+    ),
+    list(
+      category = "Project",
+      aggregation = "equally_weighted",
+      assignments = "Project 1"
+    )
+  )
+  
+  pol <- list(categories = cats)
+  
+  actual <- get_grades(gs, pol)
+  
+  expect_s3_class(actual, "tbl_df")
+  
+})
+

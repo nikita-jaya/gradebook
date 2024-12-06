@@ -17,6 +17,7 @@
 #' @return A dataframe of the original Gradescope data with computed categories' scores appended as additional columns 
 #'
 #' @importFrom dplyr select relocate left_join mutate_at vars mutate
+#' @importFrom tibble as_tibble
 #' 
 #' @export
 get_grades <- function(gs, policy, verbose = FALSE){
@@ -28,7 +29,8 @@ get_grades <- function(gs, policy, verbose = FALSE){
     process_policy(verbose = verbose) |>
     reconcile_policy_with_gs(gs = gs, verbose = verbose)
   
-  calculate_grades(gs, policy)
+  calculate_grades(gs, policy) |>
+    tibble::as_tibble()
   
 }
 
