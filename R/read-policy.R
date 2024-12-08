@@ -67,8 +67,7 @@ check_keys <- function(policy, verbose = FALSE){
 get_categories <- function(policy, verbose = FALSE){
   policy <- flatten_policy(policy)
   
-  categories <- purrr::map(policy$categories, "category") |>
-    unlist()
+  categories <- purrr::map_chr(policy$categories, "category")
   
   alert <- function() {
     cli::cli_div(theme = list(span.emph = list(color = "orange")))
