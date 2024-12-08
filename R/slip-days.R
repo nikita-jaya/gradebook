@@ -23,7 +23,7 @@ apply_slip_days <- function(gs, policy){
   for (policy_item in policy$slip_days){
     
     # defaults to chronological, if not, keeps order of policy file
-    if (is.null(policy_item$order) | (!is.null(policy_item$order) && policy_item$order == "chronological")){
+    if (is.null(policy_item$order) || policy_item$order == "chronological"){
       # put assignments in chronological order
       # save back into policy item
       policy_item$assignments <- order_assignments(gs, policy_item)
@@ -55,7 +55,7 @@ order_assignments <- function(gs, policy_item){
     dplyr::group_by(Assignment) |>
     dplyr::summarize(`Submission Median` = median(`Submission Time`, na.rm = TRUE))
   # if NA submission for all of at least one assignment
-  if (sum(is.na(chronological_assigns$`Submission Median`)) > 0) {
+  if (any(is.na(chronological_assigns$`Submission Median`))) {
     #keep original order
     return (policy_item$assignments)
   }
