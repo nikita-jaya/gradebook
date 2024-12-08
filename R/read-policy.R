@@ -100,14 +100,13 @@ get_categories <- function(policy, verbose = FALSE){
 #' @export
 
 get_nested_assignments <- function(category, verbose = FALSE){
-  name <- category$category
   assignments <- extract_nested_assignments(category) |> 
     unlist()
   alert <- function() {
     cli::cli_div(theme = list(span.emph = list(color = "orange")))
     cli::cli_text("{.emph Important Message}")
     cli::cli_end()
-    cli::cli_alert_info("The assignments from the category {name} are {assignments}")
+    cli::cli_alert_info("The assignments from the category {category$category} are {assignments}")
   }
   
   if (verbose){
