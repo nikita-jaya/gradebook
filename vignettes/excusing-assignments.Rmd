@@ -38,7 +38,7 @@ Our notation for excusing assignments is molded around Canvas's notation for exc
 
 Users of other grade aggregators who wish to excuse assignments should set the assignment's score value to "EX" for it to be excused in Gradebook. 
 
-## Notes on the Interaction between Dropped Assignments and Category Drops
+## Notes on the Interaction between Excused Assignments and Category Drops
 
 In addition to excusing assignments, Gradebook users may also specify a number of drops that will drop each student's lowest n assignment scores in the specified category. Full details on the working of drops are available [here](https://gradebook-dev.github.io/gradebook/articles/policy-files.html). 
 
