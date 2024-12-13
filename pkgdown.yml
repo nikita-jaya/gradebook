@@ -8,8 +8,9 @@ articles:
   moderate-syllabus: moderate-syllabus.html
   policy-files: policy-files.html
   simple-syllabus: simple-syllabus.html
+  slip-days: slip-days.html
   working-with-canvas-data: working-with-canvas-data.html
-last_built: 2024-12-13T00:00Z
+last_built: 2024-12-13T20:46Z
 urls:
   reference: https://gradebook-dev.github.io/gradebook/reference
   article: https://gradebook-dev.github.io/gradebook/articles
