@@ -29,7 +29,9 @@ get_grades <- function(gs, policy, verbose = FALSE){
     process_policy(verbose = verbose) |>
     reconcile_policy_with_gs(gs = gs, verbose = verbose)
   
-  calculate_grades(gs, policy) |>
+  gs |>
+    apply_slip_days(policy = policy) |>
+    calculate_grades(policy = policy)  |>
     tibble::as_tibble()
   
 }
@@ -95,7 +97,10 @@ calculate_grades <- function(gs, policy){
   
   grades <- grades |>
     left_join(idcols, by = "SID") |>
-    dplyr::relocate(get_id_cols(gs))
+    dplyr::relocate(get_id_cols(gs)) |>
+    mutate_at(vars(contains(" - Lateness (H:M:S)")), function(lateness){
+      hms::hms(minutes = lateness)
+    }) 
   
   return (grades)
 }
@@ -530,10 +535,11 @@ max_lateness <- function(grades_mat, category, assignments){
 }
 
 
-#' @importFrom lubridate hms period_to_seconds 
 convert_to_min <- function(hms){
-  save <- lubridate::hms(hms) |>
-    lubridate::period_to_seconds()
-  save <- save/60
-  return (save)
+  purrr::map_vec(hms, function(time){
+    units <- stringr::str_split(time, pattern = ":") |>
+      unlist() |>
+      as.numeric()
+    sum(units*c(60,1,1/60))
+  })
 }
