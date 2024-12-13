@@ -146,6 +146,18 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     } 
     stop("None of the assignments in policy file are found in gs.")
   }
+
+  # check if slip days are attempted to be used with non Gradescope data
+  if ( 
+    # first check to ensure source attr exists to prevent errors
+    (is.null(attr(gs, "source"))) ||
+    # check if grades came from Gradescope
+    ((attr(gs, "source") != "Gradescope") && 
+    # check if lateness is being used in the policy (flattened)
+      ("slip_days" %in% policy))
+    ) {
+      stop("Slip days are only allowed to be used with grades sourced from Gradescope.")
+    }
   
   # check if lateness is attempted to be used with non Gradescope data
   if ( 
