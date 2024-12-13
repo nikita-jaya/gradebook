@@ -154,7 +154,7 @@ reconcile_policy_with_gs <- function(policy, gs, verbose = FALSE){
     # check if grades came from Gradescope
     ((attr(gs, "source") != "Gradescope") && 
     # check if lateness is being used in the policy (flattened)
-      ("slip_days" %in% policy))
+      ("slip_days" %in% names(policy)))
     ) {
       stop("Slip days are only allowed to be used with grades sourced from Gradescope.")
     }
