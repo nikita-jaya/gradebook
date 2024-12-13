@@ -2031,3 +2031,179 @@ Manually set grades for any effected students.",
                  fixed = TRUE
   )
 })
+
+test_that("Test reconcile_policy_with_gs - clean for slip days", {
+  categories <- list(
+    list(
+      category = "Lab 1",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 1.1", "Lab 1.2")
+    ),
+    list(
+      category = "Lab 2",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+    ),
+    list(
+      category = "Labs",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Lab 1", "Lab 2")
+    ),
+    list(
+      category = "Quizzes",
+      score = "raw_over_max",
+      aggregation = "weighted_by_points",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories, slip_days = list(
+    name = "Slip Days 1",
+    num_slip_days = 5,
+    order = "chronological",
+    assignments = c("Lab 1", "Lab 2", "Lab 3")
+  ))
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(0.2, 0, 0.9, 0.4),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                    "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(0.9, 0, 0.9, 1),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(0, 0, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.2` = c(1, 0, 0.9, 0.5),
+    `Lab 2.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.3` = c(1, 1, 0, 0.2),
+    `Lab 2.3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Quiz 1` = c(0.9, 0.6, 0.4, 0),
+    `Quiz 1 - Max Points` = c(1, 1, 1, 1),
+    `Quiz 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                   "1/22/2023 10:00:00 AM", "0"),
+    `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  attr(gs, "source") <- "Gradescope"
+  
+  expect_no_error(reconcile_policy_with_gs(policy, gs))
+})
+
+test_that("Test reconcile_policy_with_gs - clean for slip days", {
+  categories <- list(
+    list(
+      category = "Lab 1",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 1.1", "Lab 1.2")
+    ),
+    list(
+      category = "Lab 2",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      assignments = c("Lab 2.1", "Lab 2.2", "Lab 2.3")
+    ),
+    list(
+      category = "Labs",
+      score = "raw_over_max",
+      aggregation = "equally_weighted",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Lab 1", "Lab 2")
+    ),
+    list(
+      category = "Quizzes",
+      score = "raw_over_max",
+      aggregation = "weighted_by_points",
+      aggregation_max_pts = "sum_max_pts",
+      aggregation_lateness = "max_lateness",
+      weight = 0.50,
+      assignments = c("Quiz 1")
+    )
+  )
+  
+  policy <- list(categories = categories, slip_days = list(
+    name = "Slip Days 1",
+    num_slip_days = 5,
+    order = "chronological",
+    assignments = c("Lab 1", "Lab 2", "Lab 3")
+  ))
+  
+  gs <- tibble::tibble(
+    `SID` = c(3032412514, 3032122516, 3032412516,3032412517),
+    `Lab 1.1` = c(0.2, 0, 0.9, 0.4),
+    `Lab 1.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.1 - Submission Time` = c("1/19/2023 9:25:00 AM", "0",
+                                    "1/19/2023 10:00:00 AM", "0"),
+    `Lab 1.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 1.2` = c(0.9, 0, 0.9, 1),
+    `Lab 1.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 1.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 1.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.1` = c(0, 0, 0.9, 0.5),
+    `Lab 2.1 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.1 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.1 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.2` = c(1, 0, 0.9, 0.5),
+    `Lab 2.2 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.2 - Submission Time` = c("1/20/2023 9:25:00 AM", "0",
+                                    "1/20/2023 10:00:00 AM", "0"),
+    `Lab 2.2 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Lab 2.3` = c(1, 1, 0, 0.2),
+    `Lab 2.3 - Max Points` = c(1, 1, 1, 1),
+    `Lab 2.3 - Submission Time` = c("0", "0", "1/21/2023 10:00:00 AM",
+                                    "1/21/2023 9:50:00 AM"),
+    `Lab 2.3 - Lateness (H:M:S)` = c("0:00:00", "0:00:00", "0:00:00", "0:00:00"),
+    
+    `Quiz 1` = c(0.9, 0.6, 0.4, 0),
+    `Quiz 1 - Max Points` = c(1, 1, 1, 1),
+    `Quiz 1 - Submission Time` = c("1/22/2023 9:25:00 AM", "0",
+                                   "1/22/2023 10:00:00 AM", "0"),
+    `Quiz 1 - Lateness (H:M:S)` = c("0:00:00","0:00:00","0:00:00","0:00:00")
+  )
+  attr(gs, "source") <- "Canvas"
+  
+  expect_error(reconcile_policy_with_gs(policy, gs))
+})

@@ -27,8 +27,8 @@ reference:
   - process_policy
   - reconcile_policy_with_gs
   - flatten_policy
-  
-  
+  - get_categories
+  - get_nested_assignments
 
 - title: Grading Functions
   desc: >
@@ -61,6 +61,7 @@ reference:
   - mean_lateness
   - sum_lateness
   - max_lateness
+  - apply_slip_days
 
 - title: Demo Items
   desc: >
@@ -83,6 +84,7 @@ articles:
 - title: Miscellaneous
   contents:
   - detailed-canvas-export-info
+  - slip-days
 
 development:
   mode: auto
