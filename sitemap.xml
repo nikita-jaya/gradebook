@@ -4,14 +4,18 @@
 <url><loc>https://gradebook-dev.github.io/gradebook/CONTRIBUTING.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/LICENSE.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/articles/complex-syllabus.html</loc></url>
+<url><loc>https://gradebook-dev.github.io/gradebook/articles/detailed-canvas-export-info.html</loc></url>
+<url><loc>https://gradebook-dev.github.io/gradebook/articles/excusing-assignments.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/articles/index.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/articles/moderate-syllabus.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/articles/policy-files.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/articles/simple-syllabus.html</loc></url>
+<url><loc>https://gradebook-dev.github.io/gradebook/articles/working-with-canvas-data.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/authors.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/index.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/calculate_grades.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/check_data_format.html</loc></url>
+<url><loc>https://gradebook-dev.github.io/gradebook/reference/determine_grade_source.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/equally_weighted.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/flatten_policy.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/get_assignments.html</loc></url>
@@ -25,6 +29,7 @@
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/process_gs.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/process_policy.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/raw_over_max.html</loc></url>
+<url><loc>https://gradebook-dev.github.io/gradebook/reference/read_files.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/read_gs.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/read_policy.html</loc></url>
 <url><loc>https://gradebook-dev.github.io/gradebook/reference/reconcile_policy_with_gs.html</loc></url>
